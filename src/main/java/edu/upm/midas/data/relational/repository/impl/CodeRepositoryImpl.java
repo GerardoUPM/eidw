@@ -67,10 +67,10 @@ public class CodeRepositoryImpl extends AbstractDao<CodePK, Code>
 
     @SuppressWarnings("unchecked")
     @Override
-    public Code findByIdNative(CodePK codePK) {
+    public Code findByIdNativeMapping(CodePK codePK) {
         Code code = null;
         List<Code> codeList = (List<Code>) getEntityManager()
-                .createNamedQuery("Code.findByIdNative")
+                .createNamedQuery("Code.findByIdNativeMapping")
                 .setParameter("code", codePK.getCode())
                 .setParameter("resourceId", codePK.getResourceId())
                 .getResultList();
@@ -91,6 +91,21 @@ public class CodeRepositoryImpl extends AbstractDao<CodePK, Code>
         if (CollectionUtils.isNotEmpty(codeList))
             code = codeList.get(0);
         return code;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Object[] findByIdNative(String code, int resourceId) {
+        Object[] cod = null;
+        List<Object[]> codeList = (List<Object[]>) getEntityManager()
+                .createNamedQuery("Code.findByIdNative")
+                .setParameter("code", code)
+                .setParameter("resourceId", resourceId)
+                .setMaxResults(1)
+                .getResultList();
+        if (CollectionUtils.isNotEmpty(codeList))
+            cod = codeList.get(0);
+        return cod;
     }
 
     @SuppressWarnings("unchecked")

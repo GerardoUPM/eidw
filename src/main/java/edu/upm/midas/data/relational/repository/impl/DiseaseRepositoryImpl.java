@@ -1,4 +1,5 @@
 package edu.upm.midas.data.relational.repository.impl;
+
 import edu.upm.midas.data.relational.entities.edsssdb.Disease;
 import edu.upm.midas.data.relational.repository.AbstractDao;
 import edu.upm.midas.data.relational.repository.DiseaseRepository;

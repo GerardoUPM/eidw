@@ -3,6 +3,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.sql.Date;
 import java.util.Objects;
 
 /**
@@ -17,6 +18,8 @@ import java.util.Objects;
 @Entity
 public class Configuration {
     private String confId;
+    private String sourceId;
+    private Date version;
     private String tool;
     private String configuration;
 
@@ -28,6 +31,26 @@ public class Configuration {
 
     public void setConfId(String confId) {
         this.confId = confId;
+    }
+
+    @Basic
+    @Column(name = "source_id", nullable = false, length = 10)
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
+
+    @Basic
+    @Column(name = "version", nullable = false)
+    public Date getVersion() {
+        return version;
+    }
+
+    public void setVersion(Date version) {
+        this.version = version;
     }
 
     @Basic
@@ -49,6 +72,9 @@ public class Configuration {
     public void setConfiguration(String configuration) {
         this.configuration = configuration;
     }
+
+
+
 
     @Override
     public boolean equals(Object o) {

@@ -23,8 +23,8 @@ public class UtilDate {
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
     public Date getSqlDate(){
-        return new Date(117, 05, 29);
-        //return new Date(new java.util.Date().getTime());
+        //return new Date(117, 05, 29);
+        return new Date(new java.util.Date().getTime());
     }
 
     public Timestamp getSqlTimestamp(){

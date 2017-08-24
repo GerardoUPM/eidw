@@ -236,28 +236,28 @@ public class ExtractionWikipedia {
 
                                     // Obtiene el titulo del párrafo o nombre del síntoma si existe
                                     String title = "";
-                                    if (prevElementBro.tagName() == Constants.HTML_H3) {
+                                    if (prevElementBro.tagName() == Constants.HTML_H3 || prevElementBro.tagName() == Constants.HTML_H4) {
                                         if (prevElementBro.text() != null) title = prevElementBro.text();
                                     }
                                     //</editor-fold>
 
                                     // Extrae el texto si es una etiqueta <p> (paragraph)
-                                    if (nextElementBro.tagName() == Constants.HTML_P) {
+                                    if (nextElementBro.tagName() == Constants.HTML_P) {//&& !nextElementBro.text().isEmpty()
                                         //<editor-fold desc="EXTRAE TEXTO DE UN PARRAFO Y LO ALMACENA EN UN OBJETO PARAGRAPH">
                                         // Guarda la información extraida de un párrafo wikipedia en un objeto
-                                        isText = true;
                                         // Se crea un párrafo y se extrae su información
-                                        paragraph = getParagraphData(nextElementBro, countText, title);
+                                        isText = true;
+                                        paragraph = setParagraphData(nextElementBro, countText, title);
 
                                         // Agrega el párrafo a la lista de textos
                                         textList.add(paragraph);
                                         //</editor-fold>
                                         //Extrae el texto si es una etiqueta <ul> o <ol>
-                                    } else if (nextElementBro.tagName() == Constants.HTML_UL || nextElementBro.tagName() == Constants.HTML_OL) {
+                                    } else if (nextElementBro.tagName() == Constants.HTML_UL || nextElementBro.tagName() == Constants.HTML_OL) {//&& !nextElementBro.text().isEmpty()
                                         //<editor-fold desc="EXTRAE TEXTO DE UN PARRAFO Y LO ALMACENA EN UN OBJETO LIST_">
                                         // Guarda la información extraida de una lista wikipedia en un objeto
                                         isText = true;
-                                        list_ = getList_Data(nextElementBro, countText, title);
+                                        list_ = setList_Data(nextElementBro, countText, title);
 
                                         // Agrega la lista "List_" a la lista de textos
                                         textList.add(list_);
@@ -919,7 +919,7 @@ public class ExtractionWikipedia {
      * @param title
      * @return objeto Paragraph
      */
-    public Paragraph getParagraphData(Element element, int countText, String title){
+    public Paragraph setParagraphData(Element element, int countText, String title){
         Paragraph paragraph = new Paragraph();
 
         paragraph.setId( countText );
@@ -942,7 +942,7 @@ public class ExtractionWikipedia {
      * @param title
      * @return objeto List_
      */
-    public List_ getList_Data(Element element, int countText, String title){
+    public List_ setList_Data(Element element, int countText, String title){
         List_ list_ = new List_();
         List<String> liList;
 

@@ -96,7 +96,7 @@ public class SymptomRepositoryImpl extends AbstractDao<String, Symptom>
                 .createNamedQuery("Symptom.findBySourceAndVersionNative")
                 .setParameter("version", version)
                 .setParameter("source", source)
-                .setMaxResults(30)
+                //.setMaxResults(100)
                 .getResultList();
         if (CollectionUtils.isNotEmpty(symptomList))
             symptoms = symptomList;

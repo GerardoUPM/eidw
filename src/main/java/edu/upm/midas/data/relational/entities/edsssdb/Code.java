@@ -28,7 +28,7 @@ import java.util.Objects;
 
 @NamedNativeQueries({
         @NamedNativeQuery(
-                name = "Code.findByIdNative",
+                name = "Code.findByIdNativeMapping",
                 query = "SELECT c.code, c.resource_id "
                         + "FROM code c WHERE c.code = :code AND c.resource_id = :resourceId",
                 resultSetMapping="CodeMapping"
@@ -40,6 +40,11 @@ import java.util.Objects;
                         + "FROM code c WHERE c.code = :code AND c.resource_id = :resourceId",
                 resultClass = Code.class
         ),
+        @NamedNativeQuery(
+                name = "Code.findByIdNative",
+                query = "SELECT c.code, c.resource_id "
+                        + "FROM code c WHERE c.code = :code AND c.resource_id = :resourceId"
+        ),
 
 
         @NamedNativeQuery(
@@ -49,7 +54,7 @@ import java.util.Objects;
         ),
         @NamedNativeQuery(
                 name = "HasCode.insertNative",
-                query = "INSERT INTO has_code (document_id, date, code, resource_id) "
+                query = "INSERT IGNORE INTO has_code (document_id, date, code, resource_id) "
                         + "VALUES (:documentId, :date, :code, :resourceId)"
         ),
         @NamedNativeQuery(

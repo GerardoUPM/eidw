@@ -6,11 +6,7 @@ import edu.upm.midas.data.extraction.model.Doc;
 import edu.upm.midas.data.extraction.model.Source;
 import edu.upm.midas.data.extraction.model.code.Resource;
 import edu.upm.midas.data.extraction.sources.wikipedia.service.ExtractionWikipedia;
-import edu.upm.midas.data.relational.entities.edsssdb.SemanticType;
-import edu.upm.midas.data.relational.service.SemanticTypeService;
 import edu.upm.midas.data.relational.service.helperNative.*;
-import edu.upm.midas.utilsservice.Common;
-import edu.upm.midas.utilsservice.UniqueId;
 import edu.upm.midas.utilsservice.UtilDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,7 +135,7 @@ public class PopulateDbNative {
             System.out.println("Source: " + sourceId + " - " + source.getName());
 
             //<editor-fold desc="PERSISTIR TODAS LAS SECCIONES">
-            System.out.println("Insert all sections...");
+            System.out.println("Insert all sections, if exists...");
             sectionHelperNative.insertIfExist( source.getSectionMap() );
             System.out.println("Insert all sections ready!");
             System.out.println("Insert documents start!");
@@ -161,9 +157,7 @@ public class PopulateDbNative {
                 //</editor-fold>
 
                 //<editor-fold desc="RECORRIDO DE SECCIONES PARA ACCEDER A LOS TEXTOS">
-                for (edu.upm.midas.data.extraction.model.Section section:
-                        document.getSectionList()) {
-
+                for (edu.upm.midas.data.extraction.model.Section section: document.getSectionList()) {
                     //<editor-fold desc="PERSISTIR has_section">
                     String sectionId = hasSectionHelperNative.insert( documentId, version, section );
                     //</editor-fold>

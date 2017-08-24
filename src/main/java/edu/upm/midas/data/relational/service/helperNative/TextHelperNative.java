@@ -2,12 +2,12 @@ package edu.upm.midas.data.relational.service.helperNative;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.upm.midas.constants.Constants;
 import edu.upm.midas.data.extraction.model.text.List_;
 import edu.upm.midas.data.extraction.model.text.Paragraph;
 import edu.upm.midas.data.extraction.model.text.Text;
 import edu.upm.midas.data.relational.service.HasTextService;
 import edu.upm.midas.data.relational.service.TextService;
+import edu.upm.midas.enums.ContentType;
 import edu.upm.midas.utilsservice.Common;
 import edu.upm.midas.utilsservice.UniqueId;
 import org.slf4j.Logger;
@@ -65,17 +65,21 @@ public class TextHelperNative {
 
         if(text instanceof Paragraph){
             text_ = (!text.getTitle().equals(""))?text.getTitle() + " => ":"" + ( (Paragraph) text).getText();
-            textService.insertNative( textId, Constants.CONTENT_TYPE_PARA, text_.trim() );
+            textService.insertNative( textId, ContentType.PARA.getClave(), text_.trim() );
         }else{
-            String textList = "";
-            for (String bullet:
-                    ( (List_) text).getBulletList() ) {
-                textList += bullet + "&";
+            String textList = "";int bulletCount = 1;
+            List<String> bulletList = ( (List_) text).getBulletList();
+            for (String bullet: bulletList ) {
+                if (bulletCount == bulletList.size())
+                    textList += bullet;
+                else
+                    textList += bullet + "&";
+                bulletCount++;
             }
             if (!textList.equals(""))
                 textList = common.cutStringPerformance(0, 1, textList);
             text_ = (!text.getTitle().equals(""))?text.getTitle() + " => ":"" +textList;
-            textService.insertNative( textId, Constants.CONTENT_TYPE_PARA, text_.trim() );
+            textService.insertNative( textId, ContentType.LIST.getClave(), text_.trim() );
         }
 
         //<editor-fold desc="INSERTAR URLS">

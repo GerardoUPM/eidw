@@ -22,6 +22,8 @@ public interface CodeService {
     Code findByCodeQuery(String code);
 
     Code findByResourceIdQuery(int resourceId);
+
+    Object[] findByIdNative(String code, int resourceId);
     
     List<Code> findAll();
 

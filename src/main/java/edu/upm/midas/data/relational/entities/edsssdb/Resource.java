@@ -83,6 +83,7 @@ public class Resource {
 
     @Id
     @Column(name = "resource_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getResourceId() {
         return resourceId;
     }

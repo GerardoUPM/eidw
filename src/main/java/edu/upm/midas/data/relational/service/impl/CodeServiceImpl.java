@@ -46,6 +46,11 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
+    public Object[] findByIdNative(String code, int resourceId) {
+        return daoCode.findByIdNative(code, resourceId);
+    }
+
+    @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
     public List<Code> findAll() {
         List<Code> listCodeEntities = daoCode.findAllQuery();
         return listCodeEntities;

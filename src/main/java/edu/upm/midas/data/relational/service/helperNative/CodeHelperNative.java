@@ -3,8 +3,6 @@ package edu.upm.midas.data.relational.service.helperNative;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.upm.midas.data.extraction.model.code.Code;
-import edu.upm.midas.data.relational.entities.edsssdb.CodePK;
-import edu.upm.midas.data.relational.entities.edsssdb.Resource;
 import edu.upm.midas.data.relational.service.CodeService;
 import edu.upm.midas.data.relational.service.ResourceService;
 import edu.upm.midas.utilsservice.Common;
@@ -54,19 +52,21 @@ public class CodeHelperNative {
      * @throws JsonProcessingException
      */
     public void insertIfExist(List<Code> codeList, String documentId, Date version) throws JsonProcessingException {
-        edu.upm.midas.data.relational.entities.edsssdb.Code codeEntity;
+        Object[] codeEntity;
 
         for (Code code: codeList) {
             codeEntity = getCodeByCodeResource( code );
-            int resourceId = resourceService.findIdByNameQuery( code.getResource().getName() );
-            
+
             if ( codeEntity == null ){
+                int resourceId = resourceService.findIdByNameQuery( code.getResource().getName() );
+
                 codeService.insertNative( code.getCode(), resourceId );
                 codeService.insertNativeHasCode( documentId, version, code.getCode(), resourceId );
                 String urlId = urlHelperNative.getUrl( code.getLink(), getId( code.getCode(), resourceId ) );
                 codeService.insertNativeUrl( code.getCode(), resourceId, urlId );
             }else{
-                codeService.insertNativeHasCode( documentId, version, code.getCode(), resourceId );
+                System.out.println("Document_id: " + documentId + " Version: " + version + " Code: " + codeEntity[0] + " ResourceName: " + codeEntity[1]);
+                codeService.insertNativeHasCode( documentId, version, (String) codeEntity[0], (int) codeEntity[1] );
             }
         }
     }
@@ -77,7 +77,7 @@ public class CodeHelperNative {
      * @return
      */
     public boolean exist(Code cod){
-        edu.upm.midas.data.relational.entities.edsssdb.Code code = getCodeByCodeResource( cod );
+        Object[] code = getCodeByCodeResource( cod );
         if( code != null )
             return true;
         else
@@ -89,15 +89,10 @@ public class CodeHelperNative {
      * @param code
      * @return
      */
-    public edu.upm.midas.data.relational.entities.edsssdb.Code getCodeByCodeResource(Code code){
+    public Object[] getCodeByCodeResource(Code code){
 //        System.out.println("RESOURCE NAME A BUSCAR: " + code.getResource().getName());
-        Resource resource = resourceService.findByName( code.getResource().getName() );
-//        System.out.println("RESOURCE NAME: " + code.getResource().getName() + " id: " + resource.getResourceId());
-        CodePK codePK = new CodePK();
-        codePK.setCode( code.getCode() );
-        codePK.setResourceId( resource.getResourceId() );
-
-        return codeService.findById( codePK );
+        int resourceId = resourceService.findIdByNameQuery( code.getResource().getName() );
+        return codeService.findByIdNative(code.getCode(), resourceId);
     }
 
 

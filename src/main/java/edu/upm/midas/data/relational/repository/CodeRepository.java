@@ -25,9 +25,11 @@ public interface CodeRepository {
 
     Code findByResourceIdQuery(int resourceId);
 
-    Code findByIdNative(CodePK codePK);
+    Code findByIdNativeMapping(CodePK codePK);
 
     Code findByIdNativeResultClass(CodePK codePK);
+
+    Object[] findByIdNative(String code, int resourceId);
 
     List<Code> findAllQuery();
 

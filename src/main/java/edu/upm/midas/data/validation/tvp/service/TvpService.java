@@ -9,7 +9,7 @@ import edu.upm.midas.data.validation.model.Consult;
 import edu.upm.midas.data.validation.model.query.ResponseSymptom;
 import edu.upm.midas.data.validation.tvp.model.response.Concept;
 import edu.upm.midas.data.validation.tvp.model.response.MatchNLP;
-import edu.upm.midas.data.validation.tvp.tvpApiResponse.impl.TvpResourceImpl;
+import edu.upm.midas.data.validation.tvp.tvpApiResponse.impl.TvpResourceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class TvpService {
     @Autowired
     private ConsultHelper consultHelper;
     @Autowired
-    private TvpResourceImpl tvpResource;
+    private TvpResourceServiceImpl tvpResource;
     @Autowired
     private ObjectMapper mapper;
 
@@ -66,12 +66,12 @@ public class TvpService {
 
         int countText = 1;
         /* Actualizar entidad HasSymptom con CUI y textId */
-        for (ResponseSymptom symptom:
-                responseSymptoms) {
+        for (ResponseSymptom symptom: responseSymptoms) {
             MatchNLP matchNLP = exist(symptom.getCui(), matchNLPList);
             if ( matchNLP.hasMatches() ){
                 System.out.println("Symptom validated! | " + symptom.getCui() + "==" + matchNLP.getConcept().toString());
-                //hasSymptomService.updateValidatedNative(consult.getVersion(), sourceId, symptom.getCui(), true);
+                hasSymptomService.updateValidatedNative(consult.getVersion(), sourceId, symptom.getCui(), true);
+                System.out.println("Insert symptom in DB ready!");
             }else{
                 System.out.println("Symptom not found.");
             }
