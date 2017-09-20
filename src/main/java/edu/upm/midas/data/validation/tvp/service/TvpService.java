@@ -49,6 +49,7 @@ public class TvpService {
      */
     @Transactional
     public void validation(Consult consult) throws Exception {
+        //Colocar una validación para Consult...
         String sourceId = sourceService.findByNameNative( consult.getSource() );
         System.out.println( "Source: " + sourceId);
         System.out.println( "Read symptoms to the DB..." );
@@ -70,7 +71,7 @@ public class TvpService {
             MatchNLP matchNLP = exist(symptom.getCui(), matchNLPList);
             if ( matchNLP.hasMatches() ){
                 System.out.println("Symptom validated! | " + symptom.getCui() + "==" + matchNLP.getConcept().toString());
-                hasSymptomService.updateValidatedNative(consult.getVersion(), sourceId, symptom.getCui(), true);
+                //hasSymptomService.updateValidatedNative(consult.getVersion(), sourceId, symptom.getCui(), true);
                 System.out.println("Insert symptom in DB ready!");
             }else{
                 System.out.println("Symptom not found.");

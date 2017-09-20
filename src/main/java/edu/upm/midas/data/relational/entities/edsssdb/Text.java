@@ -68,7 +68,9 @@ import java.util.Objects;
                         "LEFT JOIN has_source hs ON hs.document_id = ht.document_id AND hs.date = ht.date " +
                         "LEFT JOIN source s ON s.source_id = hs.source_id " +
                         "WHERE ht.date = :version " +
-                        "AND s.name = :source"
+                        "AND s.name = :source " +
+                        "AND t.text IS NOT NULL " +
+                        "AND LENGTH(t.text) > 0 " //EVITAR VALORES VACIOS
         )
 
 

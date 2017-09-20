@@ -19,6 +19,7 @@ public class ResponseText {
     private String textId;
     private String contentType;
     private String text;
+    private boolean call;
 
 
     public String getSourceId() {
@@ -75,5 +76,13 @@ public class ResponseText {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public boolean isCall() {
+        return call;
+    }
+
+    public void setCall(boolean call) {
+        this.call = call;
     }
 }

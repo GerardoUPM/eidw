@@ -18,19 +18,19 @@ public class UniqueId {
         return RandomStringUtils.randomAlphanumeric( length ).toLowerCase();
     }
 
-    public String generateDisease(String documentId, int disease){
-        String dis = (disease < 10)?String.format("%02d", disease):disease+"";
-        return documentId + ".Di" + dis;
+    public String generateDisease(int disease){
+        String dis = String.format("%06d", disease);
+        return "DIS" + dis;
     }
 
     public String generateSource(int source){
         String sou = (source < 10)?String.format("%02d", source):source+"";
-        return "So" + sou;
+        return "SO" + sou;
     }
 
     public String generateDocument(String sourceId, int document){
         String doc = (document < 10)?String.format("%02d", document):document+"";
-        return sourceId + ".Do" + doc;
+        return sourceId + ".DOC" + doc;
     }
 
     public String generateCode(String code, int resourceId){
@@ -41,7 +41,7 @@ public class UniqueId {
 
     public String generateSection(int section){
         String sec = (section < 10)?String.format("%02d", section):section+"";
-        return "Se" + sec;
+        return "SEC" + sec;
     }
 
     public String generateText(String documentId, String sectionId, int text){
@@ -50,6 +50,11 @@ public class UniqueId {
     }
 
     public String generateUrl(String id, int url){
+        String u = (url < 10)?String.format("%02d", url):url+"";
+        return id + ".U" + u;
+    }
+
+    public String generateConfiguration(String id, int url){
         String u = (url < 10)?String.format("%02d", url):url+"";
         return id + ".U" + u;
     }

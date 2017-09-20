@@ -31,7 +31,7 @@ import java.util.Objects;
 
 @NamedNativeQueries({
         @NamedNativeQuery(
-                name = "Disease.findByIdNative",
+                name = "Disease.findByIdNativeMapping",
                 query = "SELECT d.disease_id, d.name, d.cui "
                         + "FROM disease d WHERE d.disease_id COLLATE utf8_bin = :diseaseId",
                 resultSetMapping="DiseaseMapping"
@@ -61,6 +61,67 @@ import java.util.Objects;
                 name = "HasDisease.insertNative",
                 query = "INSERT INTO has_disease (document_id, date, disease_id) "
                         + "VALUES (:documentId, :date, :diseaseId)"
+        ),
+
+
+        @NamedNativeQuery(
+                name = "Disease.findAllBySourceAndVersionNative",
+                query = "SELECT d.disease_id, d.name, d.cui " +
+                        "FROM disease d " +
+                        "INNER JOIN has_disease hd ON hd.disease_id = d.disease_id " +
+                        "INNER JOIN document doc ON doc.document_id = hd.document_id AND doc.date = hd.date " +
+                        "INNER JOIN has_source hs ON hs.document_id = doc.document_id AND hs.date = doc.date " +
+                        "INNER JOIN source s ON s.source_id = hs.source_id " +
+                        "WHERE s.name COLLATE utf8_bin = :sourceName " +
+                        "AND doc.date = :version "
+        ),
+        @NamedNativeQuery(
+                name = "Disease.findByIdAndSourceAndVersionNative",
+                query = "SELECT d.disease_id, d.name, d.cui " +
+                        "FROM disease d " +
+                        "INNER JOIN has_disease hd ON hd.disease_id = d.disease_id " +
+                        "INNER JOIN document doc ON doc.document_id = hd.document_id AND doc.date = hd.date " +
+                        "INNER JOIN has_source hs ON hs.document_id = doc.document_id AND hs.date = doc.date " +
+                        "INNER JOIN source s ON s.source_id = hs.source_id " +
+                        "WHERE s.name COLLATE utf8_bin = :sourceName " +
+                        "AND doc.date = :version " +
+                        "AND d.disease_id = :diseaseId "
+        ),
+        @NamedNativeQuery(
+                name = "Disease.findByCuiAndSourceAndVersionNative",
+                query = "SELECT d.disease_id, d.name, d.cui " +
+                        "FROM disease d " +
+                        "INNER JOIN has_disease hd ON hd.disease_id = d.disease_id " +
+                        "INNER JOIN document doc ON doc.document_id = hd.document_id AND doc.date = hd.date " +
+                        "INNER JOIN has_source hs ON hs.document_id = doc.document_id AND hs.date = doc.date " +
+                        "INNER JOIN source s ON s.source_id = hs.source_id " +
+                        "WHERE s.name COLLATE utf8_bin = :sourceName " +
+                        "AND doc.date = :version " +
+                        "AND d.cui = :cui "
+        ),
+        @NamedNativeQuery(
+                name = "Disease.findByNameAndSourceAndVersionNative",
+                query = "SELECT d.disease_id, d.name, d.cui " +
+                        "FROM disease d " +
+                        "INNER JOIN has_disease hd ON hd.disease_id = d.disease_id " +
+                        "INNER JOIN document doc ON doc.document_id = hd.document_id AND doc.date = hd.date " +
+                        "INNER JOIN has_source hs ON hs.document_id = doc.document_id AND hs.date = doc.date " +
+                        "INNER JOIN source s ON s.source_id = hs.source_id " +
+                        "WHERE s.name COLLATE utf8_bin = :sourceName " +
+                        "AND doc.date = :version " +
+                        "AND d.name LIKE :diseaseName "
+        ),
+        @NamedNativeQuery(
+                name = "Disease.updateCuiByIdAndSourceAndVersionNative",
+                query = " UPDATE disease d " +
+                        " INNER JOIN has_disease hd ON hd.disease_id = d.disease_id " +
+                        " INNER JOIN document doc ON doc.document_id = hd.document_id AND doc.date = hd.date " +
+                        " INNER JOIN has_source hs ON hs.document_id = doc.document_id AND hs.date = doc.date " +
+                        " INNER JOIN source s ON s.source_id = hs.source_id " +
+                        " SET d.cui = :cui " +
+                        " WHERE s.name COLLATE utf8_bin = :sourceName " +
+                        " AND doc.date = :version " +
+                        " AND d.disease_id = :diseaseId "
         )
 })
 

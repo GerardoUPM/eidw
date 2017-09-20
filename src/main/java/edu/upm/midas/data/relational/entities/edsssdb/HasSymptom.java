@@ -55,7 +55,7 @@ import java.util.Objects;
                 query = "UPDATE has_symptom h " +
                         "SET h.validated = :validated " +
                         "WHERE h.text_id LIKE :version " +
-                        "AND  h.text_id LIKE :sourceId " +
+                        "AND h.text_id LIKE :sourceId " +
                         "AND h.cui = :cui "
         )
 })

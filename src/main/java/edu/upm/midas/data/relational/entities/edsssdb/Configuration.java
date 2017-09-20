@@ -1,8 +1,9 @@
 package edu.upm.midas.data.relational.entities.edsssdb;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Date;
 import java.util.Objects;
 
@@ -16,6 +17,38 @@ import java.util.Objects;
  * @see
  */
 @Entity
+@Table(name = "configuration", catalog = "edsssdb", schema = "")
+@XmlRootElement
+@NamedQueries({
+        @NamedQuery(name = "Configuration.findAll", query = "SELECT c FROM Configuration c")
+        , @NamedQuery(name = "Configuration.findByConfId", query = "SELECT c FROM Configuration c WHERE c.confId = :confId")
+        , @NamedQuery(name = "Configuration.findByTool", query = "SELECT c FROM Configuration c WHERE c.tool = :tool")
+})
+
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = "Configuration.insertNative",
+                query = "INSERT INTO configuration (conf_id, source_id, version, tool, configuration) " +
+                        "VALUES (:conf_id, :source_id, :version, :tool, :configuration) "
+        )
+})
+
+@SqlResultSetMappings({
+        @SqlResultSetMapping(
+                name = "ConfigurationMapping",
+                entities = @EntityResult(
+                        entityClass = Configuration.class,
+                        fields = {
+                                @FieldResult(name = "confId", column = "conf_id"),
+                                @FieldResult(name = "sourceId", column = "source_id"),
+                                @FieldResult(name = "version", column = "version"),
+                                @FieldResult(name = "tool", column = "tool"),
+                                @FieldResult(name = "configuration", column = "configuration")
+                        }
+                )
+        )
+})
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="confId")
 public class Configuration {
     private String confId;
     private String sourceId;

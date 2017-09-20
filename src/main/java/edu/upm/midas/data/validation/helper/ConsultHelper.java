@@ -39,8 +39,10 @@ public class ConsultHelper {
     public List<ResponseText> findTextsByVersionAndSource(Consult consult){
         List<ResponseText> responseTextList = new ArrayList<>();
         List<Object[]> texts = textService.findBySourceAndVersionNative(consult.getDate(), consult.getSource());
-        for (Object[] text:
-             texts) {
+        int count = 1, call = 50;
+        for (Object[] text: texts) {
+            // Verificación del texto para evitar envíar textos vacíos a la api rest
+            //if ( ((String) text[6]).isEmpty() ) continue;
             ResponseText responseText = new ResponseText();
             responseText.setSourceId((String) text[0]);
             responseText.setSourceName((String) text[1]);
@@ -51,6 +53,12 @@ public class ConsultHelper {
             responseText.setText((String) text[6]);
 
             responseTextList.add(responseText);
+
+            if (count == call){
+                responseText.setCall(true);
+                call = call + 50;
+            }else if (count == texts.size()) responseText.setCall(true);
+            count++;
         }
         return responseTextList;
     }

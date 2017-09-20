@@ -80,10 +80,10 @@ public class DiseaseRepositoryImpl extends AbstractDao<String, Disease>
 
     @SuppressWarnings("unchecked")
     @Override
-    public Disease findByIdNative(String diseaseId) {
+    public Disease findByIdNativeMapping(String diseaseId) {
         Disease source = null;
         List<Disease> listSource = (List<Disease>) getEntityManager()
-                .createNamedQuery("Disease.findByIdNative")
+                .createNamedQuery("Disease.findByIdNativeMapping")
                 .setParameter("diseaseId", diseaseId)
                 .getResultList();
         if (CollectionUtils.isNotEmpty(listSource))
@@ -111,6 +111,49 @@ public class DiseaseRepositoryImpl extends AbstractDao<String, Disease>
                 .createNamedQuery("Disease.findAll")
                 .setMaxResults(0)
                 .getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Object[]> findAllBySourceAndVersionNative(String sourceName, Date version) {
+        return (List<Object[]>) getEntityManager()
+                .createNamedQuery("Disease.findAllBySourceAndVersionNative")
+                .setParameter("sourceName", sourceName)
+                .setParameter("version", version)
+                //.setMaxResults(10)
+                .getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Object[] findByIdAndSourceAndVersionNative(String diseaseId, String sourceName, Date version) {
+        Object[] disease = null;
+        List<Object[]> diseaseList = (List<Object[]>) getEntityManager()
+                .createNamedQuery("Disease.findByIdAndSourceAndVersionNative")
+                .setParameter("diseaseId", diseaseId)
+                .setParameter("sourceName", sourceName)
+                .setParameter("version", version)
+                //.setMaxResults(100)
+                .getResultList();
+        if (CollectionUtils.isNotEmpty(diseaseList))
+            disease = diseaseList.get(0);
+        return disease;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Object[] findByCuiAndSourceAndVersionNative(String cui, String sourceName, Date version) {
+        Object[] disease = null;
+        List<Object[]> diseaseList = (List<Object[]>) getEntityManager()
+                .createNamedQuery("Disease.findByCuiAndSourceAndVersionNative")
+                .setParameter("cui", cui)
+                .setParameter("sourceName", sourceName)
+                .setParameter("version", version)
+                //.setMaxResults(100)
+                .getResultList();
+        if (CollectionUtils.isNotEmpty(diseaseList))
+            disease = diseaseList.get(0);
+        return disease;
     }
 
     public void persist(Disease disease) {
@@ -160,6 +203,17 @@ public class DiseaseRepositoryImpl extends AbstractDao<String, Disease>
                 .setParameter("diseaseId", disease.getDiseaseId())
                 .setParameter("name", disease.getName())
                 .setParameter("cui", disease.getCui())
+                .executeUpdate();
+    }
+
+    @Override
+    public int updateCuiByIdAndSourceAndVersionNative(String diseaseId, String cui, String sourceName, Date version) {
+        return getEntityManager()
+                .createNamedQuery("Disease.updateCuiByIdAndSourceAndVersionNative")
+                .setParameter("diseaseId", diseaseId)
+                .setParameter("cui", cui)
+                .setParameter("sourceName", sourceName)
+                .setParameter("version", version)
                 .executeUpdate();
     }
 }

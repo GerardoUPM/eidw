@@ -26,6 +26,12 @@ public interface DiseaseService {
 
     List<Disease> findAll();
 
+    List<Object[]> findAllBySourceAndVersionNative(String sourceName, Date version);
+
+    Object[] findByIdAndSourceAndVersionNative(String diseaseId, String sourceName, Date version);
+
+    Object[] findByCuiAndSourceAndVersionNative(String cui, String sourceName, Date version);
+
     void save(Disease disease);
 
     int insertNative(String diseaseId, String name, String cui);
@@ -37,5 +43,7 @@ public interface DiseaseService {
     boolean updateFindPartial(Disease disease);
 
     boolean deleteById(String diseaseId);
-    
+
+    int updateCuiByIdAndSourceAndVersionNative(String diseaseId, String cui, String sourceName, Date version);
+
 }

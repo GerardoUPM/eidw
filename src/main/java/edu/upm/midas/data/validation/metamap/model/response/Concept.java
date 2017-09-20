@@ -1,4 +1,4 @@
-package edu.upm.midas.data.validation.model;
+package edu.upm.midas.data.validation.metamap.model.response;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,19 +14,10 @@ import java.util.Objects;
  */
 public class Concept {
 
-    private String id;
+    private String cui;/*Código cui*/
     private String name;
-    private String cui;/*CUI CODE*/
     private List<String> semanticTypes;
 
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -66,4 +57,12 @@ public class Concept {
         return Objects.hash(getCui());
     }
 
+    @Override
+    public String toString() {
+        return "Concept{" +
+                "cui='" + cui + '\'' +
+                ", name='" + name + '\'' +
+                ", semanticTypes=" + semanticTypes +
+                '}';
+    }
 }

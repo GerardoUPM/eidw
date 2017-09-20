@@ -1,6 +1,8 @@
 package edu.upm.midas.constants;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by gerardo on 27/3/17.
@@ -21,7 +23,13 @@ public class Constants {
 
     /** Validaciones */
     public static final String SEMANTIC_TYPES[] = { "sosy", "diap", "dsyn", "fndg", "lbpr", "lbtr" };
-
+    public static final List<String> SEMANTIC_TYPES_LIST = new ArrayList<String>(){{
+        add("sosy");
+        add("diap");
+        add("dsyn");
+        add("fndg");
+        add("lbpr");
+        add("lbtr"); }};
 
     /**
      * Fuentes de extracción
@@ -621,6 +629,10 @@ public class Constants {
     public final static String DISEASES_URLS_FILE = "cnv_data/diseases.lst";
     public final static String DISEASES_TEXTS_FOLDER = "cnv_data/diseasesData/";
     public final static String VALIDATION_FINDINGS_TEMP_FOLDER = "vte_data/temp_findings/";
+
+
+    public final static String ERR_NO_PARAMETER = "No parameter was sent";
+    public final static String ERR_EMPTY_PARAMETER = "Empty parameter";
 
 
 

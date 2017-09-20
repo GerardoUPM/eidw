@@ -90,6 +90,7 @@ public class TextRepositoryImpl extends AbstractDao<String, Text>
                 .createNamedQuery("Text.findBySourceAndVersionNative")
                 .setParameter("version", version)
                 .setParameter("source", source)
+                .setMaxResults(100)
                 .getResultList();
         if (CollectionUtils.isNotEmpty(textList))
             texts = textList;

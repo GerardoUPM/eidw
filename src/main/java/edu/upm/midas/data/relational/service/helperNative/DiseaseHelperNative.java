@@ -47,11 +47,11 @@ public class DiseaseHelperNative {
      * @throws JsonProcessingException
      */
     public String insertIfExist(Doc document, String documentId, Date version) throws JsonProcessingException {
-        Disease diseaseEntity = diseaseService.findById( document.getUrl().getUrl() );
-
-        String diseaseId = document.getUrl().getUrl();
+        String diseaseId = uniqueId.generateDisease( document.getDisease().getId() );
         String diseaseName = document.getDisease().getName();
         String url = document.getUrl().getUrl();
+
+        Disease diseaseEntity = diseaseService.findById( diseaseId );
         if ( diseaseEntity == null ){
             diseaseService.insertNative( diseaseId, diseaseName, "" );
             diseaseService.insertNativeHasDisease( documentId, version, diseaseId );
@@ -74,6 +74,7 @@ public class DiseaseHelperNative {
         else
             return false;
     }
+
 
 
 }

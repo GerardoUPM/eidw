@@ -52,13 +52,13 @@ import java.util.Objects;
         @NamedNativeQuery(
                 name = "Section.findLastSectionNativeResultClass",
                 query = "SELECT s.section_id, s.name, s.description "
-                        + "FROM section s ORDER BY CAST( SUBSTRING( s.section_id , 3) AS UNSIGNED) DESC ",
+                        + "FROM section s ORDER BY CAST( SUBSTRING( s.section_id , 4) AS UNSIGNED) DESC ",
                 resultClass = Section.class
         ),
         @NamedNativeQuery(
                 name = "Section.findLastIdNative",
                 query = "SELECT s.section_id "
-                        + "FROM section s ORDER BY CAST( SUBSTRING( s.section_id , 3) AS UNSIGNED) DESC"
+                        + "FROM section s ORDER BY CAST( SUBSTRING( s.section_id , 4) AS UNSIGNED) DESC"
         ),
 
 

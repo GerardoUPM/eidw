@@ -21,12 +21,12 @@ import java.util.List;
  * @see
  */
 @FeignClient(name = "tvp-client",
-        url = "http://localhost:8083/api/tvp",
+        url = "http://localhost:8083/tvp/api",
         fallback = TvpClientFallback.class,
         configuration = FeignTvpConfiguration.class)
 public interface CustomizeTvpClient {
 
-    @RequestMapping(value = "/validation", method = RequestMethod.POST)
+    @RequestMapping(value = "/concepts-validated", method = RequestMethod.POST)
     List<MatchNLP> getValidateSymptoms(@RequestBody List<Concept> concepts);
 
 }

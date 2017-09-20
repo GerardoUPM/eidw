@@ -7,7 +7,7 @@ import edu.upm.midas.data.relational.entities.edsssdb.HasSymptomPK;
 import edu.upm.midas.data.relational.entities.edsssdb.Symptom;
 import edu.upm.midas.data.relational.service.HasSymptomService;
 import edu.upm.midas.data.relational.service.SymptomService;
-import edu.upm.midas.data.validation.model.Concept;
+import edu.upm.midas.data.validation.metamap.model.response.Concept;
 import edu.upm.midas.utilsservice.Common;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

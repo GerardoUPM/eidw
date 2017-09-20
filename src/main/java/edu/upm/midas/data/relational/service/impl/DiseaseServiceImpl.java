@@ -65,6 +65,21 @@ public class DiseaseServiceImpl implements DiseaseService {
         return listDiseaseEntities;
     }
 
+    @Override
+    public List<Object[]> findAllBySourceAndVersionNative(String sourceName, Date version) {
+        return daoDisease.findAllBySourceAndVersionNative(sourceName, version);
+    }
+
+    @Override
+    public Object[] findByIdAndSourceAndVersionNative(String diseaseId, String sourceName, Date version) {
+        return daoDisease.findByIdAndSourceAndVersionNative(diseaseId, sourceName, version);
+    }
+
+    @Override
+    public Object[] findByCuiAndSourceAndVersionNative(String cui, String sourceName, Date version) {
+        return daoDisease.findByCuiAndSourceAndVersionNative(cui, sourceName, version);
+    }
+
     @Transactional(propagation= Propagation.REQUIRED)
     public void save(Disease disease) {
         daoDisease.persist(disease);
@@ -125,5 +140,10 @@ public class DiseaseServiceImpl implements DiseaseService {
         else
             return false;
         return true;
+    }
+
+    @Override
+    public int updateCuiByIdAndSourceAndVersionNative(String diseaseId, String cui, String sourceName, Date version) {
+        return daoDisease.updateCuiByIdAndSourceAndVersionNative(diseaseId, cui, sourceName, version);
     }
 }

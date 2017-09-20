@@ -97,8 +97,8 @@ public class SectionHelperNative {
 
         if (sectionService.findAll().size() > 0){
             String sectionId = sectionService.findLastSectionIdQuery();
-
-            int last = Integer.parseInt( common.cutStringPerformance(2, 0, sectionId ) );
+            int last = Integer.parseInt( common.cutStringPerformance(3, 0, sectionId ) );
+            //System.out.println("secId: " + sectionId + " last: " + (last+1) + " |" + common.cutStringPerformance(3, 0, sectionId ));
 
             return uniqueId.generateSection( last + 1 );
 

@@ -26,11 +26,17 @@ public interface DiseaseRepository {
 
     Disease findLastDiseaseQuery();
 
-    Disease findByIdNative(String diseaseId);
+    Disease findByIdNativeMapping(String diseaseId);
 
     Disease findByIdNativeResultClass(String diseaseId);
 
     List<Disease> findAllQuery();
+
+    List<Object[]> findAllBySourceAndVersionNative(String sourceName, Date version);
+
+    Object[] findByIdAndSourceAndVersionNative(String diseaseId, String sourceName, Date version);
+
+    Object[] findByCuiAndSourceAndVersionNative(String cui, String sourceName, Date version);
 
     void persist(Disease disease);
 
@@ -45,5 +51,7 @@ public interface DiseaseRepository {
     Disease update(Disease disease);
 
     int updateByIdQuery(Disease disease);
+
+    int updateCuiByIdAndSourceAndVersionNative(String diseaseId, String cui, String sourceName, Date version);
     
 }
