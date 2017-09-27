@@ -1,9 +1,7 @@
 package edu.upm.midas.data.validation.tvp.tvpApiResponse;
 
-import edu.upm.midas.data.validation.tvp.model.response.Concept;
-import edu.upm.midas.data.validation.tvp.model.response.MatchNLP;
-
-import java.util.List;
+import edu.upm.midas.data.validation.tvp.model.request.Request;
+import edu.upm.midas.data.validation.tvp.model.response.Response;
 
 /**
  * Created by gerardo on 08/08/2017.
@@ -16,6 +14,6 @@ import java.util.List;
  */
 public interface TvpResourceService {
 
-    List<MatchNLP> getValidateSymptoms(List<Concept> concepts);
+    Response getValidateSymptoms(Request request);
 
 }

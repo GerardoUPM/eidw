@@ -97,7 +97,7 @@ public class Configuration {
     }
 
     @Basic
-    @Column(name = "configuration", nullable = false, length = -1)
+    @Column(name = "configuration", nullable = true, length = -1)
     public String getConfiguration() {
         return configuration;
     }

@@ -29,7 +29,7 @@ public class MetamapResourceServiceImpl implements MetamapResourceService {
     }
 
     @Override
-//    @HystrixCommand(fallbackMethod = "retrieveFallback")
+    @HystrixCommand(fallbackMethod = "retrieveFallback")
     public Response filterTexts(Request request) {
         return metamapClient.filterTexts( request );
     }

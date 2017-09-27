@@ -1,8 +1,10 @@
 package edu.upm.midas.data.validation.tvp.tvpApiResponse.impl;
 
 import edu.upm.midas.data.validation.tvp.client.TvpClient;
+import edu.upm.midas.data.validation.tvp.model.request.Request;
 import edu.upm.midas.data.validation.tvp.model.response.Concept;
 import edu.upm.midas.data.validation.tvp.model.response.MatchNLP;
+import edu.upm.midas.data.validation.tvp.model.response.Response;
 import edu.upm.midas.data.validation.tvp.tvpApiResponse.TvpResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,7 +28,7 @@ public class TvpResourceServiceImpl implements TvpResourceService {
     private TvpClient tvpClient;
 
     @Override
-    public List<MatchNLP> getValidateSymptoms(List<Concept> concepts) {
-        return tvpClient.getValidateSymptoms( concepts );
+    public Response getValidateSymptoms(Request request) {
+        return tvpClient.getValidateSymptoms( request );
     }
 }
