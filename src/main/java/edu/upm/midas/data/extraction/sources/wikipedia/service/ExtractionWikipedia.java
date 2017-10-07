@@ -95,6 +95,8 @@ public class ExtractionWikipedia {
 
         Boolean isSection;
         Boolean isText;
+
+        Date version = date.getSqlDate();
         //</editor-fold>
 
         System.out.println("Preparing model...");
@@ -160,7 +162,7 @@ public class ExtractionWikipedia {
                                 Constants.XML_HL_DISEASENAME, xmlSource).getId();
                         // Se inicia a introducir información de un documento
                         doc.setId(countDoc);
-                        doc.setDate(date.getSqlDate());
+                        doc.setDate(version);
 
                         // Enlace del documento
                         url.setId(countDoc);

@@ -51,13 +51,13 @@ public class DiseaseHelperNative {
         String diseaseName = document.getDisease().getName();
         String url = document.getUrl().getUrl();
 
-        Disease diseaseEntity = diseaseService.findById( diseaseId );
+        Disease diseaseEntity = diseaseService.findByName( diseaseName );
         if ( diseaseEntity == null ){
             diseaseService.insertNative( diseaseId, diseaseName, "" );
             diseaseService.insertNativeHasDisease( documentId, version, diseaseId );
         }else{
-            System.out.println("HasDisease: "+ documentId + " | " + version + " | " + url);
-            diseaseService.insertNativeHasDisease( documentId, version, url );
+            System.out.println("HasDisease: "+ documentId + " | " + version + " | " + diseaseEntity.getDiseaseId() );
+            diseaseService.insertNativeHasDisease( documentId, version, diseaseEntity.getDiseaseId() );
         }
         return diseaseId;
     }

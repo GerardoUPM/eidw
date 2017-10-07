@@ -2,7 +2,7 @@ package edu.upm.midas.data.extraction.model;
 
 import edu.upm.midas.data.extraction.model.code.Code;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 /**
