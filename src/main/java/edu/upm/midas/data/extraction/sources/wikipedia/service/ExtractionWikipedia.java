@@ -143,6 +143,7 @@ public class ExtractionWikipedia {
                 // Se inicializa un contador para todos los documentos
                 countDoc = 1;
                 // Se leen todos los enlaces a los documentos de wikipedia (https...)
+                //OJO...AHORA DEBE LEER DE OTRA FUENTE... ALBUM REST
                 for (XmlLink xmlLink : xmlSource.getLinkList()) {
                     // Se conecta con el documento wikipedia por medio de su enlace
                     connect = connectDocument.connect(xmlLink.getUrl());
