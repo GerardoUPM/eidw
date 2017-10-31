@@ -1,4 +1,5 @@
 package edu.upm.midas.data.relational.service.helperNative;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.upm.midas.data.extraction.model.Doc;
@@ -51,7 +52,8 @@ public class DiseaseHelperNative {
         String diseaseName = document.getDisease().getName();
         String url = document.getUrl().getUrl();
 
-        Disease diseaseEntity = diseaseService.findByName( diseaseName );
+        Disease diseaseEntity = diseaseService.findById( diseaseId );
+        System.out.println(diseaseName+ "DIS: "+ diseaseEntity);
         if ( diseaseEntity == null ){
             diseaseService.insertNative( diseaseId, diseaseName, "" );
             diseaseService.insertNativeHasDisease( documentId, version, diseaseId );

@@ -7,6 +7,7 @@ import edu.upm.midas.data.extraction.model.Source;
 import edu.upm.midas.data.extraction.model.code.Resource;
 import edu.upm.midas.data.extraction.sources.wikipedia.service.ExtractionWikipedia;
 import edu.upm.midas.data.relational.service.helperNative.*;
+import edu.upm.midas.utilsservice.UniqueId;
 import edu.upm.midas.utilsservice.UtilDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +65,9 @@ public class PopulateDbNative {
     @Autowired
     private DocumentHelperNative documentHelperNative;
 
+    @Autowired
+    private UniqueId uniqueId;
+
 
     /**
      * @throws Exception
@@ -101,6 +105,12 @@ public class PopulateDbNative {
 //        List<edu.upm.Source> sourceList = extractionWikipedia.extract();
 //        sectionHelperNative.insertIfExist( source.getSectionMap() );
         System.out.println("INSERT SECTIONS READY!");
+    }
+
+
+    public void checkWikiPages() throws Exception {
+        System.out.println(uniqueId.generate(12));
+        extractionWikipedia.checkWikiPages();
     }
 
 

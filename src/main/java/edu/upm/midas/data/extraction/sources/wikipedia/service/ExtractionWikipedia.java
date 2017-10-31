@@ -322,6 +322,31 @@ public class ExtractionWikipedia {
 
     }
 
+    public void checkWikiPages() throws Exception {
+        Connect connect;
+        for (XmlSource xmlSource : loadSource.loadSources()) {
+            // VALIDAR QUE SOLO SE RECUPERE INFORMACIÓN DE WIKIPEDIA
+            if (xmlSource.getName().equals(Constants.SOURCE_WIKIPEDIA)) {
+                // Se leen las secciones del XML
+                for (XmlSection xmlSection : xmlSource.getSectionList()) {
+                    System.out.println(xmlSection.getId());
+                }
+                // Se inicializa un contador para todos los documentos
+                int countDoc = 1;
+                // Se leen todos los enlaces a los documentos de wikipedia (https...)
+                for (XmlLink xmlLink : xmlSource.getLinkList()) {
+                    // Se conecta con el documento wikipedia por medio de su enlace
+                    connect = connectDocument.connect(xmlLink.getUrl());
+                    // Se verifica si hubo conexión con el documento (enlace Web)
+
+                        // Se pinta en pantalla el status OK (esta disponible el enlace)
+                        System.out.println(countDoc + " check " + xmlLink.getUrl() + " ==> " + connect.getStatus());
+                    countDoc++;
+                }
+            }
+        }
+    }
+
 
     /**
      * Método que extrae de todos los documentos wikipedia las fuentes de sus códigos de su infobox
@@ -332,7 +357,7 @@ public class ExtractionWikipedia {
     public HashMap<String, Resource> extractResource() throws Exception {
 
         System.out.println("Preparing resource model...");
-        System.out.println("Reading data resource from Wikipedia...");
+        System.out.println("Reading data resource from Wikipedia...");//System.out.println(date.getSqlDate());
 
         //<editor-fold desc="VARIABLES DE INICIO">
         Connect connect;
@@ -364,8 +389,8 @@ public class ExtractionWikipedia {
                         String idElementName = getHighlightXmlByDescription(Constants.XML_HL_DISEASENAME, xmlSource).getId();
                         String diseaseName = oDoc.getElementById( idElementName ).text();
 //                    System.out.println("Disease: " + oDoc.getElementById( idElementName ).text() );
-
                     System.out.println(x + " extract codes " + diseaseName + " (" + oXmlLink.getUrl() + ") ==> " + connect.getStatus());
+
 
                     /*
                         Se obtiene el elemento (tabla) con clase "infobox" NOTA. infobox es un elemento Highlight

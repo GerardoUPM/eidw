@@ -3,7 +3,7 @@ package edu.upm.midas.data.extraction.service;
 import edu.upm.midas.constants.Constants;
 import edu.upm.midas.data.extraction.model.Connect;
 import edu.upm.midas.enums.StatusHttpEnum;
-import org.jsoup.Connection.Response;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
@@ -34,17 +34,14 @@ public class ConnectDocument {
      * @return Status Code
      *//*REGRESAR UN OBJETO CONNECTOBJECTRESPONSE*/
     public Connect connect(String link) throws Exception {
-        Response oResponse;
+        //Response oResponse; ya no se usa
         oConnect.setLink( link );
         oConnect.setsStatusEnum( StatusHttpEnum.NOT_FOUND );
 
         try {
-
-            oResponse = Jsoup.connect(Constants.HTTP_HEADER + oConnect.getLink() ).execute();
-            oConnect.setStatus( oResponse.statusMessage() );
-
-            oConnect.setoDoc( getHtmlDocument() );
-
+            Connection connection = Jsoup.connect(Constants.HTTP_HEADER + oConnect.getLink() );//oResponse = connection.execute();
+            oConnect.setStatus( connection.execute().statusMessage() );
+            oConnect.setoDoc( getHtmlDocument(connection) );
         } catch (IOException ex) {
             System.out.println("Exception to obtain el Status Code: " + ex.getMessage() + " " +ex.getCause() + " " + Constants.HTTP_HEADER + oConnect.getLink());
         }
@@ -58,14 +55,13 @@ public class ConnectDocument {
      * @paramFromObject getLink()
      * @return Documento HTML
      */
-    public Document getHtmlDocument() throws Exception {
-
+    public Document getHtmlDocument(Connection connection) throws Exception {
         Document oDoc = null;
 
         try {
-            oDoc = Jsoup.connect(Constants.HTTP_HEADER + oConnect.getLink() ).get();
+            oDoc = connection.get();
         } catch (IOException ex) {
-            System.out.println("Exception to obtain HTML document" + ex.getMessage());
+            System.out.println("Exception to obtain HTML document (" + oConnect.getLink() + ")" + ex.getMessage());
         }
 
         return oDoc;

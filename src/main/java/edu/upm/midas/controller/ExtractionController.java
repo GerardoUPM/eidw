@@ -32,4 +32,10 @@ public class ExtractionController {
         return "Successful extraction and insertion in a DB!";
     }
 
+    @RequestMapping(path = { "/wikipedia/check" }, //wikipedia extraction
+            method = RequestMethod.GET)
+    public void checkLinks() throws Exception {
+        populateDbNative.checkWikiPages();
+    }
+
 }
