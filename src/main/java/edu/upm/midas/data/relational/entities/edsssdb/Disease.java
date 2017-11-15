@@ -45,10 +45,15 @@ import java.util.Objects;
 
         ),
         @NamedNativeQuery(
-                name = "Disease.findByNameNativeResultClass",
+                name = "Disease.findByNameNative",
                 query = "SELECT d.disease_id, d.name, d.cui "
-                        + "FROM disease d WHERE d.name COLLATE utf8_bin = :name",
-                resultClass = Disease.class
+                        + "FROM disease d WHERE d.name COLLATE utf8_bin = :name"
+        ),
+        @NamedNativeQuery(
+                name = "Disease.findLastIdNative",
+                query = "SELECT d.disease_id, SUBSTRING( d.disease_id , 4) 'int_disease_id' " +
+                        "FROM disease d " +
+                        "ORDER BY CAST( SUBSTRING( d.disease_id , 4) AS UNSIGNED) DESC "
         ),
 
 

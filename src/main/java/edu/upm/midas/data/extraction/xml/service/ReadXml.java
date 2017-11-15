@@ -32,6 +32,7 @@ import java.util.Set;
 public class ReadXml {
 
     private XmlSource oXml = new XmlSource();
+
     @Autowired
     private Common common;
 
@@ -264,7 +265,7 @@ public class ReadXml {
                     //Se obtiene el valor de los atributos de cada tag 'section'
                     oLink.setConsult( link.getAttributeValue( Constants.XML_ATT_CONSULT ).trim() );
                     oLink.setId( Integer.parseInt( link.getAttributeValue( Constants.XML_ATT_ID ).trim() ) );
-                    oLink.setUrl( common.replaceUTFCharacters( link.getTextTrim() ) );
+                    oLink.setUrl( common.replaceUnicodeToSpecialCharacters( link.getTextTrim() ) );
 
                     linkList.add(oLink);
                 }

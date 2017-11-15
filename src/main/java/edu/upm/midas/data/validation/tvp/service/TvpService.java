@@ -73,7 +73,7 @@ public class TvpService {
         request.setConcepts( nonRepetedSymptoms );
         request.setToken( "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJncmFyZG9sYWdhckBob3RtYWlsLmNvbSIsImF1ZCI6IndlYiIsIm5hbWUiOiJHZXJhcmRvIExhZ3VuZXMiLCJ1c2VyIjp0cnVlLCJpYXQiOjE1MDY0MzIwNjQsInNlY3JldF9jbGFpbSI6IlBlcnRlciBQYXJrZXIifQ.mC-hTx9a6vRX8-2QlP1W4vjnBiVk2D9ySnhasz7az12gZ_wx7u4gw20V1VC41zYydGBbX_A7MVJ0uGmzWwIRWQ" );
         //printConcepstJSON( nonRepetedSymptoms );
-        System.out.println( "Connect with TVP API..." );
+        System.out.println( "Connection_ with TVP API..." );
         System.out.println( "Validating symptoms... please wait, this process can take from minutes to hours... " );
         Response response = tvpResource.getValidateSymptoms( request );
         System.out.println("Authorization: "+ response.isAuthorization());

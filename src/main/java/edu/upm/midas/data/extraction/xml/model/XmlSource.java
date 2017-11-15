@@ -26,6 +26,7 @@ public class XmlSource implements Serializable {
     private List<XmlSection> sectionList;
     private List<XmlHighlight> highlightList;
     private List<XmlLink> linkList;
+    private List<DiseaseAlbumLink> diseaseAlbumLinkList;
 
 
     public File getXmlFile() {
@@ -92,4 +93,11 @@ public class XmlSource implements Serializable {
         this.linkList = linkList;
     }
 
+    public List<DiseaseAlbumLink> getDiseaseAlbumLinkList() {
+        return diseaseAlbumLinkList;
+    }
+
+    public void setDiseaseAlbumLinkList(List<DiseaseAlbumLink> diseaseAlbumLinkList) {
+        this.diseaseAlbumLinkList = diseaseAlbumLinkList;
+    }
 }

@@ -57,7 +57,7 @@ public class CodeHelperNative {
         for (Code code: codeList) {
             codeEntity = getCodeByCodeResource( code );
 
-            if ( codeEntity == null ){
+            if ( codeEntity == null ){//validar el resourceId por si no existe
                 int resourceId = resourceService.findIdByNameQuery( code.getResource().getName() );
 
                 codeService.insertNative( code.getCode(), resourceId );

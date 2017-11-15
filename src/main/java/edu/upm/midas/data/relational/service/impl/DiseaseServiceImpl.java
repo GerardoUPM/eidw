@@ -36,11 +36,14 @@ public class DiseaseServiceImpl implements DiseaseService {
 
     @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
     public Disease findByName(String diseaseName) {
-        Disease disease = daoDisease.findByNameQuery(diseaseName);
-/*
-        if(source!=null)
-            Hibernate.initialize(source.getVersionList());
-*/
+        Disease disease = null;
+        Object[] oQuery = daoDisease.findByNameNative(diseaseName);
+        if (oQuery != null){
+            disease = new Disease();
+            disease.setDiseaseId( (String) oQuery[0] );
+            disease.setName( (String) oQuery[1] );
+            disease.setCui( (String) oQuery[2] );
+        }
         return disease;
     }
 
@@ -54,9 +57,21 @@ public class DiseaseServiceImpl implements DiseaseService {
         return disease;
     }
 
+    @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
     @Override
     public Disease findLastDiseaseQuery() {
         return daoDisease.findLastDiseaseQuery();
+    }
+
+    @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
+    @Override
+    public String findLastIdNative() {
+        String diseaseId = null;
+        Object[] oQuery = daoDisease.findLastIdNative();
+        if (oQuery != null){
+            diseaseId = (String) oQuery[0];
+        }
+        return diseaseId;
     }
 
     @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
@@ -111,7 +126,7 @@ public class DiseaseServiceImpl implements DiseaseService {
 
     @Transactional(propagation= Propagation.REQUIRED)
     public boolean updateFindPartial(Disease disease) {
-        Disease dis = daoDisease.findByNameQuery(disease.getName());
+        Disease dis = null;//daoDisease.findByNameNative(disease.getName());
         if(dis!=null){
 /*
             if(StringUtils.isNotBlank(disease.getDocumentId()))

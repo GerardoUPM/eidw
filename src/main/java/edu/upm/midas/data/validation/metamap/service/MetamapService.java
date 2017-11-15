@@ -183,9 +183,9 @@ public class MetamapService {
 
             //<editor-fold desc="BLOQUE QUE LLAMA Y OBTIENE RESULTADOS DE LA API">
             request.setTextList( texts );
-            request.setToken( "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJncmFyZG9sYWdhckBob3RtYWlsLmNvbSIsImF1ZCI6IndlYiIsIm5hbWUiOiJHZXJhcmRvIExhZ3VuZXMiLCJ1c2VyIjp0cnVlLCJpYXQiOjE1MDY0MzIwNjQsInNlY3JldF9jbGFpbSI6IlBlcnRlciBQYXJrZXIifQ.mC-hTx9a6vRX8-2QlP1W4vjnBiVk2D9ySnhasz7az12gZ_wx7u4gw20V1VC41zYydGBbX_A7MVJ0uGmzWwIRWQ" );
+            request.setToken(Constants.TOKEN);
 
-            System.out.println( "Connect with METAMAP API..." );
+            System.out.println( "Connection_ with METAMAP API..." );
             System.out.println( "Founding medical concepts in a texts... please wait, this process can take from minutes to hours... " );
             Response response = metamapResourceService.filterTexts( request );
             System.out.println("Authorization: "+ response.isAuthorization());
@@ -217,7 +217,7 @@ public class MetamapService {
                 System.out.println("Insert configuration...");
                 String configurationJson = gson.toJson(request.getConfiguration());
                 String configurationId = consult.getSource() + ":" + consult.getVersion() + "_" + utilDate.getTimestampNumber();
-                //confService.insertNative(configurationId, sourceId, version, "metamap", configurationJson);
+                confService.insertNative(configurationId, sourceId, version, "metamap", configurationJson);
                 System.out.println("Insert configuration ready!...");
             }else{
                 System.out.println("Authorization message: " + response.getAuthorizationMessage() + " | token: " + response.getToken());
@@ -260,7 +260,7 @@ public class MetamapService {
         }
         request.setTextList(texts);
 
-        System.out.println( "Connect with METAMAP API..." );
+        System.out.println( "Connection_ with METAMAP API..." );
         System.out.println( "Founding medical concepts in a texts... please wait, this process can take from minutes to hours... " );
         Response response = metamapResourceService.filterDiseaseName( request );
 

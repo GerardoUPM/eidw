@@ -24,6 +24,8 @@ public interface DiseaseService {
 
     Disease findLastDiseaseQuery();
 
+    String findLastIdNative();
+
     List<Disease> findAll();
 
     List<Object[]> findAllBySourceAndVersionNative(String sourceName, Date version);

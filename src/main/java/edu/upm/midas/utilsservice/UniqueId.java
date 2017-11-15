@@ -1,5 +1,6 @@
 package edu.upm.midas.utilsservice;
 import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UniqueId {
+
+    @Autowired
+    private UtilDate utilDate;
 
     public String generate(int length){
         return RandomStringUtils.randomAlphanumeric( length ).toLowerCase();
@@ -54,9 +58,9 @@ public class UniqueId {
         return id + ".U" + u;
     }
 
-    public String generateConfiguration(String id, int url){
-        String u = (url < 10)?String.format("%02d", url):url+"";
-        return id + ".U" + u;
+    public String generateConfiguration(String source, String version){
+        String configurationId = source + ":" + version + "_" + utilDate.getTimestampNumber();
+        return configurationId;
     }
 
 

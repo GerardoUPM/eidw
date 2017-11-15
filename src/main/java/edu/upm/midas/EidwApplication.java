@@ -7,9 +7,9 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 
 @EnableFeignClients
-@SpringBootApplication
 @EnableCircuitBreaker
 @EnableHystrix
+@SpringBootApplication
 public class EidwApplication {
 
 	public static void main(String[] args) {

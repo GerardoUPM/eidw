@@ -3,7 +3,7 @@ import edu.upm.midas.data.relational.entities.edsssdb.Code;
 import edu.upm.midas.data.relational.entities.edsssdb.CodePK;
 import edu.upm.midas.data.relational.repository.AbstractDao;
 import edu.upm.midas.data.relational.repository.CodeRepository;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;

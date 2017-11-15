@@ -63,7 +63,7 @@ public class Extract implements Callable<Doc> {
     @Override
     public Doc call() throws Exception {
         //<editor-fold desc="VARIABLES DE INICO">
-        Connect connect;
+        Connection_ connection_;
         Document document;
 
         Doc doc;
@@ -83,18 +83,18 @@ public class Extract implements Callable<Doc> {
         Boolean isText;
         //</editor-fold>
         // Se conecta con el documento wikipedia por medio de su enlace
-        connect = connectDocument.connect(xmlLink.getUrl());
+        connection_ = connectDocument.connect(xmlLink.getUrl());
         // Se crea un nuevo documento (Doc), url (Link) y enfermedad (Disease)
         doc = new Doc();
         url = new Link();
         disease = new Disease();
         // Se verifica si hubo conexión con el documento (enlace Web)
-        if (connect.getStatus().equals(StatusHttpEnum.OK.toString())) {
+        if (connection_.getStatus().equals(StatusHttpEnum.OK.getDescripcion())) {
             // Se pinta en pantalla el status OK (esta disponible el enlace)
-            System.out.println(countDoc + " extract " + xmlLink.getUrl() + " ==> " + connect.getStatus());
+            System.out.println(countDoc + " extract " + xmlLink.getUrl() + " ==> " + connection_.getStatus());
             // Se obtiene el documento HTML (página wikipedia)
             //<editor-fold desc="DOCUMENTOS">
-            document = connect.getoDoc();
+            document = connection_.getoDoc();
             // Se obtiene el elemento HTML que almacena el nombre de la enfermedad
             String idElementName = getHighlightXmlByDescription(
                     Constants.XML_HL_DISEASENAME, xmlSource).getId();
@@ -233,10 +233,10 @@ public class Extract implements Callable<Doc> {
 
             // Relaciona (agrega) la lista de secciones al documento
             doc.setSectionList(sectionList);
-        } else {//end if oConnect.connect().equals("OK")
+        } else {//end if oConnect.connection_().equals("OK")
             // Mensaje mostrado al documento que no se pudo conectar
-            System.out.println(xmlLink.getUrl() + " ==> " + connect.getStatus());
-        }//end else if oConnect.connect().equals("OK")
+            System.out.println(xmlLink.getUrl() + " ==> " + connection_.getStatus());
+        }//end else if oConnect.connection_().equals("OK")
 
         return doc;
     }

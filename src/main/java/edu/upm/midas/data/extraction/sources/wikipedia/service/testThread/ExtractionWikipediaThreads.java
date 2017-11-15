@@ -180,7 +180,7 @@ public class ExtractionWikipediaThreads {
     public Doc getWikipediaDocument(XmlSource xmlSource, XmlLink xmlLink, int countDoc) throws Exception {
 
         //<editor-fold desc="VARIABLES DE INICO">
-        Connect connect;
+        Connection_ connection_;
         Document document;
 
         Doc doc;
@@ -201,18 +201,18 @@ public class ExtractionWikipediaThreads {
         //</editor-fold>
 
         // Se conecta con el documento wikipedia por medio de su enlace
-        connect = connectDocument.connect(xmlLink.getUrl());
+        connection_ = connectDocument.connect(xmlLink.getUrl());
         // Se crea un nuevo documento (Doc), url (Link) y enfermedad (Disease)
         doc = new Doc();
         url = new Link();
         disease = new Disease();
         // Se verifica si hubo conexión con el documento (enlace Web)
-        if (connect.getStatus().equals(StatusHttpEnum.OK.toString())) {
+        if (connection_.getStatus().equals(StatusHttpEnum.OK.toString())) {
             // Se pinta en pantalla el status OK (esta disponible el enlace)
-            System.out.println(countDoc + " extract " + xmlLink.getUrl() + " ==> " + connect.getStatus());
+            System.out.println(countDoc + " extract " + xmlLink.getUrl() + " ==> " + connection_.getStatus());
             // Se obtiene el documento HTML (página wikipedia)
             //<editor-fold desc="DOCUMENTOS">
-            document = connect.getoDoc();
+            document = connection_.getoDoc();
             // Se obtiene el elemento HTML que almacena el nombre de la enfermedad
             String idElementName = getHighlightXmlByDescription(
                     Constants.XML_HL_DISEASENAME, xmlSource).getId();
@@ -351,10 +351,10 @@ public class ExtractionWikipediaThreads {
 
             // Relaciona (agrega) la lista de secciones al documento
             doc.setSectionList(sectionList);
-        } else {//end if oConnect.connect().equals("OK")
+        } else {//end if oConnect.connection_().equals("OK")
         // Mensaje mostrado al documento que no se pudo conectar
-        System.out.println(xmlLink.getUrl() + " ==> " + connect.getStatus());
-        }//end else if oConnect.connect().equals("OK")
+        System.out.println(xmlLink.getUrl() + " ==> " + connection_.getStatus());
+        }//end else if oConnect.connection_().equals("OK")
 
         return doc;
     }
@@ -372,7 +372,7 @@ public class ExtractionWikipediaThreads {
         System.out.println("Reading data resource from Wikipedia...");
 
         //<editor-fold desc="VARIABLES DE INICIO">
-        Connect connect;
+        Connection_ connection_;
         Document oDoc;
         Resource resource;
         Code oCode;
@@ -389,20 +389,20 @@ public class ExtractionWikipediaThreads {
 
                 int x = 1;
                 for (XmlLink oXmlLink: xmlSource.getLinkList()) {
-                    connect = connectDocument.connect(oXmlLink.getUrl());
+                    connection_ = connectDocument.connect(oXmlLink.getUrl());
 
                     //Verificación de la conexión del enlace >
-                    if (connect.getStatus().equals(StatusHttpEnum.OK.toString())) {
+                    if (connection_.getStatus().equals(StatusHttpEnum.OK.toString())) {
 
                         //Se obtiene el documento html "DOM"
-                        oDoc = connect.getoDoc();
+                        oDoc = connection_.getoDoc();
 
                     /* Se obtiene el nombre de la enfermedad dentro del documento */
                         String idElementName = getHighlightXmlByDescription(Constants.XML_HL_DISEASENAME, xmlSource).getId();
                         String diseaseName = oDoc.getElementById( idElementName ).text();
 //                    System.out.println("Disease: " + oDoc.getElementById( idElementName ).text() );
 
-                    System.out.println(x + " extract codes " + diseaseName + " (" + oXmlLink.getUrl() + ") ==> " + connect.getStatus());
+                    System.out.println(x + " extract codes " + diseaseName + " (" + oXmlLink.getUrl() + ") ==> " + connection_.getStatus());
 
                     /*
                         Se obtiene el elemento (tabla) con clase "infobox" NOTA. infobox es un elemento Highlight

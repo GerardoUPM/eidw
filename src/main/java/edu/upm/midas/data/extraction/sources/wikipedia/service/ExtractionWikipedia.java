@@ -46,10 +46,13 @@ public class ExtractionWikipedia {
     @Autowired
     private ConnectDocument connectDocument;
 
+
+
     @Autowired
     private Common common;
     @Autowired
     private UtilDate date;
+
 
 
     /**
@@ -68,10 +71,10 @@ public class ExtractionWikipedia {
      * @return lista de fuentes de información "Source". Para ser insertados en la BD.
      * @throws Exception
      */
-    public List<Source> extract() throws Exception {
+    public List<Source> extract(List<XmlLink> externalDiseaseLinkList) throws Exception {
 
         //<editor-fold desc="VARIABLES DE INICO">
-        Connect connect;
+        Connection_ connection_;
         Document document;
 
         Source source;
@@ -138,26 +141,38 @@ public class ExtractionWikipedia {
                 source.setSectionMap(sectionMap);
                 //</editor-fold>
                 System.out.println("Procesing links and extracting...");
+                //READ DISEASE ALBUM LINKS
+                //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+                //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                 // Se crea una lista de documentos "Doc". Doc: es una documento de wikipedia
                 docList = new ArrayList<>();
                 // Se inicializa un contador para todos los documentos
                 countDoc = 1;
                 // Se leen todos los enlaces a los documentos de wikipedia (https...)
-                //OJO...AHORA DEBE LEER DE OTRA FUENTE... ALBUM REST
+                //<editor-fold desc="LISTA DE ENFERMEDADES LLAMANDO A LA API REST GET_DISEASELIST_FROM_DBPEDIA">
+                List<XmlLink> linkListFromDBPedia = externalDiseaseLinkList;
+                if (linkListFromDBPedia != null) {
+                    if (!linkListFromDBPedia.isEmpty()) {
+                        xmlSource.setLinkList(linkListFromDBPedia);
+                        System.out.println("getDiseaseLinkListFromDBPedia.size(): " + xmlSource.getLinkList().size());
+                    }
+                }
+                //</editor-fold>
                 for (XmlLink xmlLink : xmlSource.getLinkList()) {
                     // Se conecta con el documento wikipedia por medio de su enlace
-                    connect = connectDocument.connect(xmlLink.getUrl());
+                    connection_ = connectDocument.connect(xmlLink.getUrl());
                     // Se crea un nuevo documento (Doc), url (Link) y enfermedad (Disease)
                     doc = new Doc();
                     url = new Link();
                     disease = new Disease();
                     // Se verifica si hubo conexión con el documento (enlace Web)
-                    if (connect.getStatus().equals(StatusHttpEnum.OK.toString())) {
-                        // Se pinta en pantalla el status OK (esta disponible el enlace)
-                        System.out.println(countDoc + " extract " + xmlLink.getUrl() + " ==> " + connect.getStatus());
+                    // Se pinta en pantalla el status OK (esta disponible el enlace)
+                    System.out.println(countDoc + " extract " + xmlLink.getUrl() + " ==> " + connection_.getStatus() + "("+connection_.getStatusCode()+")");
+                    if (connection_.getStatus().equals(StatusHttpEnum.OK.getDescripcion()) && connection_.getoDoc() != null) {
                         // Se obtiene el documento HTML (página wikipedia)
                         //<editor-fold desc="DOCUMENTOS">
-                        document = connect.getoDoc();
+                        document = connection_.getoDoc();
                         // Se obtiene el elemento HTML que almacena el nombre de la enfermedad
                         String idElementName = getHighlightXmlByDescription(
                                 Constants.XML_HL_DISEASENAME, xmlSource).getId();
@@ -300,10 +315,10 @@ public class ExtractionWikipedia {
                         // Agrega un documento a la lista de documentos
                         docList.add(doc);
 
-                    } else {//end if oConnect.connect().equals("OK")
+                    } else {//end if oConnect.connection_().equals("OK")
                         // Mensaje mostrado al documento que no se pudo conectar
-                        System.out.println(xmlLink.getUrl() + " ==> " + connect.getStatus());
-                    }//end else if oConnect.connect().equals("OK")
+                        System.out.println(xmlLink.getUrl() + " ==> " + connection_.getStatus());
+                    }//end else if oConnect.connection_().equals("OK")
 
                     // Relaciona (agrega) la lista de documentos a la fuente "Source"
                     source.setDocList(docList);
@@ -323,8 +338,9 @@ public class ExtractionWikipedia {
 
     }
 
+
     public void checkWikiPages() throws Exception {
-        Connect connect;
+        Connection_ connection_;
         for (XmlSource xmlSource : loadSource.loadSources()) {
             // VALIDAR QUE SOLO SE RECUPERE INFORMACIÓN DE WIKIPEDIA
             if (xmlSource.getName().equals(Constants.SOURCE_WIKIPEDIA)) {
@@ -337,11 +353,11 @@ public class ExtractionWikipedia {
                 // Se leen todos los enlaces a los documentos de wikipedia (https...)
                 for (XmlLink xmlLink : xmlSource.getLinkList()) {
                     // Se conecta con el documento wikipedia por medio de su enlace
-                    connect = connectDocument.connect(xmlLink.getUrl());
+                    connection_ = connectDocument.connect(xmlLink.getUrl());
                     // Se verifica si hubo conexión con el documento (enlace Web)
 
                         // Se pinta en pantalla el status OK (esta disponible el enlace)
-                        System.out.println(countDoc + " check " + xmlLink.getUrl() + " ==> " + connect.getStatus());
+                        System.out.println(countDoc + " check " + xmlLink.getUrl() + " ==> " + connection_.getStatus());
                     countDoc++;
                 }
             }
@@ -355,13 +371,13 @@ public class ExtractionWikipedia {
      * @return lista "HashMap" sin elementos repetidos de las fuentes de códigos. Ej. eMedicine, Medline, Patient PK
      * @throws Exception
      */
-    public HashMap<String, Resource> extractResource() throws Exception {
+    public HashMap<String, Resource> extractResource(List<XmlLink> externalDiseaseLinkList) throws Exception {
 
         System.out.println("Preparing resource model...");
         System.out.println("Reading data resource from Wikipedia...");//System.out.println(date.getSqlDate());
 
         //<editor-fold desc="VARIABLES DE INICIO">
-        Connect connect;
+        Connection_ connection_;
         Document oDoc;
         Resource resource;
         Code oCode;
@@ -376,29 +392,38 @@ public class ExtractionWikipedia {
             // VALIDAR QUE SOLO SE RECUPERE INFORMACIÓN DE WIKIPEDIA
             if (xmlSource.getName().equals(Constants.SOURCE_WIKIPEDIA)) {
 
+                //<editor-fold desc="LISTA DE ENFERMEDADES LLAMANDO A LA API REST GET_DISEASELIST_FROM_DBPEDIA">
+                List<XmlLink> linkListFromDBPedia = externalDiseaseLinkList;
+                if (linkListFromDBPedia != null) {
+                    if (!linkListFromDBPedia.isEmpty()) {
+                        xmlSource.setLinkList(linkListFromDBPedia);
+                        System.out.println("getDiseaseLinkListFromDBPedia.size(): " + xmlSource.getLinkList().size());
+                    }
+                }
+                //</editor-fold>
                 int x = 1;
                 for (XmlLink oXmlLink: xmlSource.getLinkList()) {
-                    connect = connectDocument.connect(oXmlLink.getUrl());
+                    connection_ = connectDocument.connect(oXmlLink.getUrl());
 
                     //Verificación de la conexión del enlace >
-                    if (connect.getStatus().equals(StatusHttpEnum.OK.toString())) {
+                    System.out.println(x + " extract codes (" + oXmlLink.getUrl() + ") ==> " + connection_.getStatus() + "("+connection_.getStatusCode()+")");
+                    if (connection_.getStatus().equals(StatusHttpEnum.OK.getDescripcion()) && connection_.getoDoc() != null) {
 
                         //Se obtiene el documento html "DOM"
-                        oDoc = connect.getoDoc();
+                        oDoc = connection_.getoDoc();
 
-                    /* Se obtiene el nombre de la enfermedad dentro del documento */
+                        /* Se obtiene el nombre de la enfermedad dentro del documento */
                         String idElementName = getHighlightXmlByDescription(Constants.XML_HL_DISEASENAME, xmlSource).getId();
                         String diseaseName = oDoc.getElementById( idElementName ).text();
-//                    System.out.println("Disease: " + oDoc.getElementById( idElementName ).text() );
-                    System.out.println(x + " extract codes " + diseaseName + " (" + oXmlLink.getUrl() + ") ==> " + connect.getStatus());
+                        //                    System.out.println("Disease: " + oDoc.getElementById( idElementName ).text() );
 
 
-                    /*
-                        Se obtiene el elemento (tabla) con clase "infobox" NOTA. infobox es un elemento Highlight
-                        del documento source.xml
-                        IMPORTANTE. La siguiente rutina sirve para los infobox que se encuentran en el pie
-                        del documento wikipedia. Es necesario otro para el infobox ubicado al principio.
-                     */
+                        /*
+                            Se obtiene el elemento (tabla) con clase "infobox" NOTA. infobox es un elemento Highlight
+                            del documento source.xml
+                            IMPORTANTE. La siguiente rutina sirve para los infobox que se encuentran en el pie
+                            del documento wikipedia. Es necesario otro para el infobox ubicado al principio.
+                         */
 
                         // Se arma la consulta para buscar el elemento  */
                         String query = getHighlightXmlByDescription( Constants.XML_HL_INFOBOX, xmlSource).getClass_();
@@ -418,7 +443,7 @@ public class ExtractionWikipedia {
                             //<editor-fold desc="RECORRIDO DE LAS FILAS DE LA TABLA INFOBOX">
                             for (Element row: rowElements) {
 
-                        /* Se almecenan por cada fila <tr> el valor llave <th> y su valor <td> */
+                            /* Se almecenan por cada fila <tr> el valor llave <th> y su valor <td> */
                                 Elements thElements = row.select(Constants.HTML_TH);
                                 Elements tdElements = row.select(Constants.HTML_TD);
                                 Elements liElements_ = row.select(Constants.HTML_LI);
@@ -463,7 +488,7 @@ public class ExtractionWikipedia {
                                     }
                                 }
                                 hasValidSection = isAValidInfoboxSection( infoboxSection );
-//                            System.out.println("<<hasValidSection>>: " + hasValidSection);
+                                //                            System.out.println("<<hasValidSection>>: " + hasValidSection);
 
                                 boolean validLiElement = false;
                                 if(liElements_.size() <= 0){ validLiElement = true; }
@@ -474,38 +499,38 @@ public class ExtractionWikipedia {
 
                                 /** Se valida: 1) que en la fila se encuente un elemento con class: external text,
                                  * 2) que no tenga elementos <li>, 3) que no tenga colspan (que no se una sola columna) */
-//                            System.out.println(thElements.text() + " => hasExternalText: " + hasExternalText + " && validLiElement: " + validLiElement + " && hasValidSection("+infoboxSection+"):" + hasValidSection + " && !thElements.hasAttr(Constants.HTML_COLSPAN): " + !thElements.hasAttr(Constants.HTML_COLSPAN));
+                                //                            System.out.println(thElements.text() + " => hasExternalText: " + hasExternalText + " && validLiElement: " + validLiElement + " && hasValidSection("+infoboxSection+"):" + hasValidSection + " && !thElements.hasAttr(Constants.HTML_COLSPAN): " + !thElements.hasAttr(Constants.HTML_COLSPAN));
                                 if( hasExternalText && validLiElement && hasValidSection ){
 
-                            /* Dentro deL infobox <table> se analiza sus elementos <th> */
+                                /* Dentro deL infobox <table> se analiza sus elementos <th> */
                                     //<editor-fold desc="OBTERNER FUENTES EXTERNAS PARA UNA ENFERMEDAD">
                                     //resource = null;
                                     resource = new Resource();
                                     for (Element thElement:
                                             thElements) {
                                         List<String> linkList = new ArrayList<>();
-                                /* Obtener los "resources" y sus enlaces (vocabularios, bases online libres o servicios) */
-//                                    System.out.println( "    Resource(HTML_A): " + thElements.text() );
+                                    /* Obtener los "resources" y sus enlaces (vocabularios, bases online libres o servicios) */
+                                        //                                    System.out.println( "    Resource(HTML_A): " + thElements.text() );
                                         Elements links = thElement.getElementsByTag( Constants.HTML_A +"" );
                                         for (Element link:
                                                 links) {
-//                                        System.out.println( "           URL:" + link.attr(Constants.HTML_HREF).toString() );
+                                            //                                        System.out.println( "           URL:" + link.attr(Constants.HTML_HREF).toString() );
                                             linkList.add( link.attr(Constants.HTML_HREF).trim() );
                                         }
                                         resource.setName( thElements.text().trim() );
-//                                    resource.setLinkList( linkList );
-                                    resource.setNameDisease( diseaseName );
+                                        //                                    resource.setLinkList( linkList );
+                                        resource.setNameDisease( diseaseName );
 
                                         resourceMap.put( resource.getName(), resource );
 
                                     }//</editor-fold>
 
-                            /* Dentro deL infobox <table> se analiza sus elementos <td> */
+                                /* Dentro deL infobox <table> se analiza sus elementos <td> */
                                     //<editor-fold desc="OBTERNER CÓDIGOS DE LAS FUENTES EXTERNAS">
                                     for (Element tdElement:
                                             tdElements) {
-                                /* Obtener los códigos de los vocabularios, bases online libres o servicios
-                                 * Se obtienen los elementos <a> con class="external text" y su atributo href */
+                                    /* Obtener los códigos de los vocabularios, bases online libres o servicios
+                                     * Se obtienen los elementos <a> con class="external text" y su atributo href */
                                         String class_ = getHighlightXmlByDescription(Constants.XML_HL_EXTERNAL_TEXT + "", xmlSource).getClass_();
                                         Elements codeElements = tdElement.select(Constants.QUERY_A_CLASS + class_ + Constants.RIGHT_PARENTHESIS);
                                         for (Element code :
@@ -522,24 +547,24 @@ public class ExtractionWikipedia {
                                             oCode.setLink( url );
                                             oCode.setResource( resource );
                                             codeList.add( oCode );
-//                                        System.out.println("       Code: " + code.text() + " | URL:" + code.attr(Constants.HTML_HREF).toString());
+                                            //                                        System.out.println("       Code: " + code.text() + " | URL:" + code.attr(Constants.HTML_HREF).toString());
                                         }
                                     }//</editor-fold>
                                 }//</editor-fold>
 
 
                                 //<editor-fold desc="PROCESO PARA EL INFOBOX EN EL PIE DEL DOCUMENTO">
-                        /* Dentro de una fila <tr> se recorren los elementos <td> */
+                            /* Dentro de una fila <tr> se recorren los elementos <td> */
                                 if(hasHorizontalList) {
                                     Resource resourceFather = new Resource();
                                     for (Element tdElement :
                                             tdElements) {
-                                /* Dentro de un <td> se seleccionan todos los elementos <li> */
+                                    /* Dentro de un <td> se seleccionan todos los elementos <li> */
                                         Elements liElements = tdElement.select(Constants.HTML_LI);
                                         for (int i = 0; i < liElements.size(); i++) {
-                                /* Obtiene los "resources" y sus enlaces (vocabularios, bases online libres o servicios) */
+                                    /* Obtiene los "resources" y sus enlaces (vocabularios, bases online libres o servicios) */
                                             //<editor-fold desc="OBTERNER FUENTES EXTERNAS PARA UNA ENFERMEDAD">
-                                /* Se obtiene el elemento <b> que es el nombre del "resource"*/
+                                    /* Se obtiene el elemento <b> que es el nombre del "resource"*/
                                             Elements bElements = liElements.get(i).getElementsByTag(Constants.HTML_B);
                                             resource = new Resource();
                                             List<String> linkList = new ArrayList<>();
@@ -550,17 +575,17 @@ public class ExtractionWikipedia {
                                                  *  un enlace de cualquier tipo * no es lo mejor) */
                                                 if (aElements.size() > 0) {
 
-//                                                System.out.println("    Resource(HTML_B): " + b.text());
-                                    /* Se obtienen los enlaces de un "resource"*/
+                                                    //                                                System.out.println("    Resource(HTML_B): " + b.text());
+                                        /* Se obtienen los enlaces de un "resource"*/
                                                     Elements links = b.getElementsByTag(Constants.HTML_A + "");
                                                     for (Element link :
                                                             links) {
-//                                                    System.out.println("           URL(HTML_B):" + link.attr(Constants.HTML_HREF).toString());
+                                                        //                                                    System.out.println("           URL(HTML_B):" + link.attr(Constants.HTML_HREF).toString());
                                                         linkList.add(link.attr(Constants.HTML_HREF).toString().trim());
                                                     }
                                                     resource.setName(b.text().trim());
-//                                                resource.setLinkList(linkList);
-                                                resource.setNameDisease(diseaseName);
+                                                    //                                                resource.setLinkList(linkList);
+                                                    resource.setNameDisease(diseaseName);
 
                                                     resourceFather = resource;
 
@@ -569,9 +594,9 @@ public class ExtractionWikipedia {
                                             }
                                             //</editor-fold>
 
-                                /* Obtiene los códigos y su enlace de los vocabularios, bases online libres o servicios */
+                                    /* Obtiene los códigos y su enlace de los vocabularios, bases online libres o servicios */
                                             //<editor-fold desc="OBTERNER CÓDIGOS DE LAS FUENTES EXTERNAS">
-                                /* Se obtienen los elementos <a> con class="external text" y su attr href */
+                                    /* Se obtienen los elementos <a> con class="external text" y su attr href */
                                             String class_ = getHighlightXmlByDescription(Constants.XML_HL_EXTERNAL_TEXT + "", xmlSource).getClass_();
                                             Elements codeElements = liElements.get(i).select(Constants.QUERY_A_CLASS + class_ + Constants.RIGHT_PARENTHESIS);
                                             for (Element code :
@@ -588,7 +613,7 @@ public class ExtractionWikipedia {
                                                 oCode.setLink( url );
                                                 oCode.setResource( resourceFather );
                                                 codeList.add( oCode );
-//                                            System.out.println("       Code(HTML_B): " + code.text() + " | URL:" + code.attr(Constants.HTML_HREF).toString() + " R: " + resourceFather.getName());
+                                                //                                            System.out.println("       Code(HTML_B): " + code.text() + " | URL:" + code.attr(Constants.HTML_HREF).toString() + " R: " + resourceFather.getName());
                                             }
                                             //</editor-fold>
 
@@ -858,6 +883,7 @@ public class ExtractionWikipedia {
      *
      * @throws Exception
      */
+/*
     public void extractionReport() throws Exception {
 
         List<Integer> countCharacteresList = new ArrayList<>();
@@ -879,7 +905,7 @@ public class ExtractionWikipedia {
             for (Doc document:
                     source.getDocList()) {
 
-                System.out.println("Document(" + document.getId() + "_" + document.getDate() + ") => " + document.getUrl().getUrl());
+                System.out.println("Document(" + document.getId() + "_" + document.getVersion() + ") => " + document.getUrl().getUrl());
                 System.out.println("    Disease(" + document.getDisease().getId() + "_" + document.getDisease().getName() + ") ");
 
                 System.out.println("    Codes list...:");
@@ -925,6 +951,7 @@ public class ExtractionWikipedia {
 
         }
 
+*/
 /*
         System.out.println("=========================================================");
         Collections.sort(countCharacteresList);
@@ -932,11 +959,13 @@ public class ExtractionWikipedia {
              countCharacteresList) {
             System.out.println(i);
         }
-*/
+*//*
+
 
         System.out.println("the task (model informtacion of diseases from wikipedia) has taken "+ ( (time_end - time_start) / 1000 ) +" seconds");
 
     }
+*/
 
 
     /**

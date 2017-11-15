@@ -2,7 +2,7 @@ package edu.upm.midas.data.relational.repository.impl;
 import edu.upm.midas.data.relational.entities.edsssdb.Section;
 import edu.upm.midas.data.relational.repository.AbstractDao;
 import edu.upm.midas.data.relational.repository.SectionRepository;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -1,5 +1,6 @@
 package edu.upm.midas.utilsservice;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashSet;
@@ -51,7 +52,7 @@ public class Common {
     }
 
 
-    public String replaceUTFCharacters(String data){
+    public String replaceUnicodeToSpecialCharacters(String data){
 
         Pattern p = Pattern.compile("\\\\u(\\p{XDigit}{4})");
         Matcher m = p.matcher(data);
@@ -62,6 +63,10 @@ public class Common {
         }
         return m.appendTail(buf).toString();
 
+    }
+
+    public String replaceSpecialCharactersToUnicode(String text){
+        return StringEscapeUtils.escapeJava(text);
     }
 
 

@@ -1,6 +1,5 @@
 package edu.upm.midas.data.extraction.model;
 
-import edu.upm.midas.enums.StatusHttpEnum;
 import org.jsoup.nodes.Document;
 
 /**
@@ -9,13 +8,14 @@ import org.jsoup.nodes.Document;
  * @author Gerardo Lagunes G. ${EMAIL}
  * @version ${<VERSION>}
  * @project ExtractionInformationDiseasesWikipedia
- * @className Connect
+ * @className Connection_
  * @see
  */
-public class Connect {
+public class Connection_ {
 
     private String link;
     private String status;
+    private int statusCode;
     private Document oDoc;
 
     public String getLink() {
@@ -34,8 +34,12 @@ public class Connect {
         this.status = status;
     }
 
-    public void setsStatusEnum(StatusHttpEnum sStatus) {
-        this.status = sStatus.getClave();
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
     }
 
     public Document getoDoc() {

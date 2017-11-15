@@ -1,12 +1,23 @@
 package edu.upm.midas.data.relational.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import edu.upm.midas.constants.Constants;
+import edu.upm.midas.data.extraction.album.diseaseAlbumApiResponse.DiseaseAlbumResourceService;
+import edu.upm.midas.data.extraction.album.model.request.RequestFather;
+import edu.upm.midas.data.extraction.album.model.request.RequestGDLL;
+import edu.upm.midas.data.extraction.album.model.response.Album;
+import edu.upm.midas.data.extraction.album.model.response.ResponseGDLL;
+import edu.upm.midas.data.extraction.album.model.response.ResponseLA;
+import edu.upm.midas.data.extraction.model.ConfigurationDiseaseAlbum;
 import edu.upm.midas.data.extraction.model.Doc;
 import edu.upm.midas.data.extraction.model.Source;
 import edu.upm.midas.data.extraction.model.code.Resource;
 import edu.upm.midas.data.extraction.sources.wikipedia.service.ExtractionWikipedia;
+import edu.upm.midas.data.extraction.xml.model.XmlLink;
 import edu.upm.midas.data.relational.service.helperNative.*;
+import edu.upm.midas.utilsservice.Common;
 import edu.upm.midas.utilsservice.UniqueId;
 import edu.upm.midas.utilsservice.UtilDate;
 import org.slf4j.Logger;
@@ -15,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -66,19 +79,30 @@ public class PopulateDbNative {
     private DocumentHelperNative documentHelperNative;
 
     @Autowired
+    private ConfigurationHelper confHelper;
+
+    @Autowired
     private UniqueId uniqueId;
+    @Autowired
+    private Constants constants;
+    @Autowired
+    private Common common;
+
+    @Autowired
+    private DiseaseAlbumResourceService diseaseAlbumResource;
 
 
     /**
      * @throws Exception
      */
     @Transactional
-    public void populateResource() throws Exception {
+    public void populateResource(List<XmlLink> externalDiseaseLinkList) throws Exception {
 
-        HashMap<String, Resource> resourceMap = extractionWikipedia.extractResource();
+        HashMap<String, Resource> resourceMap = extractionWikipedia.extractResource(externalDiseaseLinkList);
 
         System.out.println("INSERT RESOURCES...");
-        List<edu.upm.midas.data.relational.entities.edsssdb.Resource> resourceList = resourceHelperNative.insertIfExist( resourceMap );
+        List<edu.upm.midas.data.relational.entities.edsssdb.Resource> resourceList = 
+                resourceHelperNative.insertIfExist( resourceMap );
 
         if ( resourceList.size() > 0 ) System.out.println("INSERT RESOURCES READY!");
 
@@ -113,13 +137,12 @@ public class PopulateDbNative {
         extractionWikipedia.checkWikiPages();
     }
 
-
-
+    
     /**
      * @throws Exception
      */
     @Transactional
-    public void populate() throws Exception {
+    public void populate(List<XmlLink> externalDiseaseLinkList, Date version) throws Exception {
 
 /*
         Source source = new Source();
@@ -132,15 +155,13 @@ public class PopulateDbNative {
         System.out.println("SourceId: " + sourceHelperNative.insertIfExist( source ) );
 */
 
-        List<Source> sourceList = extractionWikipedia.extract();
+        List<Source> sourceList = extractionWikipedia.extract(externalDiseaseLinkList);
 
-        Date version = date.getSqlDate();
+        //Date version = dateVersion;//date.getSqlDate();
 
         System.out.println("-------------------- POPULATE DATABASE --------------------");
         System.out.println("Populate start...");
-        for (Source source:
-                sourceList) {
-
+        for (Source source: sourceList) {
             String sourceId = sourceHelperNative.insertIfExist( source );
             System.out.println("Source: " + sourceId + " - " + source.getName());
 
@@ -151,9 +172,7 @@ public class PopulateDbNative {
             System.out.println("Insert documents start!");
             //</editor-fold>
             int docsCount = 1;
-            for (Doc document:
-                    source.getDocList()) {
-
+            for (Doc document: source.getDocList()) {
                 String documentId = documentHelperNative.insert( sourceId, document, version );
 
                 System.out.println(docsCount + " Insert document: " + document.getDisease().getName() + "_" + documentId);
@@ -187,10 +206,75 @@ public class PopulateDbNative {
                 //</editor-fold>
                 docsCount++;
             }// Documentos
-
         }// Fuentes "Sources"
         System.out.println("Populate end...");
 
     }
+
+
+    public Album getAlbum(){
+        RequestFather request = new RequestFather();
+        Album album = null;
+        request.setToken(Constants.TOKEN);
+        System.out.println("Start Connection_ with GET DISEASE ALBUM API REST...");
+        System.out.println("Get Album Information... please wait, this process can take from minutes... ");
+        ResponseLA response = diseaseAlbumResource.getDiseaseAlbum(request);
+        System.out.println("Authorization: "+ response.isAuthorization());
+        System.out.println("End Connection_ with GET DISEASE ALBUM API REST...");
+        if (response.isAuthorization())
+            album = response.getAlbum();
+        return album;
+    }
+
+
+    public List<XmlLink> getDiseaseLinkListFromDBPedia(Date version){
+        List<XmlLink> xmlLinkList = null;
+
+        Album album = getAlbum();
+        if (album != null) {
+            xmlLinkList = new ArrayList<>();
+            System.out.println("Start Connection_ with GET DISEASE ALBUM API REST...");
+            System.out.println("Get diseases... please wait, this process can take from minutes... ");
+            RequestGDLL request = new RequestGDLL();
+            request.setSource(Constants.SOURCE_WIKIPEDIA);
+            request.setAlbum(album.getAlbumId());
+            request.setVersion(new SimpleDateFormat("yyyy-MM-dd").format(album.getDate()));
+            request.setToken(Constants.TOKEN);
+            System.out.println("request: " + request);
+            ResponseGDLL response = diseaseAlbumResource.getDiseaseLinkList(request);
+            System.out.println("Authorization: " + response.isAuthorization());
+            System.out.println("End Connection_ with GET DISEASE ALBUM API REST...");
+            if (response.isAuthorization()) {
+                int count = 1;
+                for (edu.upm.midas.data.extraction.album.model.response.Disease disease : response.getDiseases()) {
+                    XmlLink xmlLink = new XmlLink();
+                    xmlLink.setId(count);
+                    xmlLink.setConsult("y");
+                    xmlLink.setUrl(common.replaceUnicodeToSpecialCharacters(disease.getUrl()));
+                    xmlLinkList.add(xmlLink);
+                    count++;
+                }
+                //Validar que el source tenga información
+                ConfigurationDiseaseAlbum conf = new ConfigurationDiseaseAlbum();
+                conf.setAlbumId(album.getAlbumId());
+                conf.setVersion( date.dateFormatyyyMMdd(album.getDate()) );
+                conf.setNumberDiseases(album.getNumberDiseases());
+                conf.setSource(Constants.SOURCE_WIKIPEDIA_CODE);
+                conf.setServiceCode(constants.SERVICE_DIALIST_CODE);
+                List<String> requestList = new ArrayList<String>(){{
+                    add(constants.SERVICE_DIALIST_PATH_LAST);
+                    add(constants.SERVICE_DIALIST_PATH_GET);
+                }};
+                conf.setRequests(requestList);
+                //Insertar la configuración por la que se esta creando la lista
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                String configurationJson = gson.toJson(conf);
+                confHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_DIALIST_CODE + " - " + constants.SERVICE_DIALIST_NAME, configurationJson);
+            }
+        }
+        return xmlLinkList;
+    }
+
+
 
 }

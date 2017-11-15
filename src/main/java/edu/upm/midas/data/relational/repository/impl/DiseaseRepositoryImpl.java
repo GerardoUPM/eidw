@@ -3,7 +3,7 @@ package edu.upm.midas.data.relational.repository.impl;
 import edu.upm.midas.data.relational.entities.edsssdb.Disease;
 import edu.upm.midas.data.relational.repository.AbstractDao;
 import edu.upm.midas.data.relational.repository.DiseaseRepository;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -41,10 +41,10 @@ public class DiseaseRepositoryImpl extends AbstractDao<String, Disease>
     }
 
     @SuppressWarnings("unchecked")
-    public Disease findByNameQuery(String diseaseName) {
-        Disease disease = null;
-        List<Disease> diseaseList = (List<Disease>) getEntityManager()
-                .createNamedQuery("Disease.findByNameNativeResultClass")
+    public Object[] findByNameNative(String diseaseName) {
+        Object[] disease = null;
+        List<Object[]> diseaseList = (List<Object[]>) getEntityManager()
+                .createNamedQuery("Disease.findByNameNative")
                 .setParameter("name", diseaseName)
                 .setMaxResults(1)
                 .getResultList();
@@ -76,6 +76,14 @@ public class DiseaseRepositoryImpl extends AbstractDao<String, Disease>
         if (CollectionUtils.isNotEmpty(diseaseList))
             disease = diseaseList.get(0);
         return disease;
+    }
+
+    @Override
+    public Object[] findLastIdNative() {
+        return  (Object[]) getEntityManager()
+                .createNamedQuery("Disease.findLastIdNative")
+                .setMaxResults(1)
+                .getSingleResult();
     }
 
     @SuppressWarnings("unchecked")

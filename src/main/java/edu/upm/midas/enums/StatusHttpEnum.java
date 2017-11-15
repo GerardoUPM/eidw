@@ -13,21 +13,21 @@ import org.apache.commons.lang.StringUtils;
  */
 public enum StatusHttpEnum {
 
-    OK("200", "OK"),
-    MULTIPLE_CHICES("300", "Multiple Choices"),
-    MOVED_PERMANENTLY("301", "Moved Permanently"),
-    USE_PROXY("305", "Use Proxy"),
-    BAD_REQUEST("400", "Bad Request"),
-    FORBIDDEN("403", "Forbidden"),
-    NOT_FOUND("404", "Not Found"),
-    INTERNAL_SERVER_ERROR("500", "Internal Server Error"),
-    BAD_GATEWAY("502", "Bad Gateway"),
-    SERV_UNAVAILABLE("503", "Service Unavailable");
+    OK(200, "OK"),
+    MULTIPLE_CHICES(300, "Multiple Choices"),
+    MOVED_PERMANENTLY(301, "Moved Permanently"),
+    USE_PROXY(305, "Use Proxy"),
+    BAD_REQUEST(400, "Bad Request"),
+    FORBIDDEN(403, "Forbidden"),
+    NOT_FOUND(404, "Not Found"),
+    INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
+    BAD_GATEWAY(502, "Bad Gateway"),
+    SERV_UNAVAILABLE(503, "Service Unavailable");
 
-    private String clave;
+    private int clave;
     private String descripcion;
 
-    private StatusHttpEnum(String clave, String descripcion) {
+    private StatusHttpEnum(int clave, String descripcion) {
         this.clave = clave;
         this.descripcion = descripcion;
     }
@@ -42,11 +42,11 @@ public enum StatusHttpEnum {
         return null;
     }
 
-    public String getClave() {
+    public int getClave() {
         return clave;
     }
 
-    public void setClave(String clave) {
+    public void setClave(int clave) {
         this.clave = clave;
     }
 

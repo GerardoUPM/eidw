@@ -3,7 +3,7 @@ import edu.upm.midas.data.relational.entities.edsssdb.HasText;
 import edu.upm.midas.data.relational.entities.edsssdb.HasTextPK;
 import edu.upm.midas.data.relational.repository.AbstractDao;
 import edu.upm.midas.data.relational.repository.HasTextRepository;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;

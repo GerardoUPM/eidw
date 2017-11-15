@@ -23,8 +23,8 @@ public class UtilDate {
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public Date getSqlDate(){
-        return new Date(117, 9, 15);
-        //return new Date(new java.util.Date().getTime());
+        //return new Date(117, 10, 2);
+        return new Date(new java.util.Date().getTime());
     }
 
     public long getTimestampNumber(){
@@ -33,6 +33,10 @@ public class UtilDate {
 
     public String getTime(){
         return String.format(new java.util.Date().toString(), dtf);
+    }
+
+    public String dateFormatyyyMMdd(java.util.Date date){
+        return new SimpleDateFormat("yyyy-MM-dd").format(date);
     }
 
 }

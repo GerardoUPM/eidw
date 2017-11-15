@@ -1,7 +1,6 @@
 package edu.upm.midas.data.extraction.service;
 
-import edu.upm.midas.constants.Constants;
-import edu.upm.midas.data.extraction.model.Connect;
+import edu.upm.midas.data.extraction.model.Connection_;
 import edu.upm.midas.enums.StatusHttpEnum;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -21,7 +20,6 @@ import java.io.IOException;
 @Component
 public class ConnectDocument {
 
-    private Connect oConnect = new Connect();
     /**
      * Con esta método compruebo el Status code de la respuesta que recibo al hacer la petición
      * EJM:
@@ -33,20 +31,24 @@ public class ConnectDocument {
      * @paramFromObject getLink()
      * @return Status Code
      *//*REGRESAR UN OBJETO CONNECTOBJECTRESPONSE*/
-    public Connect connect(String link) throws Exception {
+    public Connection_ connect(String link) throws Exception {
         //Response oResponse; ya no se usa
-        oConnect.setLink( link );
-        oConnect.setsStatusEnum( StatusHttpEnum.NOT_FOUND );
+        Connection_ connection_ = new Connection_();
+        connection_.setLink( link );
 
         try {
-            Connection connection = Jsoup.connect(Constants.HTTP_HEADER + oConnect.getLink() );//oResponse = connection.execute();
-            oConnect.setStatus( connection.execute().statusMessage() );
-            oConnect.setoDoc( getHtmlDocument(connection) );
-        } catch (IOException ex) {
-            System.out.println("Exception to obtain el Status Code: " + ex.getMessage() + " " +ex.getCause() + " " + Constants.HTTP_HEADER + oConnect.getLink());
+            Connection connection = Jsoup.connect( connection_.getLink().replace("http", "https") ).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0").referrer("http://www.google.com").timeout(20*1000);//oResponse = connection.execute(); || Jsoup.connect(Constants.HTTP_HEADER + connection_.getLink()
+            connection_.setoDoc( connection.get()/*getHtmlDocument(connection)*/ );
+            connection_.setStatus( connection.execute().statusMessage() );
+            connection_.setStatusCode( connection.execute().statusCode() );
+        } catch (Exception e) {
+            System.out.println("Exception to connect with the page: (" + connection_.getLink() + ") " + e.getMessage() + " " +e.getStackTrace());
+            connection_.setStatus( StatusHttpEnum.NOT_FOUND.getDescripcion() );
+            connection_.setStatusCode( StatusHttpEnum.NOT_FOUND.getClave() );
+            connection_.setoDoc(null);
         }
 
-        return oConnect;
+        return connection_;
     }
 
     /**
@@ -61,7 +63,9 @@ public class ConnectDocument {
         try {
             oDoc = connection.get();
         } catch (IOException ex) {
+/*
             System.out.println("Exception to obtain HTML document (" + oConnect.getLink() + ")" + ex.getMessage());
+*/
         }
 
         return oDoc;

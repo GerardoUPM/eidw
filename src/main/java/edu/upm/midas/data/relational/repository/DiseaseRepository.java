@@ -20,11 +20,13 @@ public interface DiseaseRepository {
 
     Disease findByIdQuery(String diseaseId);
 
-    Disease findByNameQuery(String diseaseName);
+    Object[] findByNameNative(String diseaseName);
 
     Disease findByCuiQuery(String cui);
 
     Disease findLastDiseaseQuery();
+
+    Object[] findLastIdNative();
 
     Disease findByIdNativeMapping(String diseaseId);
 

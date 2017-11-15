@@ -48,20 +48,21 @@ public class DiseaseHelperNative {
      * @throws JsonProcessingException
      */
     public String insertIfExist(Doc document, String documentId, Date version) throws JsonProcessingException {
-        String diseaseId = uniqueId.generateDisease( document.getDisease().getId() );
         String diseaseName = document.getDisease().getName();
         String url = document.getUrl().getUrl();
 
-        Disease diseaseEntity = diseaseService.findById( diseaseId );
+        Disease diseaseEntity = diseaseService.findByName( diseaseName );
         System.out.println(diseaseName+ "DIS: "+ diseaseEntity);
         if ( diseaseEntity == null ){
+            String diseaseId = getDiseaseId();
             diseaseService.insertNative( diseaseId, diseaseName, "" );
             diseaseService.insertNativeHasDisease( documentId, version, diseaseId );
+            return diseaseId;
         }else{
             System.out.println("HasDisease: "+ documentId + " | " + version + " | " + diseaseEntity.getDiseaseId() );
             diseaseService.insertNativeHasDisease( documentId, version, diseaseEntity.getDiseaseId() );
+            return diseaseEntity.getDiseaseId();
         }
-        return diseaseId;
     }
 
 
@@ -75,6 +76,17 @@ public class DiseaseHelperNative {
             return true;
         else
             return false;
+    }
+
+
+    public String getDiseaseId(){
+        String lastId = diseaseService.findLastIdNative();
+        if (!common.isEmpty(lastId)){
+            int last = Integer.parseInt( common.cutStringPerformance(3, 0, lastId ) );
+            return uniqueId.generateDisease( last + 1 );
+        }else{
+            return uniqueId.generateDisease(1);
+        }
     }
 
 
