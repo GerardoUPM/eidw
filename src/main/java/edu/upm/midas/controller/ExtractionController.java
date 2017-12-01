@@ -46,9 +46,13 @@ public class ExtractionController {
         Date version = utilDate.getSqlDate();
         List<XmlLink> externalDiseaseLinkList = populateDbNative.getDiseaseLinkListFromDBPedia(version);
 
-        populateDbNative.populateResource(externalDiseaseLinkList);
-        populateDbNative.populateSemanticTypes();
-        populateDbNative.populate(externalDiseaseLinkList, version);
+        if (externalDiseaseLinkList!=null) {
+            populateDbNative.populateResource(externalDiseaseLinkList);
+            populateDbNative.populateSemanticTypes();
+            populateDbNative.populate(externalDiseaseLinkList, version);
+        }else{
+            System.out.println("ERROR disease album");
+        }
         System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
 
 /*

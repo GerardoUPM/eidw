@@ -2,15 +2,19 @@ package edu.upm.midas.data.validation.tvp.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.upm.midas.data.relational.service.ConfigurationService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import edu.upm.midas.constants.Constants;
 import edu.upm.midas.data.relational.service.HasSymptomService;
 import edu.upm.midas.data.relational.service.SourceService;
+import edu.upm.midas.data.relational.service.helperNative.ConfigurationHelper;
 import edu.upm.midas.data.validation.helper.ConsultHelper;
 import edu.upm.midas.data.validation.model.Consult;
 import edu.upm.midas.data.validation.model.query.ResponseSymptom;
+import edu.upm.midas.data.validation.tvp.model.TvpConfiguration;
+import edu.upm.midas.data.validation.tvp.model.request.Request;
 import edu.upm.midas.data.validation.tvp.model.response.Concept;
 import edu.upm.midas.data.validation.tvp.model.response.MatchNLP;
-import edu.upm.midas.data.validation.tvp.model.request.Request;
 import edu.upm.midas.data.validation.tvp.model.response.Response;
 import edu.upm.midas.data.validation.tvp.tvpApiResponse.impl.TvpResourceServiceImpl;
 import edu.upm.midas.utilsservice.UtilDate;
@@ -47,7 +51,9 @@ public class TvpService {
     @Autowired
     private TvpResourceServiceImpl tvpResource;
     @Autowired
-    private ConfigurationService confService;
+    private ConfigurationHelper configurationHelper;
+    @Autowired
+    private Constants constants;
     @Autowired
     private UtilDate utilDate;
 
@@ -59,19 +65,22 @@ public class TvpService {
      */
     @Transactional
     public void validation(Consult consult) throws Exception {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        TvpConfiguration tvpConfiguration = new TvpConfiguration();
         //Colocar una validación para Consult...
         String sourceId = sourceService.findByNameNative( consult.getSource() );
         System.out.println( "Source: " + sourceId);
         System.out.println( "Read symptoms to the DB..." );
-        List<ResponseSymptom> responseSymptoms = consultHelper.findSymptomssByVersionAndSource( consult );
-        System.out.println( "Symptoms found: " + responseSymptoms.size() );
+        List<ResponseSymptom> responseSymptoms = consultHelper.findSymptomsByVersionAndSource( consult );
+        tvpConfiguration.setNumSymptomsFound(responseSymptoms.size());
+        System.out.println( "Symptoms found: " + tvpConfiguration.getNumSymptomsFound() );
         System.out.println( "Removing repeated symptoms..." );
         List<Concept> nonRepetedSymptoms = getConceptList(responseSymptoms );
         System.out.println( "NonRepetedSymptoms: " + nonRepetedSymptoms.size() );
         System.out.println( "Creating request..." );
         Request request = new Request();
         request.setConcepts( nonRepetedSymptoms );
-        request.setToken( "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJncmFyZG9sYWdhckBob3RtYWlsLmNvbSIsImF1ZCI6IndlYiIsIm5hbWUiOiJHZXJhcmRvIExhZ3VuZXMiLCJ1c2VyIjp0cnVlLCJpYXQiOjE1MDY0MzIwNjQsInNlY3JldF9jbGFpbSI6IlBlcnRlciBQYXJrZXIifQ.mC-hTx9a6vRX8-2QlP1W4vjnBiVk2D9ySnhasz7az12gZ_wx7u4gw20V1VC41zYydGBbX_A7MVJ0uGmzWwIRWQ" );
+        request.setToken( "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJncmFyZG9sYWdhckBob3RtYWlsLmNvbSIsImF1ZCI6IndlYiIsIm5hbWUiOiJHZXJhcmRvIExhZ3VuZXMiLCJ1c2VyIjp0cnVlLCJpYXQiOjE1MDk2MTQyNjh9.uVhDgfLrAgdnj02Hsbgfj9tkVlfni89i0hKVYW31eHApCHpheikK9ae1MhbzRhiyUcFGMKwtiyVgff5NCMY3PA" );
         //printConcepstJSON( nonRepetedSymptoms );
         System.out.println( "Connection_ with TVP API..." );
         System.out.println( "Validating symptoms... please wait, this process can take from minutes to hours... " );
@@ -80,23 +89,24 @@ public class TvpService {
 
 
         if (response.isAuthorization()) {
-            int countText = 1;
+            int validatedSymptoms = 0;
         /* Actualizar entidad HasSymptom con CUI y textId */
             for (ResponseSymptom symptom : responseSymptoms) {
                 MatchNLP matchNLP = exist(symptom.getCui(), response.getValidatedConcepts());//antes matchNLPList
                 if (matchNLP.hasMatches()) {
                     System.out.println("Symptom validated! | " + symptom.getCui() + "==" + matchNLP.getConcept().toString());
                     hasSymptomService.updateValidatedNative(consult.getVersion(), sourceId, symptom.getCui(), true);
+                    validatedSymptoms++;
                     System.out.println("Insert symptom in DB ready!");
                 } else {
                     System.out.println("Symptom not found:" + symptom.getCui());
                 }
             }
-
-            System.out.println("Insert configuration...");
-            String configurationId = consult.getSource() + ":" + consult.getVersion() + "_" + utilDate.getTimestampNumber();
-            confService.insertNative(configurationId, sourceId, consult.getDate(), "tvp", "");
-            System.out.println("Insert configuration ready!...");
+            System.out.println("Start insert configuration...");
+            tvpConfiguration.setNumSymptomsFoundValidated(validatedSymptoms);
+            String configurationJson = gson.toJson(tvpConfiguration);
+            configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, consult.getDate(), constants.SERVICE_TVP_CODE + " - " + constants.SERVICE_TVP_NAME, configurationJson);
+            System.out.println("End insert configuration ready!...");
         }else{
             System.out.println("Authorization message: " + response.getAuthorizationMessage() + " | token: " + response.getToken());
         }

@@ -34,7 +34,7 @@ public class Constants {
     @Value("${my.service.metamap.name}")
     public String SERVICE_METAMAP_NAME;
     @Value("${my.service.metamap.code}")
-    public String SERVICE_METMAP_CODE;
+    public String SERVICE_METAMAP_CODE;
     @Value("${my.service.tvp.name}")
     public String SERVICE_TVP_NAME;
     @Value("${my.service.tvp.code}")

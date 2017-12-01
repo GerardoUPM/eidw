@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @see
  */
 @FeignClient(name = "tvp-client",
-        url = "http://localhost:8087/tvp/api",
+        url = "http://localhost:11062/api",
         fallback = TvpClientFallback.class,
         configuration = FeignConfiguration.class)
 public interface CustomizeTvpClient {
 
-    @RequestMapping(value = "/concepts-validated", method = RequestMethod.POST)
+    @RequestMapping(value = "/tvp", method = RequestMethod.POST)
     //@Headers("token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJncmFyZG9sYWdhckBob3RtYWlsLmNvbSIsImF1ZCI6IndlYiIsIm5hbWUiOiJHZXJhcmRvIExhZ3VuZXMiLCJ1c2VyIjp0cnVlLCJpYXQiOjE1MDY0MzIwNjQsInNlY3JldF9jbGFpbSI6IlBlcnRlciBQYXJrZXIifQ.mC-hTx9a6vRX8-2QlP1W4vjnBiVk2D9ySnhasz7az12gZ_wx7u4gw20V1VC41zYydGBbX_A7MVJ0uGmzWwIRWQ")
     Response getValidateSymptoms(@RequestBody Request request);
 

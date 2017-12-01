@@ -68,11 +68,10 @@ public class ConsultHelper {
      * @param consult
      * @return
      */
-    public List<ResponseSymptom> findSymptomssByVersionAndSource(Consult consult){
+    public List<ResponseSymptom> findSymptomsByVersionAndSource(Consult consult){
         List<ResponseSymptom> responseSymptomList = new ArrayList<>();
         List<Object[]> symptoms = symptomService.findBySourceAndVersionNative(consult.getDate(), consult.getSource());
-        for (Object[] symptom:
-                symptoms) {
+        for (Object[] symptom: symptoms) {
             ResponseSymptom responseSymptom = new ResponseSymptom();
             responseSymptom.setSourceId((String) symptom[0]);
             responseSymptom.setSourceName((String) symptom[1]);
