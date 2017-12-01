@@ -3,8 +3,8 @@ package edu.upm.midas.data.validation.metamap.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.upm.midas.constants.Constants;
-import edu.upm.midas.data.relational.service.ConfigurationService;
 import edu.upm.midas.data.relational.service.DiseaseService;
+import edu.upm.midas.data.relational.service.helperNative.ConfigurationHelper;
 import edu.upm.midas.data.relational.service.helperNative.SymptomHelperNative;
 import edu.upm.midas.data.validation.helper.ConsultHelper;
 import edu.upm.midas.data.validation.metamap.Metamap;
@@ -12,11 +12,14 @@ import edu.upm.midas.data.validation.metamap.metamapApiResponse.impl.MetamapReso
 import edu.upm.midas.data.validation.metamap.model.receiver.Configuration;
 import edu.upm.midas.data.validation.metamap.model.receiver.Request;
 import edu.upm.midas.data.validation.metamap.model.receiver.Text;
+import edu.upm.midas.data.validation.metamap.model.response.Concept;
 import edu.upm.midas.data.validation.metamap.model.response.Response;
 import edu.upm.midas.data.validation.model.Consult;
 import edu.upm.midas.data.validation.model.query.ResponseText;
 import edu.upm.midas.utilsservice.ReplaceUTF8;
+import edu.upm.midas.utilsservice.UniqueId;
 import edu.upm.midas.utilsservice.UtilDate;
+import gov.nih.nlm.nls.metamap.Ev;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +49,7 @@ public class MetamapService {
     @Autowired
     private DiseaseService diseaseService;
     @Autowired
-    private ConfigurationService confService;
+    private ConfigurationHelper configurationHelper;
 
     @Autowired
     private Metamap metamap;
@@ -54,6 +57,10 @@ public class MetamapService {
     private ReplaceUTF8 replaceUTF8;
     @Autowired
     private UtilDate utilDate;
+    @Autowired
+    private UniqueId uniqueId;
+    @Autowired
+    private Constants constants;
 
 
 
@@ -63,61 +70,60 @@ public class MetamapService {
      * @return
      * @throws Exception
      */
-//    @Transactional
-//    public void filter(Consult consult) throws Exception {
-//        Request request = new Request();//VALIDAR CONSULT
-//        Configuration conf = new Configuration();
-//        List<Text> texts = new ArrayList<>();
-//        String sourceId = "";
-//        Date version = null;
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//
-//        conf.setOptions("-y -R");
-//        List<String> sources = new ArrayList<>();
-//        sources.add("SNOMEDCT_US");
-//        conf.setSources(sources);
-//        conf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
-//
-//        request.setConfiguration( conf );
-//
-//        System.out.println("Get all texts by version and source...");
-//        List<ResponseText> responseTexts = consultHelper.findTextsByVersionAndSource( consult );
-//        System.out.println("size: " + responseTexts.size());
-//        if (responseTexts != null) {
-//            int countRT = 1;
-//            for (ResponseText responseText : responseTexts) {
-//                if (countRT == 1){
-//                    sourceId = responseText.getSourceId();
-//                    version = responseText.getVersion();
-//                }
-//                System.out.println("("+countRT+") Filter text: " + responseText.getTextId());
-//                String textNonAscii = replaceUTF8.replaceLooklike( responseText.getText() );
-//
-//                if (!textNonAscii.isEmpty()){
-//                    for (Ev conceptEv : metamap.performNLP( textNonAscii ) ) {
-//
-//                        Concept concept = new Concept();
-//                        concept.setCui( conceptEv.getConceptId() );
-//                        concept.setName( conceptEv.getConceptName() );
-//                        concept.setSemanticTypes( conceptEv.getSemanticTypes() );
-//
-//                        System.out.println( "   Insert symptom..." + concept.toString() );
-//                        symptomHelperNative.insertIfExist(concept, responseText.getTextId());
-//                    }// busqueda de conceptos con metamap
-//                }// validación del texto no vacío
-//                countRT++;
-//            }
-//        }
-//
-//        if (!sourceId.isEmpty() && !version.toString().isEmpty()) {
-//            System.out.println("Insert configuration...");
-//            String configurationJson = gson.toJson(request.getConfiguration());
-//            String configurationId = consult.getSource() + ":" + consult.getVersion() + "_" + utilDate.getTimestampNumber();
-//            confService.insertNative(configurationId, sourceId, version, "metamap", configurationJson);
-//            System.out.println("Insert configuration ready!...");
-//        }
-//
-//    }
+    @Transactional
+    public void localFilter(Consult consult) throws Exception {
+        Request request = new Request();//VALIDAR CONSULT
+        Configuration conf = new Configuration();
+        List<Text> texts = new ArrayList<>();
+        String sourceId = "";
+        Date version = null;
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        conf.setOptions("-y -R");
+        List<String> sources = new ArrayList<>();
+        sources.add("SNOMEDCT_US");
+        conf.setSources(sources);
+        conf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
+
+        request.setConfiguration( conf );
+
+        System.out.println("Get all texts by version and source...");
+        List<ResponseText> responseTexts = consultHelper.findTextsByVersionAndSource( consult );
+        System.out.println("size: " + responseTexts.size());
+        if (responseTexts != null) {
+            int countRT = 1;
+            for (ResponseText responseText : responseTexts) {
+                if (countRT == 1){
+                    sourceId = responseText.getSourceId();
+                    version = responseText.getVersion();
+                }
+                System.out.println("("+countRT+") Filter text: " + responseText.getTextId());
+                String textNonAscii = replaceUTF8.replaceLooklike( responseText.getText() );
+
+                if (!textNonAscii.isEmpty()){
+                    for (Ev conceptEv : metamap.performNLP( textNonAscii ) ) {
+
+                        Concept concept = new Concept();
+                        concept.setCui( conceptEv.getConceptId() );
+                        concept.setName( conceptEv.getConceptName() );
+                        concept.setSemanticTypes( conceptEv.getSemanticTypes() );
+
+                        System.out.println( "   Insert symptom..." + concept.toString() );
+                        symptomHelperNative.insertIfExist(concept, responseText.getTextId());
+                    }// busqueda de conceptos con metamap
+                }// validación del texto no vacío
+                countRT++;
+            }
+        }
+
+        if (!sourceId.isEmpty() && !version.toString().isEmpty()) {
+            System.out.println("Insert configuration...");
+            String configurationJson = gson.toJson(request.getConfiguration());
+            configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
+            System.out.println("Insert configuration ready!...");
+        }
+
+    }
 
 
 
@@ -216,8 +222,7 @@ public class MetamapService {
 
                 System.out.println("Insert configuration...");
                 String configurationJson = gson.toJson(request.getConfiguration());
-                String configurationId = consult.getSource() + ":" + consult.getVersion() + "_" + utilDate.getTimestampNumber();
-                confService.insertNative(configurationId, sourceId, version, "metamap", configurationJson);
+                configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
                 System.out.println("Insert configuration ready!...");
             }else{
                 System.out.println("Authorization message: " + response.getAuthorizationMessage() + " | token: " + response.getToken());
