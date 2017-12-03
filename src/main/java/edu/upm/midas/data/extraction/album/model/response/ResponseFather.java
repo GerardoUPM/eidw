@@ -11,7 +11,7 @@ package edu.upm.midas.data.extraction.album.model.response;
 public class ResponseFather {
 
     private String token;
-    private boolean authorization;
+    private boolean authorized;
     private String authorizationMessage;
 
 
@@ -23,12 +23,12 @@ public class ResponseFather {
         this.token = token;
     }
 
-    public boolean isAuthorization() {
-        return authorization;
+    public boolean isAuthorized() {
+        return authorized;
     }
 
-    public void setAuthorization(boolean authorization) {
-        this.authorization = authorization;
+    public void setAuthorized(boolean authorized) {
+        this.authorized = authorized;
     }
 
     public String getAuthorizationMessage() {

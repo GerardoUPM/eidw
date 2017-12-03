@@ -218,10 +218,10 @@ public class PopulateDbNative {
         request.setToken(Constants.TOKEN);
         System.out.println("Start Connection_ with GET DISEASE ALBUM API REST...");
         System.out.println("Get Album Information... please wait, this process can take from minutes... ");
-        ResponseLA response = diseaseAlbumResource.getDiseaseAlbum(request);
-        System.out.println("Authorization: "+ response.isAuthorization());
+        ResponseLA response = diseaseAlbumResource.getDiseaseAlbum(request);System.out.println(response.getAlbum().getAlbumId());
+        System.out.println("Authorization: "+ response.isAuthorized());
         System.out.println("End Connection_ with GET DISEASE ALBUM API REST...");
-        if (response.isAuthorization())
+        if (response.isAuthorized())
             album = response.getAlbum();
         return album;
     }
@@ -242,9 +242,9 @@ public class PopulateDbNative {
             request.setToken(Constants.TOKEN);
             System.out.println("request: " + request);
             ResponseGDLL response = diseaseAlbumResource.getDiseaseLinkList(request);
-            System.out.println("Authorization: " + response.isAuthorization());
+            System.out.println("Authorization: " + response.isAuthorized());
             System.out.println("End Connection_ with GET DISEASE ALBUM API REST...");
-            if (response.isAuthorization()) {
+            if (response.isAuthorized()) {
                 int count = 1;
                 for (edu.upm.midas.data.extraction.album.model.response.Disease disease : response.getDiseases()) {
                     XmlLink xmlLink = new XmlLink();
