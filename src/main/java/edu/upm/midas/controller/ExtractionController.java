@@ -94,4 +94,11 @@ public class ExtractionController {
     }
 
 
+    @RequestMapping(path = { "/wikipedia/codes" }, //wikipedia extraction
+            method = RequestMethod.GET)
+    public void checkCodes() throws Exception {
+        extractionWikipedia.extractResource(null);
+    }
+
+
 }

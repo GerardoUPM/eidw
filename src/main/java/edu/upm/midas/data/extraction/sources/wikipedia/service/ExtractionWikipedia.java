@@ -469,10 +469,9 @@ public class ExtractionWikipedia {
                                 boolean hasDivPlainList = ( divPlainListElements.size()>0) ;
 
                                 // Se obtienen los elementos <div>??? que tengan class: hlist
-                                String findHorizontalList = getHighlightXmlByDescription(Constants.XML_HL_HORIZONTAL_LIST + "", xmlSource).getClass_();
-                                Elements hListElements = tdElements.select(Constants.QUERY_DIV_CLASS + findHorizontalList + Constants.RIGHT_PARENTHESIS);
+                                //<<CAMBIO>> Se ha cambiado la clase hlist a hlist hlist-separated
                                 // Se verifica (boolean) que en la fila se encuentre un class: hlist
-                                boolean hasHorizontalList = ( hListElements.size()>0 );
+                                boolean hasHorizontalList = existHorizontalInfobox(xmlSource, tdElements);
 
                                 // Verificar si la fila con <th></th> sin <td></td> es una de las secciones válidas
                                 String findTextAlignCenter = getHighlightXmlByDescription(Constants.XML_HL_TEXT_ALIGN_CENTER + "", xmlSource).getId();
@@ -551,14 +550,13 @@ public class ExtractionWikipedia {
                                         }
                                     }//</editor-fold>
                                 }//</editor-fold>
-
+                                System.out.println("    QUE PASA " );
 
                                 //<editor-fold desc="PROCESO PARA EL INFOBOX EN EL PIE DEL DOCUMENTO">
                             /* Dentro de una fila <tr> se recorren los elementos <td> */
-                                if(hasHorizontalList) {
+                                if(hasHorizontalList) {System.out.println("    ENTRA " );
                                     Resource resourceFather = new Resource();
-                                    for (Element tdElement :
-                                            tdElements) {
+                                    for (Element tdElement : tdElements) {
                                     /* Dentro de un <td> se seleccionan todos los elementos <li> */
                                         Elements liElements = tdElement.select(Constants.HTML_LI);
                                         for (int i = 0; i < liElements.size(); i++) {
@@ -575,7 +573,7 @@ public class ExtractionWikipedia {
                                                  *  un enlace de cualquier tipo * no es lo mejor) */
                                                 if (aElements.size() > 0) {
 
-                                                    //                                                System.out.println("    Resource(HTML_B): " + b.text());
+                                                    System.out.println("    Resource(HTML_B): " + b.text());
                                         /* Se obtienen los enlaces de un "resource"*/
                                                     Elements links = b.getElementsByTag(Constants.HTML_A + "");
                                                     for (Element link :
@@ -653,6 +651,19 @@ public class ExtractionWikipedia {
     }
 
 
+    public boolean existHorizontalInfobox(XmlSource xmlSource, Elements tdElements){
+        //<<CAMBIO>> Se ha modificado el nombre del class "hlist" a "hlist hlist-separated"
+        String findHorizontalList = getHighlightXmlByDescription(Constants.XML_HL_HORIZONTAL_LIST + "", xmlSource).getClass_();
+        Elements hListElements = tdElements.select(Constants.QUERY_DIV_CLASS + findHorizontalList + Constants.RIGHT_PARENTHESIS);
+        String findHorizontalList_v1 = getHighlightXmlByDescription(Constants.XML_HL_HORIZONTAL_LIST + "_v1", xmlSource).getClass_();
+        Elements hListElements_v1 = tdElements.select(Constants.QUERY_DIV_CLASS + findHorizontalList_v1 + Constants.RIGHT_PARENTHESIS);
+        // Se verifica (boolean) que en la fila se encuentre un class: hlist
+        boolean hasHorizontalList = ( hListElements.size()>0 || hListElements_v1.size()>0);//System.out.println("QUE ES: "+hListElements.size() + "QUE ES: "+hListElements_v1.size());
+        return hasHorizontalList;
+
+    }
+
+
     /**
      * Método que extrae los códigos y sus fuentes de un documento
      *
@@ -713,11 +724,9 @@ public class ExtractionWikipedia {
                 boolean hasPlainList = ( plainListElements.size()>0) ;
                 boolean hasDivPlainList = ( divPlainListElements.size()>0) ;
 
-                // Se obtienen los elementos <div>??? que tengan class: hlist
-                String findHorizontalList = getHighlightXmlByDescription(Constants.XML_HL_HORIZONTAL_LIST + "", xmlSource).getClass_();
-                Elements hListElements = tdElements.select(Constants.QUERY_DIV_CLASS + findHorizontalList + Constants.RIGHT_PARENTHESIS);
-                // Se verifica (boolean) que en la fila se encuentre un class: hlist
-                boolean hasHorizontalList = ( hListElements.size()>0 );
+                // Se obtienen los elementos <div>??? que tengan class: "hlist"
+                //<<CAMBIO>> Se ha modificado el nombre del class "hlist" a "hlist hlist-separated"
+                boolean hasHorizontalList = existHorizontalInfobox(xmlSource, tdElements);
 
                 // Verificar si la fila con <th></th> sin <td></td> es una de las secciones válidas
                 String findTextAlignCenter = getHighlightXmlByDescription(Constants.XML_HL_TEXT_ALIGN_CENTER + "", xmlSource).getId();

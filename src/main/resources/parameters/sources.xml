@@ -20,10 +20,14 @@
             <tag consult="y" id="external text" class="external text" type="a" desc="externalresoruce" />
             <tag consult="y" id="plainlist" class="plainlist" type="td" desc="plainlist" />
             <tag consult="y" id="hlist" class="hlist" type="div" desc="horizontallist" />
+            <tag consult="y" id="hlist" class="hlist hlist-separated" type="div" desc="horizontallist_v1" />
             <tag consult="y" id="text-align:center" class="style" type="css" desc="textaligncenter" />
         </highlights>
         <links consult="y">
-
+            <link consult="y" id="2297">en.wikipedia.org/wiki/Cancer</link>
+            <link consult="y" id="999">en.wikipedia.org/wiki/Kawasaki_disease</link>
+            <link consult="y" id="4439">en.wikipedia.org/wiki/Rosacea</link>
+            <link consult="y" id="17">en.wikipedia.org/wiki/Testicular_cancer</link>
             <!--<link consult="y" id="2873">en.wikipedia.org/wiki/Androgen_insensitivity_syndrome</link>
             <link consult="y" id="4439">en.wikipedia.org/wiki/Rosacea</link>
             <link consult="y" id="5386">en.wikipedia.org/wiki/Cyclosporiasis</link>
@@ -51,7 +55,8 @@
             <link consult="y" id="1">en.wikipedia.org/wiki/Acid–base_imbalance</link>
             <link consult="y" id="1">en.wikipedia.org/wiki/Problem_gambling</link>
             <link consult="y" id="1">en.wikipedia.org/wiki/Cystic_fibrosis</link>-->
-            <link consult="y" id="1">en.wikipedia.org/wiki/Acute_myeloid_leukemia</link>
+
+            <!--<link consult="y" id="1">en.wikipedia.org/wiki/Acute_myeloid_leukemia</link>
             <link consult="y" id="2">en.wikipedia.org/wiki/Congenital_diaphragmatic_hernia</link>
             <link consult="y" id="3">en.wikipedia.org/wiki/Ebstein's_anomaly</link>
             <link consult="y" id="4">en.wikipedia.org/wiki/Familial_dysautonomia</link>
@@ -6990,7 +6995,7 @@
             <link consult="y" id="6932">en.wikipedia.org/wiki/Carpometacarpal_osteoarthritis</link>
             <link consult="y" id="6933">en.wikipedia.org/wiki/Adverse_reaction_to_biologic_agents</link>
             <link consult="y" id="6934">en.wikipedia.org/wiki/Hypoprolactinemia</link>
-            <link consult="y" id="6935">en.wikipedia.org/wiki/List_of_people_diagnosed_with_pancreatic_cancer</link><!---->
+            <link consult="y" id="6935">en.wikipedia.org/wiki/List_of_people_diagnosed_with_pancreatic_cancer</link>-->
         </links>
     </source>
 </sources>
