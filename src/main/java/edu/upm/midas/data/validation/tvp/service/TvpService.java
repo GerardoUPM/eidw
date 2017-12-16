@@ -85,10 +85,10 @@ public class TvpService {
         System.out.println( "Connection_ with TVP API..." );
         System.out.println( "Validating symptoms... please wait, this process can take from minutes to hours... " );
         Response response = tvpResource.getValidateSymptoms( request );
-        System.out.println("Authorization: "+ response.isAuthorization());
+        System.out.println("Authorization: "+ response.isAuthorized());
 
 
-        if (response.isAuthorization()) {
+        if (response.isAuthorized()) {
             int validatedSymptoms = 0;
         /* Actualizar entidad HasSymptom con CUI y textId */
             for (ResponseSymptom symptom : responseSymptoms) {

@@ -199,6 +199,10 @@ public class ExtractionWikipedia {
                         //<editor-fold desc="EXTRAER CÓDIGOS DE LOS INFOBOX">
                         List<Code> codes = removeRepetedCodes( getCodes(document, xmlSource) );
                         doc.setCodeList( codes );
+                        for (Code code:
+                             codes) {
+                            System.out.println(code.getCode() +" "+ code.getResource().getName());
+                        }
                         //</editor-fold>
 
                         // Crea lista de secciones
@@ -550,11 +554,11 @@ public class ExtractionWikipedia {
                                         }
                                     }//</editor-fold>
                                 }//</editor-fold>
-                                System.out.println("    QUE PASA " );
+                                //System.out.println("    QUE PASA " );
 
                                 //<editor-fold desc="PROCESO PARA EL INFOBOX EN EL PIE DEL DOCUMENTO">
                             /* Dentro de una fila <tr> se recorren los elementos <td> */
-                                if(hasHorizontalList) {System.out.println("    ENTRA " );
+                                if(hasHorizontalList) {//System.out.println("    ENTRA " );
                                     Resource resourceFather = new Resource();
                                     for (Element tdElement : tdElements) {
                                     /* Dentro de un <td> se seleccionan todos los elementos <li> */
@@ -573,7 +577,7 @@ public class ExtractionWikipedia {
                                                  *  un enlace de cualquier tipo * no es lo mejor) */
                                                 if (aElements.size() > 0) {
 
-                                                    System.out.println("    Resource(HTML_B): " + b.text());
+                                                    //System.out.println("    Resource(HTML_B): " + b.text());
                                         /* Se obtienen los enlaces de un "resource"*/
                                                     Elements links = b.getElementsByTag(Constants.HTML_A + "");
                                                     for (Element link :
