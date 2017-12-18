@@ -55,9 +55,9 @@ public class ResourceServiceImpl implements ResourceService {
         daoResource.persist(resource);
     }
 
-    @Override
-    public int insertNative(int resourceId, String name) {
-        return daoResource.insertNative( resourceId, name );
+    @Transactional(propagation= Propagation.REQUIRED)
+    public int insertNative(String name) {
+        return daoResource.insertNative( name );
     }
 
     @Transactional(propagation= Propagation.REQUIRED)

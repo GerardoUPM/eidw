@@ -57,8 +57,8 @@ import java.util.Objects;
 
         @NamedNativeQuery(
                 name = "Resource.insertNative",
-                query = "INSERT INTO resource (resource_id, name) "
-                        + "VALUES (:resourceId, :name)"
+                query = "INSERT INTO resource (name) "
+                        + "VALUES (:name)"
         )
 })
 

@@ -50,16 +50,23 @@ public class ResourceRepositoryImpl extends AbstractDao<Integer, Resource>
         return resource;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public int findIdByNameQuery(String resourceName) {
         //EntityManager em = getEntityManager();
         //em.flush();
         //em.close();
-        int resourceId = (int) getEntityManager()
+        System.out.println(resourceName);
+        int resourceId = 0;
+        List<Integer> resultList = (List<Integer>) getEntityManager()
                 .createNamedQuery("Resource.findIdByNameNative")
                 .setParameter("name", resourceName)
                 .setMaxResults(1)
-                .getSingleResult();
+                .getResultList();
+        if (CollectionUtils.isNotEmpty(resultList)) {
+            //System.out.println("no nulo" + resultList.toString());
+            resourceId = resultList.get(0);
+        }
         return resourceId;
     }
 
@@ -106,10 +113,10 @@ public class ResourceRepositoryImpl extends AbstractDao<Integer, Resource>
     }
 
     @Override
-    public int insertNative(int resourceId, String name) {
+    public int insertNative(String name) {
         return getEntityManager()
                 .createNamedQuery("Resource.insertNative")
-                .setParameter("resourceId", resourceId)
+                //.setParameter("resourceId", resourceId)
                 .setParameter("name", name)
                 .executeUpdate();
     }

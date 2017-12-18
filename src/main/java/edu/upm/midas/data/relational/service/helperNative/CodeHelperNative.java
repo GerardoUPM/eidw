@@ -59,13 +59,17 @@ public class CodeHelperNative {
 
             if ( codeEntity == null ){//validar el resourceId por si no existe
                 int resourceId = resourceService.findIdByNameQuery( code.getResource().getName() );
-
+                if (resourceId == 0){
+                    //Insertar resource
+                    resourceService.insertNative(code.getResource().getName());
+                    resourceId = resourceService.findIdByNameQuery( code.getResource().getName() );
+                }
                 codeService.insertNative( code.getCode(), resourceId );
                 codeService.insertNativeHasCode( documentId, version, code.getCode(), resourceId );
                 String urlId = urlHelperNative.getUrl( code.getLink(), getId( code.getCode(), resourceId ) );
                 codeService.insertNativeUrl( code.getCode(), resourceId, urlId );
             }else{
-                System.out.println("Document_id: " + documentId + " Version: " + version + " Code: " + codeEntity[0] + " ResourceName: " + codeEntity[1]);
+                //System.out.println("Document_id: " + documentId + " Version: " + version + " Code: " + codeEntity[0] + " ResourceName: " + codeEntity[1]);
                 codeService.insertNativeHasCode( documentId, version, (String) codeEntity[0], (int) codeEntity[1] );
             }
         }

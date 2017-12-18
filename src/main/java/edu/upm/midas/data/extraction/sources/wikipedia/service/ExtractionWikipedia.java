@@ -199,10 +199,9 @@ public class ExtractionWikipedia {
                         //<editor-fold desc="EXTRAER CÓDIGOS DE LOS INFOBOX">
                         List<Code> codes = removeRepetedCodes( getCodes(document, xmlSource) );
                         doc.setCodeList( codes );
-                        for (Code code:
-                             codes) {
+                        /*for (Code code: codes) {
                             System.out.println(code.getCode() +" "+ code.getResource().getName());
-                        }
+                        }*/
                         //</editor-fold>
 
                         // Crea lista de secciones
@@ -618,7 +617,6 @@ public class ExtractionWikipedia {
                                                 //                                            System.out.println("       Code(HTML_B): " + code.text() + " | URL:" + code.attr(Constants.HTML_HREF).toString() + " R: " + resourceFather.getName());
                                             }
                                             //</editor-fold>
-
                                         }
                                     }
                                 }//</editor-fold>
@@ -815,71 +813,7 @@ public class ExtractionWikipedia {
                 //<editor-fold desc="PROCESO PARA EL INFOBOX EN EL PIE DEL DOCUMENTO">
                         /* Dentro de una fila <tr> se recorren los elementos <td> */
                 if(hasHorizontalList) {
-                    Resource resourceFather = new Resource();
-                    for (Element tdElement :
-                            tdElements) {
-                                /* Dentro de un <td> se seleccionan todos los elementos <li> */
-                        Elements liElements = tdElement.select(Constants.HTML_LI);
-                        for (int i = 0; i < liElements.size(); i++) {
-                                /* Obtiene los "resources" y sus enlaces (vocabularios, bases online libres o servicios) */
-                            //<editor-fold desc="OBTERNER FUENTES EXTERNAS PARA UNA ENFERMEDAD">
-                                /* Se obtiene el elemento <b> que es el nombre del "resource"*/
-                            Elements bElements = liElements.get(i).getElementsByTag(Constants.HTML_B);
-                            resource = new Resource();
-                            List<String> linkList = new ArrayList<>();
-                            for (Element b :
-                                    bElements) {
-                                Elements aElements = bElements.select(Constants.HTML_A);
-                                /** Condición para eliminar los resources no válidos (aquellos que no contiene
-                                 *  un enlace de cualquier tipo * no es lo mejor) */
-                                if (aElements.size() > 0) {
-
-//                                                System.out.println("    Resource(HTML_B): " + b.text());
-                                    /* Se obtienen los enlaces de un "resource"*/
-                                    Elements links = b.getElementsByTag(Constants.HTML_A + "");
-                                    for (Element link :
-                                            links) {
-//                                                    System.out.println("           URL(HTML_B):" + link.attr(Constants.HTML_HREF).toString());
-                                        linkList.add(link.attr(Constants.HTML_HREF).toString().trim());
-                                    }
-                                    resource.setId( countResource );
-                                    resource.setName(b.text().trim());
-//                                    resource.setLinkList(linkList);
-//                                    resource.setNameDisease(diseaseName);
-
-                                    resourceFather = resource;
-
-                                    resourceMap.put(resource.getName(), resource );
-                                }
-                            }
-                            //</editor-fold>
-
-                                /* Obtiene los códigos y su enlace de los vocabularios, bases online libres o servicios */
-                            //<editor-fold desc="OBTERNER CÓDIGOS DE LAS FUENTES EXTERNAS">
-                                /* Se obtienen los elementos <a> con class="external text" y su attr href */
-                            String class_ = getHighlightXmlByDescription(Constants.XML_HL_EXTERNAL_TEXT + "", xmlSource).getClass_();
-                            Elements codeElements = liElements.get(i).select(Constants.QUERY_A_CLASS + class_ + Constants.RIGHT_PARENTHESIS);
-                            for (Element code :
-                                    codeElements) {
-                                oCode = new Code();
-                                url = new Link();
-
-                                oCode.setId( countCode );
-                                oCode.setCode( code.text() );
-
-                                url.setId( countCode );
-                                url.setUrl( code.attr(Constants.HTML_HREF).toString() );
-
-                                oCode.setLink( url );
-                                oCode.setResource( resourceFather );
-                                codeList.add( oCode );
-                                countCode++;
-//                                            System.out.println("       Code(HTML_B): " + code.text() + " | URL:" + code.attr(Constants.HTML_HREF).toString() + " R: " + resourceFather.getName());
-                            }
-                            //</editor-fold>
-
-                        }
-                    }
+                    getCodesAndResourceFromHorizontalList(xmlSource, tdElements, countResource, resourceMap, countCode, codeList);
                 }//</editor-fold>
 
             }//</editor-fold> //end for (Element row: rowElements)
@@ -888,6 +822,78 @@ public class ExtractionWikipedia {
 
         return codeList;
 
+    }
+
+
+    public void getCodesAndResourceFromHorizontalList(XmlSource xmlSource, Elements tdElements, int countResource, Map<String, Resource> resourceMap, int countCode, List<Code> codeList){
+        Resource resourceFather = new Resource();
+        String resourceWithoutUrl = "";
+        for (Element tdElement : tdElements) {
+                                /* Dentro de un <td> se seleccionan todos los elementos <li> */
+            Elements liElements = tdElement.select(Constants.HTML_LI);
+            for (int i = 0; i < liElements.size(); i++) {
+                                /* Obtiene los "resources" y sus enlaces (vocabularios, bases online libres o servicios) */
+                //<editor-fold desc="OBTERNER FUENTES EXTERNAS PARA UNA ENFERMEDAD">
+                                /* Se obtiene el elemento <b> que es el nombre del "resource"*/
+                Elements bElements = liElements.get(i).getElementsByTag(Constants.HTML_B);
+                Resource resource = new Resource();
+                List<String> linkList = new ArrayList<>();
+                for (Element b : bElements) {
+                    resourceWithoutUrl = b.text().trim();
+                    Elements aElements = bElements.select(Constants.HTML_A);
+                    /** Condición para eliminar los resources no válidos (aquellos que no contiene
+                     *  un enlace de cualquier tipo * no es lo mejor) */
+                    if (aElements.size() > 0) {
+
+//                                                System.out.println("    Resource(HTML_B): " + b.text());
+                                    /* Se obtienen los enlaces de un "resource"*/
+                        Elements links = b.getElementsByTag(Constants.HTML_A + "");
+                        for (Element link :
+                                links) {
+//                                                    System.out.println("           URL(HTML_B):" + link.attr(Constants.HTML_HREF).toString());
+                            linkList.add(link.attr(Constants.HTML_HREF).toString().trim());
+                        }
+                        resource.setId( countResource );
+                        resource.setName(b.text().trim());
+//                                    resource.setLinkList(linkList);
+//                                    resource.setNameDisease(diseaseName);
+                        resourceFather = resource;
+                        resourceMap.put(resource.getName(), resource);
+                    }else{
+                        //System.out.println("aElements.size()<0");
+                    }
+                }
+                //</editor-fold>
+
+                /* Obtiene los códigos y su enlace de los vocabularios, bases online libres o servicios */
+                //<editor-fold desc="OBTERNER CÓDIGOS DE LAS FUENTES EXTERNAS">
+                /* Se obtienen los elementos <a> con class="external text" y su attr href */
+                String class_ = getHighlightXmlByDescription(Constants.XML_HL_EXTERNAL_TEXT + "", xmlSource).getClass_();
+                Elements codeElements = liElements.get(i).select(Constants.QUERY_A_CLASS + class_ + Constants.RIGHT_PARENTHESIS);
+                for (Element code : codeElements) {
+                    Code oCode = new Code();
+                    Link url = new Link();
+
+                    oCode.setId( countCode );
+                    oCode.setCode( code.text() );
+
+                    url.setId( countCode );
+                    url.setUrl( code.attr(Constants.HTML_HREF).toString() );
+
+                    oCode.setLink(url);
+                    if (common.isEmpty(resourceFather.getName()) && !common.isEmpty(oCode.getCode())){
+                        //System.out.println("resource null " + oCode.getCode() + " " + resourceWithoutUrl);
+                        oCode.setResource(new Resource(99, resourceWithoutUrl));
+                    }else{
+                        oCode.setResource( resourceFather );
+                    }
+                    codeList.add(oCode);
+                    countCode++;
+                    //System.out.println("       Code(HTML_B): " + code.text() + " | URL:" + code.attr(Constants.HTML_HREF).toString() + " R: " + resourceFather.getName());
+                }
+                //</editor-fold>
+            }
+        }
     }
 
 

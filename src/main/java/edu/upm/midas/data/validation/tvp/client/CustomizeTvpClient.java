@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @seelocalhost:11062 http://disnet.ctb.upm.es
  */
 @FeignClient(name = "tvp-client",
-        url = "http://localhost:11062/api",
+        url = "http://localhost:8088/api",
         fallback = TvpClientFallback.class,
         configuration = FeignConfiguration.class)
 public interface CustomizeTvpClient {

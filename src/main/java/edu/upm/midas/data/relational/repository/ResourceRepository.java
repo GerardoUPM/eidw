@@ -31,7 +31,7 @@ public interface ResourceRepository {
 
     void persist(Resource resource);
 
-    int insertNative(int resourceId, String name);
+    int insertNative(String name);
 
     boolean deleteById(Integer resourceId);
 

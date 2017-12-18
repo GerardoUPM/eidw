@@ -23,6 +23,12 @@ public class Resource {
     private List<Link> linkList;
 
 
+    public Resource() {}
+
+    public Resource(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public int getId() {
         return id;

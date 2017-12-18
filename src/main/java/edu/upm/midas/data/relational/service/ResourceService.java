@@ -25,7 +25,7 @@ public interface ResourceService {
 
     void save(Resource resource);
 
-    int insertNative(int resourceId, String name);
+    int insertNative(String name);
 
     boolean updateFindFull(Resource resource);
 

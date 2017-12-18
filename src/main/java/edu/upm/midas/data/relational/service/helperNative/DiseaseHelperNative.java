@@ -52,14 +52,14 @@ public class DiseaseHelperNative {
         String url = document.getUrl().getUrl();
 
         Disease diseaseEntity = diseaseService.findByName( diseaseName );
-        System.out.println(diseaseName+ "DIS: "+ diseaseEntity);
+        //System.out.println(diseaseName+ "DIS: "+ diseaseEntity);
         if ( diseaseEntity == null ){
             String diseaseId = getDiseaseId();
             diseaseService.insertNative( diseaseId, diseaseName, "" );
             diseaseService.insertNativeHasDisease( documentId, version, diseaseId );
             return diseaseId;
         }else{
-            System.out.println("HasDisease: "+ documentId + " | " + version + " | " + diseaseEntity.getDiseaseId() );
+            //System.out.println("HasDisease: "+ documentId + " | " + version + " | " + diseaseEntity.getDiseaseId() );
             diseaseService.insertNativeHasDisease( documentId, version, diseaseEntity.getDiseaseId() );
             return diseaseEntity.getDiseaseId();
         }

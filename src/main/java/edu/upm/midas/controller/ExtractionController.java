@@ -97,8 +97,22 @@ public class ExtractionController {
     @RequestMapping(path = { "/wikipedia/codes" }, //wikipedia extraction
             method = RequestMethod.GET)
     public void checkCodes() throws Exception {
-        extractionWikipedia.extract(null);
-        extractionWikipedia.extractResource(null);
+        //extractionWikipedia.extract(null);
+        //extractionWikipedia.extractResource(null);
+
+        String inicio = utilDate.getTime();
+        Date version = utilDate.getSqlDate();
+        //List<XmlLink> externalDiseaseLinkList = populateDbNative.getDiseaseLinkListFromDBPedia(version);
+
+        //if (externalDiseaseLinkList!=null) {
+            populateDbNative.populateResource(null);
+            populateDbNative.populateSemanticTypes();
+            populateDbNative.populate(null, version);
+        //}else{
+        //    System.out.println("ERROR disease album");
+        //}
+        System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
+
     }
 
 
