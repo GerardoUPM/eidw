@@ -1,6 +1,5 @@
 package edu.upm.midas.data.validation.metamap.client;
 
-import edu.upm.midas.configuration.FeignConfiguration;
 import edu.upm.midas.data.validation.metamap.client.fallback.MetamapClientFallback;
 import edu.upm.midas.data.validation.metamap.model.receiver.Request;
 import edu.upm.midas.data.validation.metamap.model.response.Response;
@@ -21,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(name = "metamap-client",
         url = "http://localhost:8084/api/metamap",
-        fallback = MetamapClientFallback.class,
-        configuration = FeignConfiguration.class)
+        fallback = MetamapClientFallback.class/*,
+        configuration = FeignConfiguration.class*/)
 public interface MetamapClient {
 
     @RequestMapping(value = "/concepts-found", method = RequestMethod.POST)

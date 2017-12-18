@@ -1,6 +1,5 @@
 package edu.upm.midas.data.extraction.album.client;
 
-import edu.upm.midas.configuration.FeignConfiguration;
 import edu.upm.midas.data.extraction.album.client.fallback.DiseaseAlbumClientFallback;
 import edu.upm.midas.data.extraction.album.model.request.RequestFather;
 import edu.upm.midas.data.extraction.album.model.request.RequestGDLL;
@@ -22,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @FeignClient(name = "${my.service.client.disease_album.name}",
         url = "${my.service.client.disease_album.url}",
-        fallback = DiseaseAlbumClientFallback.class,
-        configuration = FeignConfiguration.class)
+        fallback = DiseaseAlbumClientFallback.class/*,
+        configuration = FeignConfiguration.class*/)
 public interface CustomizeDiseaseAlbumClient {
 
     @RequestMapping(value = "${my.service.client.disease_album.path.last}", method = RequestMethod.POST)

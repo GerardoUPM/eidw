@@ -1,13 +1,6 @@
 package edu.upm.midas.data.validation.metamap.client.configuration;
 
-import feign.Logger;
-import feign.Request;
-import feign.auth.BasicAuthRequestInterceptor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
+/*@Configuration
 @ConditionalOnProperty(value = "feign.compression.request.enabled", matchIfMissing = false)
 public class FeignMetamapConfiguration {
 
@@ -28,4 +21,4 @@ public class FeignMetamapConfiguration {
     return new Request.Options(TEN_SECONDS, TEN_SECONDS);
   }
 
-}
+}*/

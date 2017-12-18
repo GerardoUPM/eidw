@@ -21,5 +21,6 @@ public class TvpClientFallback implements TvpClient {
     public Response getValidateSymptoms(Request request) {
         return new Response();
     }
+
 }
 
