@@ -1,5 +1,5 @@
 package edu.upm.midas.data.validation.metamap.metamapApiResponse.impl;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+//import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import edu.upm.midas.data.validation.metamap.client.MetamapClient;
 import edu.upm.midas.data.validation.metamap.metamapApiResponse.MetamapResourceService;
 import edu.upm.midas.data.validation.metamap.model.receiver.Request;
@@ -23,13 +23,13 @@ public class MetamapResourceServiceImpl implements MetamapResourceService {
     private MetamapClient metamapClient;
 
     @Override
-    @HystrixCommand(fallbackMethod = "retrieveFallback")
+    //@HystrixCommand(fallbackMethod = "retrieveFallback")
     public Response filterDiseaseName(Request request) {
         return metamapClient.filterTexts( request );
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "retrieveFallback")
+    //@HystrixCommand(fallbackMethod = "retrieveFallback")
     public Response filterTexts(Request request) {
         return metamapClient.filterTexts( request );
     }

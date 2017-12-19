@@ -132,7 +132,7 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-hystrix</artifactId>
-			<version>1.3.4.RELEASE</version>
+			<!--<version>1.3.4.RELEASE</version>-->
 		</dependency>
 	</dependencies>
 
@@ -142,7 +142,7 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>Camden.SR4</version>
+				<version>Camden.SR6<!--Camden.SR4--></version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
