@@ -1,5 +1,4 @@
 package edu.upm.midas.data.validation.tvp.client.fallback;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import edu.upm.midas.data.validation.tvp.client.TvpClient;
 import edu.upm.midas.data.validation.tvp.model.request.Request;
 import edu.upm.midas.data.validation.tvp.model.response.Response;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @className TvpClientFallback
  * @see
  */
-/*@Component
+@Component
 public class TvpClientFallback implements TvpClient {
 
 
@@ -23,5 +22,5 @@ public class TvpClientFallback implements TvpClient {
         return new Response();
     }
 
-}*/
+}
 

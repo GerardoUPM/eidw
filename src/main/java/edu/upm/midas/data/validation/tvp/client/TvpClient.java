@@ -1,13 +1,14 @@
 package edu.upm.midas.data.validation.tvp.client;
 
 import edu.upm.midas.configuration.FeignConfiguration;
-//import edu.upm.midas.data.validation.tvp.client.fallback.TvpClientFallback;
 import edu.upm.midas.data.validation.tvp.model.request.Request;
 import edu.upm.midas.data.validation.tvp.model.response.Response;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+//import edu.upm.midas.data.validation.tvp.client.fallback.TvpClientFallback;
 
 /**
  * Created by gerardo on 17/08/2017.
@@ -16,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @version ${<VERSION>}
  * @project eidw
  * @className TvpClient
- * @seehttp://localhost:11062
+ * @seehttp://localhost:11062 disnet.ctb.upm.es/api
  */
 
 @FeignClient(name = "tvp-client",
-        url = "disnet.ctb.upm.es/api"/*,
+        url = "http://localhost:11062/api"/*,
         fallback = TvpClientFallback.class*/,
         configuration = FeignConfiguration.class)
 public interface TvpClient {

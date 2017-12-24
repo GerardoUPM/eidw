@@ -1,6 +1,5 @@
 package edu.upm.midas.configuration;
 
-import feign.Contract;
 import feign.Logger;
 import feign.Request;
 import feign.auth.BasicAuthRequestInterceptor;
@@ -27,5 +26,7 @@ public class FeignConfiguration {
 
     return new Request.Options(SECONDS, SECONDS);
   }
+
+
 
 }
