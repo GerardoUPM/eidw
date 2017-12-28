@@ -7,8 +7,11 @@
             <section consult="y" id="Signs_and_symptoms" type="span" name="Signs and symptoms" />
             <section consult="y" id="signs_and_symptoms" type="span" name="signs and symptoms" />
             <section consult="y" id="Sign" type="span" name="Sign" />
+            <section consult="y" id="Signs" type="span" name="Signs" />
             <section consult="y" id="Symptom" type="span" name="Symptom" />
+            <section consult="y" id="Symptoms" type="span" name="Symptoms" />
             <section consult="y" id="Cause" type="span" name="Cause" />
+            <section consult="y" id="Causes" type="span" name="Causes" />
             <section consult="y" id="Diagnosis" type="span" name="Diagnosis" />
         </sections>
         <highlights consult="y">
