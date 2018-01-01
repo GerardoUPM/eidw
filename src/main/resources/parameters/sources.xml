@@ -13,6 +13,7 @@
             <section consult="y" id="Cause" type="span" name="Cause" />
             <section consult="y" id="Causes" type="span" name="Causes" />
             <section consult="y" id="Diagnosis" type="span" name="Diagnosis" />
+            <section consult="y" id="Diagnostic_approach" type="span" name="Diagnostic approach" />
         </sections>
         <highlights consult="y">
             <tag consult="y" id="content" class="mw-body" type="div" desc="principal" />
