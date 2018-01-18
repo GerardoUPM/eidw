@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @version ${<VERSION>}
  * @project eidw
  * @className CustomizeTvpClient
- * @seelocalhost:11062 http://disnet.ctb.upm.es http://localhost:8088
+ * @seelocalhost:11062 http://disnet.ctb.upm.es http://localhost:8088 http://localhost:11062
  */
 @FeignClient(name = "tvp-client",
-        url = "http://localhost:11062/api"/*,
+        url = "138.4.130.6:11062/api"/*,
         fallback = TvpClientFallback.class*/,
         configuration = FeignConfiguration.class)
 public interface CustomizeTvpClient {

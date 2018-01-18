@@ -194,9 +194,12 @@ public class MetamapService {
             System.out.println( "Connection_ with METAMAP API..." );
             System.out.println( "Founding medical concepts in a texts... please wait, this process can take from minutes to hours... " );
             Response response = metamapResourceService.filterTexts( request );
-            System.out.println("Authorization: "+ response.isAuthorization());
+            System.out.println( "Texts Size request..." + request.getTextList().size());
+            System.out.println( "Filter Texts Size response..." + response.getTextList().size() );
+            response.setAuthorized(response.getTextList().size()>=request.getTextList().size());
+            System.out.println("Authorization: "+ response.isAuthorized());
 
-            if (response.isAuthorization()) {
+            if (response.isAuthorized()) {
 
                 System.out.println("Insert symptoms starting...");
                 System.out.println(request.getTextList().size());
@@ -207,7 +210,7 @@ public class MetamapService {
                         int countSymptoms = 1;
                         for (edu.upm.midas.data.validation.metamap.model.response.Concept concept : filterText.getConcepts()) {
                             System.out.println("Concept{ cui: " + concept.getCui() + " name: " + concept.getName() + " semTypes:" + concept.getSemanticTypes().toString() + "}");
-                            //symptomHelperNative.insertIfExist(concept, filterText.getId());//text.getId()
+                            symptomHelperNative.insertIfExist(concept, filterText.getId());//text.getId()
                             countSymptoms++;
                         }
                         count++;
@@ -223,7 +226,7 @@ public class MetamapService {
                 System.out.println("Insert configuration...");
                 String configurationJson = gson.toJson(request.getConfiguration());
                 configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
-                System.out.println("Insert configuration ready!...");
+                //System.out.println("Insert configuration ready!...");
             }else{
                 System.out.println("Authorization message: " + response.getAuthorizationMessage() + " | token: " + response.getToken());
             }

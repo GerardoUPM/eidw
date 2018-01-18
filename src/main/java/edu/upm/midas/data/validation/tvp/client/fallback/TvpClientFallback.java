@@ -18,7 +18,7 @@ public class TvpClientFallback implements TvpClient {
 
 
     public Response getValidateSymptoms(Request request)  {
-        System.out.println("SUCEDE ALGO?");
+        //System.out.println("SUCEDE ALGO?");
         return new Response();
     }
 

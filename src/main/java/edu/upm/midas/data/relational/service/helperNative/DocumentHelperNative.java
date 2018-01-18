@@ -44,6 +44,10 @@ public class DocumentHelperNative {
 
     public String insert(String sourceId, Doc document, Date version) throws JsonProcessingException {
         String documentId = uniqueId.generateDocument( sourceId, document.getId() );
+        //Buscar si la enfermedad de la que habla este documento ya se encuentra insertada
+        //Buscar por source, version y nombre de enfermedad. Si encuentra un documento, entonces no
+        //insertar nuevo documento, ni nada relacionado con el (enfermedad, textos y códigos)
+        //Cambio para la siguiente version 2018-01-15
         if ( documentService.insertNative( documentId, version ) > 0 ) {
             String docId = documentHelperNative.getDocumentId( documentId, version );
             String urlId = urlHelperNative.getUrl(document.getUrl(), docId);
