@@ -4,9 +4,7 @@ import edu.upm.midas.constants.Constants;
 import edu.upm.midas.data.extraction.model.*;
 import edu.upm.midas.data.extraction.model.code.Code;
 import edu.upm.midas.data.extraction.model.code.Resource;
-import edu.upm.midas.data.extraction.model.text.List_;
-import edu.upm.midas.data.extraction.model.text.Paragraph;
-import edu.upm.midas.data.extraction.model.text.Text;
+import edu.upm.midas.data.extraction.model.text.*;
 import edu.upm.midas.data.extraction.service.ConnectDocument;
 import edu.upm.midas.data.extraction.service.LoadSource;
 import edu.upm.midas.data.extraction.xml.model.XmlHighlight;
@@ -83,6 +81,7 @@ public class ExtractionWikipedia {
         Section section;
         Paragraph paragraph;
         List_ list_;
+        Table table;
         Link url;
 
         List<Source> sourceList;
@@ -210,8 +209,7 @@ public class ExtractionWikipedia {
                         // Lee todas las secciones del XML (No todos los documentos tienen
                         // información en las mismas secciones o incluso no las tienen)
                         //<editor-fold desc="RECORRIDO DE SECCIONES DEL XML">
-                        for (XmlSection xmlSection :
-                                xmlSource.getSectionList()) {
+                        for (XmlSection xmlSection : xmlSource.getSectionList()) {
                             // Crea una sección
                             section = new Section();
                             isSection = false;
@@ -283,6 +281,17 @@ public class ExtractionWikipedia {
                                         // Agrega la lista "List_" a la lista de textos
                                         textList.add(list_);
                                         //</editor-fold>
+                                    } else if (nextElementBro.tagName() == Constants.HTML_TABLE){
+                                        Elements trs = nextElementBro.select("table.wikitable tr");
+                                        if (trs != null) {
+                                            //System.out.println("Wikitable" + trs.toString());
+                                            isText = true;
+                                            // Guarda la información extraida de una wikitable en un objeto
+                                            table = extractWikitableTexts(trs, countText, title);
+
+                                            // Agrega la lista "List_" a la lista de textos
+                                            textList.add(table);
+                                        }
                                     }
 
                                     if (isText) {
@@ -1042,6 +1051,47 @@ public class ExtractionWikipedia {
         return list_;
     }
 
+    public Table extractWikitableTexts(Elements trElements, int countText, String title){
+        Table table = new Table();
+        List<Tr> trList = new ArrayList<>();;
+        String head = "";
+        String body = "";
+
+        table.setId( countText );
+        table.setTextOrder( countText );
+        table.setTitle(title);System.out.println("Wikitable: " + title);
+
+        for (Element tr : trElements) {
+            Elements tds = tr.getElementsByTag("td");
+            Elements ths = tr.getElementsByTag("th");
+            for (Element th_: ths) {
+                head += "<***>" + th_.text() + "<<==>>";
+                //System.out.println("th: " + th_.text());
+            }
+            for (Element td_: tds) {
+                body += td_.text() + "<<==>>";
+                //System.out.println("td: " + td_.text());
+            }
+        }
+
+        if (!common.isEmpty(head) && !common.isEmpty(body)){
+            Tr oTr_head = new Tr(head);
+            Tr oTr_body = new Tr(body);
+            trList.add(oTr_head);
+            trList.add(oTr_body);
+        }
+
+        table.setTrList(trList);
+
+        //System.out.println("th: " + head);
+        //System.out.println("td: " + body);
+
+        // Agrega la lista de enlaces al objeto lista "List_"
+        table.setUrlList( getTableTextUrls( trElements ) );
+
+        return table;
+    }
+
 
     /**
      * Método que recupera información de enlaces encontrados en cualquier bloque "elemento" del documento
@@ -1056,13 +1106,42 @@ public class ExtractionWikipedia {
         // Recorre para obtener todos los enlaces de la lista
         Elements aElements = element.select( Constants.QUERY_A_HREF );
         int countUrl = 1;
-        for (Element a :
-                aElements) {
+        for (Element a : aElements) {
             // Crear un enlace "Link"
             url = new Link();
             url.setId( countUrl );
             url.setUrl( a.attr( Constants.QUERY_ABS_HREF ) );// Obtiene la url absoluta
             url.setDescription( a.text() );
+
+            // Agrea un enlace a la lista de enlaces
+            urlList.add( url );
+//                                            linkTextMap.put(a.text(), a.attr( Constants.QUERY_ABS_HREF ));
+            countUrl++;
+        }
+
+        return  urlList;
+    }
+
+
+    /**
+     * Método que recupera información de enlaces encontrados en cualquier bloque "elemento" del documento
+     *
+     * @param elements
+     * @return lista de objetos Link
+     */
+    public List<Link> getTableTextUrls(Elements elements){
+        List<Link> urlList = new ArrayList<>();
+        Link url;
+
+        // Recorre para obtener todos los enlaces de la lista
+        Elements aElements = elements.select( Constants.QUERY_A_HREF );
+        int countUrl = 1;
+        for (Element a : aElements) {
+            // Crear un enlace "Link"
+            url = new Link();
+            url.setId( countUrl );
+            url.setUrl( a.attr( Constants.QUERY_ABS_HREF ) );// Obtiene la url absoluta
+            url.setDescription( a.text() );//System.out.println(a.attr( Constants.QUERY_ABS_HREF ));
 
             // Agrea un enlace a la lista de enlaces
             urlList.add( url );

@@ -20,6 +20,7 @@
             <tag consult="y" id="firstHeading" class="firstHeading" type="h1" desc="diseasename" />
             <tag consult="y" id="mw-content-text" class="mw-content-ltr" type="div" desc="text" />
             <tag consult="y" id="infobox" class="infobox" type="table" desc="infobox" />
+            <tag consult="y" id="wikitable" class="wikitable" type="table" desc="wikitable" />
             <tag consult="y" id="toc" class="toc" type="div" desc="content" />
             <tag consult="y" id="external text" class="external text" type="a" desc="externalresoruce" />
             <tag consult="y" id="plainlist" class="plainlist" type="td" desc="plainlist" />
@@ -34,6 +35,9 @@
             <link consult="y" id="17">en.wikipedia.org/wiki/Testicular_cancer</link>
             <link consult="y" id="2873">en.wikipedia.org/wiki/Androgen_insensitivity_syndrome</link>
             <link consult="y" id="17">en.wikipedia.org/wiki/Hip_fracture</link>
+            <link consult="y" id="4946">en.wikipedia.org/wiki/Pneumonia</link>
+            <link consult="y" id="3137">en.wikipedia.org/wiki/Crohn's_disease</link>
+            <link consult="y" id="3519">en.wikipedia.org/wiki/Ovarian_cancer</link>
             <!--
             <link consult="y" id="4439">en.wikipedia.org/wiki/Rosacea</link>
             <link consult="y" id="5386">en.wikipedia.org/wiki/Cyclosporiasis</link>

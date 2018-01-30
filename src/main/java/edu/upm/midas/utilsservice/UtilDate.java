@@ -39,4 +39,9 @@ public class UtilDate {
         return new SimpleDateFormat("yyyy-MM-dd").format(date);
     }
 
+    public String getNowFormatyyyyMMdd(){
+        //return new Date(117, 05, 29);
+        return new SimpleDateFormat("yyyy-MM-dd").format(new Date(new java.util.Date().getTime()));
+    }
+
 }

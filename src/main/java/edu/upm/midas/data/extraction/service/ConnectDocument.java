@@ -1,6 +1,5 @@
 package edu.upm.midas.data.extraction.service;
 
-import edu.upm.midas.constants.Constants;
 import edu.upm.midas.data.extraction.model.Connection_;
 import edu.upm.midas.enums.StatusHttpEnum;
 import org.jsoup.Connection;
@@ -38,7 +37,9 @@ public class ConnectDocument {
         connection_.setLink( link );
 
         try {//Constants.HTTP_HEADER +
-            Connection connection = Jsoup.connect( connection_.getLink().replace("http", "https") ).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0").referrer("http://www.google.com").timeout(20*1000);//oResponse = connection.execute(); || Jsoup.connect(Constants.HTTP_HEADER + connection_.getLink()
+            Connection connection = Jsoup.connect( connection_.getLink().replace("http", "https") ).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0").referrer("http://www.google.com").timeout(20*1000);
+            // Connection connection = Jsoup.connect( connection_.getLink().replace("http", "https") )
+            //oResponse = connection.execute(); || Jsoup.connect(Constants.HTTP_HEADER + connection_.getLink()
             connection_.setoDoc( connection.get()/*getHtmlDocument(connection)*/ );
             connection_.setStatus( connection.execute().statusMessage() );
             connection_.setStatusCode( connection.execute().statusCode() );

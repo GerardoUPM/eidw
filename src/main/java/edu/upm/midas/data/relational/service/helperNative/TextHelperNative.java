@@ -2,9 +2,7 @@ package edu.upm.midas.data.relational.service.helperNative;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.upm.midas.data.extraction.model.text.List_;
-import edu.upm.midas.data.extraction.model.text.Paragraph;
-import edu.upm.midas.data.extraction.model.text.Text;
+import edu.upm.midas.data.extraction.model.text.*;
 import edu.upm.midas.data.relational.service.HasTextService;
 import edu.upm.midas.data.relational.service.TextService;
 import edu.upm.midas.enums.ContentType;
@@ -59,14 +57,14 @@ public class TextHelperNative {
      * @throws JsonProcessingException
      */
     public String insert(Text text, String sectionId, String documentId, Date version) throws JsonProcessingException {
-
+        //System.out.println(text+" - "+ sectionId+" - "+ documentId +" - "+ version);
         String textId = getTextId( documentId, version, sectionId, text.getId() );
         String text_;
 
         if(text instanceof Paragraph){
             text_ = (!text.getTitle().equals(""))?text.getTitle() + " => ":"" + ( (Paragraph) text).getText();
             textService.insertNative( textId, ContentType.PARA.getClave(), text_.trim() );
-        }else{
+        }else if (text instanceof List_){
             String textList = "";int bulletCount = 1;
             List<String> bulletList = ( (List_) text).getBulletList();
             for (String bullet: bulletList ) {
@@ -80,6 +78,14 @@ public class TextHelperNative {
                 textList = common.cutStringPerformance(0, 1, textList);
             text_ = (!text.getTitle().equals(""))?text.getTitle() + " => ":"" +textList;
             textService.insertNative( textId, ContentType.LIST.getClave(), text_.trim() );
+        } else if (text instanceof Table){
+            String textList = "";
+            List<Tr> trList = ( (Table) text ).getTrList();
+            for (Tr oTr: trList) {
+                textList += oTr.getTd() + "<<|||>>";
+            }
+            text_ = (!text.getTitle().equals(""))?text.getTitle() + " => ":"" +textList;
+            textService.insertNative( textId, ContentType.TABLE.getClave(), text_.trim() );
         }
 
         //<editor-fold desc="INSERTAR URLS">

@@ -1,18 +1,11 @@
 package edu.upm.midas.controller;
 
-import edu.upm.midas.data.extraction.sources.wikipedia.service.ExtractionWikipedia;
-import edu.upm.midas.data.extraction.xml.model.XmlLink;
-import edu.upm.midas.data.relational.service.DiseaseService;
 import edu.upm.midas.data.relational.service.impl.PopulateDbNative;
-import edu.upm.midas.utilsservice.Common;
-import edu.upm.midas.utilsservice.UtilDate;
+import edu.upm.midas.service.ExtractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by gerardo on 05/07/2017.
@@ -30,31 +23,12 @@ public class ExtractionController {
     @Autowired
     private PopulateDbNative populateDbNative;
     @Autowired
-    private ExtractionWikipedia extractionWikipedia;
-    @Autowired
-    private UtilDate utilDate;
-    @Autowired
-    private Common common;
-    @Autowired
-    private DiseaseService diseaseService;
-
+    private ExtractService extractService;
 
     @RequestMapping(path = { "/extract/wikipedia" }, //wikipedia extraction
             method = RequestMethod.GET)
     public String extract() throws Exception {
-        String inicio = utilDate.getTime();
-        Date version = utilDate.getSqlDate();
-        List<XmlLink> externalDiseaseLinkList = populateDbNative.getDiseaseLinkListFromDBPedia(version);
-
-        if (externalDiseaseLinkList!=null) {
-            populateDbNative.populateResource(externalDiseaseLinkList);
-            populateDbNative.populateSemanticTypes();
-            populateDbNative.populate(externalDiseaseLinkList, version);
-        }else{
-            System.out.println("ERROR disease album");
-        }
-        System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
-
+        extractService.extract();
 /*
         String g ="http://en.wikipedia.org/wiki/Odonto–tricho–ungual–digital–palmar_syndrome";
         String m = "http://en.wikipedia.org/wiki/Bannayan–Riley–Ruvalcaba_syndrome";
@@ -90,29 +64,20 @@ public class ExtractionController {
     @RequestMapping(path = { "/wikipedia/check" }, //wikipedia extraction
             method = RequestMethod.GET)
     public void checkLinks() throws Exception {
-        populateDbNative.checkWikiPages();
+        extractService.checkLinks();
     }
 
 
     @RequestMapping(path = { "/wikipedia/codes" }, //wikipedia extraction
             method = RequestMethod.GET)
     public void checkCodes() throws Exception {
-        //extractionWikipedia.extract(null);
-        //extractionWikipedia.extractResource(null);
+        extractService.checkCodes();
+    }
 
-        String inicio = utilDate.getTime();
-        Date version = utilDate.getSqlDate();
-        //List<XmlLink> externalDiseaseLinkList = populateDbNative.getDiseaseLinkListFromDBPedia(version);
-
-        //if (externalDiseaseLinkList!=null) {
-            populateDbNative.populateResource(null);
-            populateDbNative.populateSemanticTypes();
-            populateDbNative.populate(null, version);
-        //}else{
-        //    System.out.println("ERROR disease album");
-        //}
-        System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
-
+    @RequestMapping(path = { "extract_only/wikipedia" }, //wikipedia extraction
+            method = RequestMethod.GET)
+    public void extractOnly() throws Exception {
+        extractService.onlyExtract();
     }
 
 

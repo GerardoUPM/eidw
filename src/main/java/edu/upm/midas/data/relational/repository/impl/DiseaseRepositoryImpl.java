@@ -78,12 +78,22 @@ public class DiseaseRepositoryImpl extends AbstractDao<String, Disease>
         return disease;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object[] findLastIdNative() {
-        return  (Object[]) getEntityManager()
+        String id = "";
+        Object[] idObject = null;
+        List<Object[]> res = (List<Object[]>) getEntityManager()
                 .createNamedQuery("Disease.findLastIdNative")
                 .setMaxResults(1)
-                .getSingleResult();
+                .getResultList();
+
+        if (CollectionUtils.isNotEmpty(res)) {
+            //System.out.println("RESS: "+res.get(0));
+            idObject = res.get(0);
+            //id = idObject[0].toString();
+        }
+        return idObject;
     }
 
     @SuppressWarnings("unchecked")

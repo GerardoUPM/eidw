@@ -34,7 +34,7 @@ public class ValidationController {
     public String metamapFilter() throws Exception {
 
         Consult consult = new Consult("wikipedia",
-                "2018-01-15");
+                "2018-01-30");
 
         String inicio = utilDate.getTime();
         //metamapService.localFilter( consult );
@@ -63,7 +63,7 @@ public class ValidationController {
     public String tvpValidation() throws Exception {
 
         Consult consult = new Consult("wikipedia",
-                "2018-01-15");
+                "2018-01-24");
 
         String inicio = utilDate.getTime();
         tvpService.validation( consult );

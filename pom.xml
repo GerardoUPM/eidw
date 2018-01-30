@@ -134,6 +134,17 @@
 			<artifactId>spring-cloud-starter-hystrix</artifactId>
 			<!--<version>1.3.4.RELEASE</version>-->
 		</dependency>
+
+		<!--PROGRAMADAS-->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<!--NECESARIA PARA FEIGN-->

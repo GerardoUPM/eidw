@@ -192,9 +192,7 @@ public class PopulateDbNative {
                     //</editor-fold>
 
                     int textCount = 0;
-                    for (edu.upm.midas.data.extraction.model.text.Text text:
-                            section.getTextList()) {
-
+                    for (edu.upm.midas.data.extraction.model.text.Text text: section.getTextList()) {
                         //<editor-fold desc="INSERTAR TEXTO">
                         textHelperNative.insert( text, sectionId, documentId, version );
                         //</editor-fold>
@@ -273,6 +271,11 @@ public class PopulateDbNative {
             }
         }
         return xmlLinkList;
+    }
+
+
+    public void onlyExtract() throws Exception {
+        extractionWikipedia.extract(null);
     }
 
 

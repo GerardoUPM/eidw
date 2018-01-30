@@ -344,6 +344,7 @@ public class Constants {
     public static final String FOOT = "foot";
     public static final String LIST = "list";
     public static final String TEXT = "text";
+    public static final String HTML_TABLE = "table";
 
     /** CONSULTAS BIBLIOTECA JSOUP */
     public static final String QUERY_A_HREF = "a[href]";

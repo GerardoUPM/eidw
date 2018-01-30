@@ -14,7 +14,8 @@ import org.apache.commons.lang.StringUtils;
 public enum ContentType {
 
     PARA("PARA", "Paragraph"),
-    LIST("LIST", "List");
+    LIST("LIST", "List"),
+    TABLE("TABLE", "Table");
 
     private String clave;
     private String descripcion;
