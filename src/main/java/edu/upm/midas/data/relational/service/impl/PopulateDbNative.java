@@ -206,6 +206,7 @@ public class PopulateDbNative {
             }// Documentos
         }// Fuentes "Sources"
         System.out.println("Populate end...");
+        //extractionWikipedia.extractionReport();
 
     }
 
@@ -275,7 +276,8 @@ public class PopulateDbNative {
 
 
     public void onlyExtract() throws Exception {
-        extractionWikipedia.extract(null);
+        //extractionWikipedia.extract(null);
+        extractionWikipedia.extractionReport();
     }
 
 

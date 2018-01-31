@@ -62,9 +62,11 @@ public class TextHelperNative {
         String text_;
 
         if(text instanceof Paragraph){
-            text_ = (!text.getTitle().equals(""))?text.getTitle() + " => ":"" + ( (Paragraph) text).getText();
+            System.out.println(((Paragraph) text).getTitle() + " =>" +((Paragraph) text).getText());
+            text_ = (!(text.getTitle().equals(""))?(text.getTitle() + " => " + ( (Paragraph) text).getText()):"" + ( (Paragraph) text).getText());
             textService.insertNative( textId, ContentType.PARA.getClave(), text_.trim() );
         }else if (text instanceof List_){
+            System.out.println(((List_) text).getBulletList().toString());
             String textList = "";int bulletCount = 1;
             List<String> bulletList = ( (List_) text).getBulletList();
             for (String bullet: bulletList ) {
@@ -79,6 +81,7 @@ public class TextHelperNative {
             text_ = (!text.getTitle().equals(""))?text.getTitle() + " => ":"" +textList;
             textService.insertNative( textId, ContentType.LIST.getClave(), text_.trim() );
         } else if (text instanceof Table){
+            System.out.println(((Table) text).getTrList().toString());
             String textList = "";
             List<Tr> trList = ( (Table) text ).getTrList();
             for (Tr oTr: trList) {

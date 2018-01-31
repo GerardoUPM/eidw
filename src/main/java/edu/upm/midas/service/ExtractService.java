@@ -45,29 +45,32 @@ public class ExtractService {
     }
 
     public boolean onlyExtract() throws Exception {
-//        boolean res = false;
-//        String inicio = utilDate.getTime();
-//        Date version = utilDate.getSqlDate();
-//        populateDbNative.onlyExtract();
-//        System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
-//
-//        return res;
         boolean res = false;
         String inicio = utilDate.getTime();
         Date version = utilDate.getSqlDate();
-        //List<XmlLink> externalDiseaseLinkList = populateDbNative.getDiseaseLinkListFromDBPedia(version);
-
-        //if (externalDiseaseLinkList!=null) {
-            populateDbNative.populateResource(null);
-            populateDbNative.populateSemanticTypes();
-            populateDbNative.populate(null, version);
-            res = true;
-        //}else{
-        //    System.out.println("ERROR disease album");
-        //}
+        populateDbNative.onlyExtract();
         System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
 
         return res;
+
+
+
+//        boolean res = false;
+//        String inicio = utilDate.getTime();
+//        Date version = utilDate.getSqlDate();
+//        //List<XmlLink> externalDiseaseLinkList = populateDbNative.getDiseaseLinkListFromDBPedia(version);
+//
+//        //if (externalDiseaseLinkList!=null) {
+//            populateDbNative.populateResource(null);
+//            populateDbNative.populateSemanticTypes();
+//            populateDbNative.populate(null, version);
+//            res = true;
+//        //}else{
+//        //    System.out.println("ERROR disease album");
+//        //}
+//        System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
+//
+//        return res;
     }
 
     public void checkCodes() throws Exception {

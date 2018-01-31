@@ -51,6 +51,10 @@ public class Common {
         return str = str.substring(cutStart, str.length() - cutFinal);
     }
 
+    public String cutString(int cutStart, int cutFinal, String str) {
+        return str = str.substring(cutStart, cutFinal);
+    }
+
 
     public String replaceUnicodeToSpecialCharacters(String data){
 

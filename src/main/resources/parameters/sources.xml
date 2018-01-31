@@ -29,6 +29,12 @@
             <tag consult="y" id="text-align:center" class="style" type="css" desc="textaligncenter" />
         </highlights>
         <links consult="y">
+            <link consult="y" id="5305">en.wikipedia.org/wiki/Infarction</link>
+
+
+            <!--<link consult="y" id="6935">en.wikipedia.org/wiki/Myalgia</link>
+            <link consult="y" id="3137">en.wikipedia.org/wiki/Crohn's_disease</link>
+            <link consult="y" id="3137">en.wikipedia.org/wiki/Madelung's_deformity</link>
             <link consult="y" id="2297">en.wikipedia.org/wiki/Cancer</link>
             <link consult="y" id="999">en.wikipedia.org/wiki/Kawasaki_disease</link>
             <link consult="y" id="4439">en.wikipedia.org/wiki/Rosacea</link>
@@ -36,8 +42,9 @@
             <link consult="y" id="2873">en.wikipedia.org/wiki/Androgen_insensitivity_syndrome</link>
             <link consult="y" id="17">en.wikipedia.org/wiki/Hip_fracture</link>
             <link consult="y" id="4946">en.wikipedia.org/wiki/Pneumonia</link>
-            <link consult="y" id="3137">en.wikipedia.org/wiki/Crohn's_disease</link>
-            <link consult="y" id="3519">en.wikipedia.org/wiki/Ovarian_cancer</link>
+
+            <link consult="y" id="3519">en.wikipedia.org/wiki/Ovarian_cancer</link>-->
+
             <!--
             <link consult="y" id="4439">en.wikipedia.org/wiki/Rosacea</link>
             <link consult="y" id="5386">en.wikipedia.org/wiki/Cyclosporiasis</link>

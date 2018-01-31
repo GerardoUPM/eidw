@@ -56,7 +56,7 @@ public class ResourceRepositoryImpl extends AbstractDao<Integer, Resource>
         //EntityManager em = getEntityManager();
         //em.flush();
         //em.close();
-        System.out.println(resourceName);
+        //System.out.println(resourceName);
         int resourceId = 0;
         List<Integer> resultList = (List<Integer>) getEntityManager()
                 .createNamedQuery("Resource.findIdByNameNative")

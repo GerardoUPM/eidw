@@ -1,13 +1,18 @@
 package edu.upm.midas.data.extraction.service;
 
+import edu.upm.midas.constants.Constants;
 import edu.upm.midas.data.extraction.model.Connection_;
 import edu.upm.midas.enums.StatusHttpEnum;
+import edu.upm.midas.utilsservice.Common;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Created by gerardo on 29/3/17.
@@ -19,6 +24,9 @@ import java.io.IOException;
  */
 @Component
 public class ConnectDocument {
+
+    @Autowired
+    private Common common;
 
     /**
      * Con esta método compruebo el Status code de la respuesta que recibo al hacer la petición
@@ -35,9 +43,37 @@ public class ConnectDocument {
         //Response oResponse; ya no se usa
         Connection_ connection_ = new Connection_();
         connection_.setLink( link );
+        //http://en.wikipedia.org/wiki/
+        //System.out.println(URLEncoder.encode(common.cutStringPerformance(30, 0,Constants.HTTP_HEADER +link), "UTF-8"));
 
         try {//Constants.HTTP_HEADER +
-            Connection connection = Jsoup.connect( connection_.getLink().replace("http", "https") ).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0").referrer("http://www.google.com").timeout(20*1000);
+            Connection connection = Jsoup.connect( Constants.HTTP_HEADER + connection_.getLink().replace("http", "https") ).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0").referrer("http://www.google.com").timeout(20*1000);
+            // Connection connection = Jsoup.connect( connection_.getLink().replace("http", "https") )
+            //oResponse = connection.execute(); || Jsoup.connect(Constants.HTTP_HEADER + connection_.getLink()
+            connection_.setoDoc( connection.get()/*getHtmlDocument(connection)*/ );
+            connection_.setStatus( connection.execute().statusMessage() );
+            connection_.setStatusCode( connection.execute().statusCode() );
+        } catch (Exception e) {
+            System.out.println("Exception to connect with the page: (" + connection_.getLink() + ") " + e.getMessage() + " " +e.getStackTrace());
+            connection_ = tryConnect(connection_);
+            if (connection_.getoDoc() == null) {
+                connection_.setStatus(StatusHttpEnum.NOT_FOUND.getDescripcion());
+                connection_.setStatusCode(StatusHttpEnum.NOT_FOUND.getClave());
+                connection_.setoDoc(null);
+            }
+        }
+
+        return connection_;
+    }
+
+
+    public Connection_ tryConnect(Connection_ connection_) throws UnsupportedEncodingException {
+        //http://en.wikipedia.org/wiki/
+        String convertLink = Constants.HTTP_HEADER + "en.wikipedia.org/wiki/" + URLEncoder.encode(common.cutStringPerformance(29, 0, connection_.getLink()), "UTF-8");
+        System.out.println(connection_.getLink()+ " - " +convertLink);
+
+        try {//Constants.HTTP_HEADER +
+            Connection connection = Jsoup.connect( convertLink.replace("http", "https") ).userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0").referrer("http://www.google.com").timeout(20*1000);
             // Connection connection = Jsoup.connect( connection_.getLink().replace("http", "https") )
             //oResponse = connection.execute(); || Jsoup.connect(Constants.HTTP_HEADER + connection_.getLink()
             connection_.setoDoc( connection.get()/*getHtmlDocument(connection)*/ );
@@ -49,7 +85,6 @@ public class ConnectDocument {
             connection_.setStatusCode( StatusHttpEnum.NOT_FOUND.getClave() );
             connection_.setoDoc(null);
         }
-
         return connection_;
     }
 

@@ -80,7 +80,7 @@ public class ExtractionWikipedia {
         Disease disease;
         Section section;
         Paragraph paragraph;
-        List_ list_;
+        List_ list_ = null;
         Table table;
         Link url;
 
@@ -265,32 +265,43 @@ public class ExtractionWikipedia {
                                         //<editor-fold desc="EXTRAE TEXTO DE UN PARRAFO Y LO ALMACENA EN UN OBJETO PARAGRAPH">
                                         // Guarda la información extraida de un párrafo wikipedia en un objeto
                                         // Se crea un párrafo y se extrae su información
-                                        isText = true;
                                         paragraph = setParagraphData(nextElementBro, countText, title);
-
-                                        // Agrega el párrafo a la lista de textos
-                                        textList.add(paragraph);
+                                        if (paragraph!=null) {System.out.println("ENTRA_paragraph");
+                                            isText = true;
+                                            // Agrega el párrafo a la lista de textos
+                                            textList.add(paragraph);
+                                        }
                                         //</editor-fold>
                                         //Extrae el texto si es una etiqueta <ul> o <ol>
                                     } else if (nextElementBro.tagName() == Constants.HTML_UL || nextElementBro.tagName() == Constants.HTML_OL) {//&& !nextElementBro.text().isEmpty()
                                         //<editor-fold desc="EXTRAE TEXTO DE UN PARRAFO Y LO ALMACENA EN UN OBJETO LIST_">
                                         // Guarda la información extraida de una lista wikipedia en un objeto
-                                        isText = true;
                                         list_ = setList_Data(nextElementBro, countText, title);
-
-                                        // Agrega la lista "List_" a la lista de textos
-                                        textList.add(list_);
+                                        if (list_!=null) {System.out.println("ENTRA_list_");
+                                            isText = true;
+                                            // Agrega la lista "List_" a la lista de textos
+                                            textList.add(list_);
+                                        }
                                         //</editor-fold>
+                                        //Extrae el texto si es una etiqueta <table> y class="wikitable"
                                     } else if (nextElementBro.tagName() == Constants.HTML_TABLE){
                                         Elements trs = nextElementBro.select("table.wikitable tr");
                                         if (trs != null) {
                                             //System.out.println("Wikitable" + trs.toString());
-                                            isText = true;
                                             // Guarda la información extraida de una wikitable en un objeto
                                             table = extractWikitableTexts(trs, countText, title);
-
                                             // Agrega la lista "List_" a la lista de textos
-                                            textList.add(table);
+                                            if (table!=null) {System.out.println("ENTRA_table");
+                                                isText = true;
+                                                textList.add(table);
+                                            }
+                                        }
+                                    } else if (nextElementBro.tagName() == Constants.HTML_DIV){
+                                        //Verifica dentro del DIV si:
+                                        boolean findList = verifyList(nextElementBro, isText, list_, countText, title, textList);
+                                        if (findList){System.out.println("ENTRA_insideDIVtoFindLists");
+                                            countText = textList.size();
+                                            isText = true;
                                         }
                                     }
 
@@ -348,6 +359,42 @@ public class ExtractionWikipedia {
         // Retorna la lista de fuentes, con sus documentos, enfermedades, secciones, códigos y textos...
         return sourceList;
 
+    }
+
+    public boolean verifyList(Element element, boolean isText, List_ list_, int countText, String title, List<Text> textList){
+        boolean res = false;
+        Elements luChildrens = element.children();//System.out.println(element.toString() +" - " + nextElementBro.toString());
+        for (Element childElement: luChildrens) {
+            if (childElement != null && (childElement.tagName() == Constants.HTML_UL || childElement.tagName() == Constants.HTML_OL) ){
+                System.out.println("ENTRA_3");
+                res = verifyExistList(childElement, isText, list_, countText, title, textList);
+                if (res){
+                    countText++;
+                    verifyList(childElement, isText, list_, countText, title, textList);
+                }
+            }
+        }
+        return res;
+    }
+
+
+    public boolean verifyExistList(Element element, boolean isText, List_ list_, int countText, String title, List<Text> textList){
+        boolean res = false;
+        if (element.tagName() == Constants.HTML_UL || element.tagName() == Constants.HTML_OL) {//&& !nextElementBro.text().isEmpty()
+            //<editor-fold desc="EXTRAE TEXTO DE UN PARRAFO Y LO ALMACENA EN UN OBJETO LIST_">
+            // Guarda la información extraida de una lista wikipedia en un objeto
+            //System.out.println("ENTRA_2");
+            isText = true;
+            list_ = setList_Data(element, countText, title);
+            if (list_ != null) {
+                // Agrega la lista "List_" a la lista de textos
+                textList.add(list_);
+                res = true;
+                //verifyMoreListInsideAList(element, isText, list_, countText, title, textList);
+            }
+            //</editor-fold>
+        }
+        return res;
     }
 
 
@@ -911,7 +958,6 @@ public class ExtractionWikipedia {
      *
      * @throws Exception
      */
-/*
     public void extractionReport() throws Exception {
 
         List<Integer> countCharacteresList = new ArrayList<>();
@@ -919,7 +965,7 @@ public class ExtractionWikipedia {
         long time_start, time_end;
 
         time_start = System.currentTimeMillis();
-        List<Source> sourceList = extract();
+        List<Source> sourceList = extract(null);
         time_end = System.currentTimeMillis();
 
 
@@ -930,10 +976,9 @@ public class ExtractionWikipedia {
             System.out.println("\n");
             System.out.println("-------------------- SOURCE(" + source.getId() + "_" + source.getName() + ") --------------------");
 
-            for (Doc document:
-                    source.getDocList()) {
+            for (Doc document: source.getDocList()) {
 
-                System.out.println("Document(" + document.getId() + "_" + document.getVersion() + ") => " + document.getUrl().getUrl());
+                System.out.println("Document(" + document.getId() + "_" + document.getDate() + ") => " + document.getUrl().getUrl());
                 System.out.println("    Disease(" + document.getDisease().getId() + "_" + document.getDisease().getName() + ") ");
 
                 System.out.println("    Codes list...:");
@@ -955,11 +1000,10 @@ public class ExtractionWikipedia {
                         if(text instanceof Paragraph){
                             System.out.println("            " + ( (Paragraph) text).getText() );
                             countCharacteresList.add( ( (Paragraph) text).getText().length() );
-                        }else{
-                            for (String bullet:
-                                    ( (List_) text).getBulletList() ) {
+                        }else if(text instanceof List_){
+                            for (String bullet: ( (List_) text).getBulletList() ) {
                                 System.out.println("            -" + bullet);
-                                aux = aux + bullet + "zzzz";
+                                aux = aux + bullet + "&";
                             }
                             //if(aux.length() > 2){aux = aux.substring(0, aux.length()-1);}
                             //System.out.println(" aux = " + aux);
@@ -979,7 +1023,8 @@ public class ExtractionWikipedia {
 
         }
 
-*/
+
+
 /*
         System.out.println("=========================================================");
         Collections.sort(countCharacteresList);
@@ -987,13 +1032,14 @@ public class ExtractionWikipedia {
              countCharacteresList) {
             System.out.println(i);
         }
-*//*
+*/
+
 
 
         System.out.println("the task (model informtacion of diseases from wikipedia) has taken "+ ( (time_end - time_start) / 1000 ) +" seconds");
 
     }
-*/
+
 
 
     /**
@@ -1005,15 +1051,18 @@ public class ExtractionWikipedia {
      * @return objeto Paragraph
      */
     public Paragraph setParagraphData(Element element, int countText, String title){
-        Paragraph paragraph = new Paragraph();
+        Paragraph paragraph = null;
 
-        paragraph.setId( countText );
-        paragraph.setText( element.text() );
-        paragraph.setTextOrder( countText );
-        paragraph.setTitle(title);
+        if (!common.isEmpty(element.text())){
+            paragraph = new Paragraph();
+            paragraph.setId( countText );
+            paragraph.setText( element.text() );
+            paragraph.setTextOrder( countText );
+            paragraph.setTitle(title);
 
-        // Agrega la lista de enlaces al párrafo
-        paragraph.setUrlList( getTextUrls( element ) );
+            // Agrega la lista de enlaces al párrafo
+            paragraph.setUrlList( getTextUrls( element ) );
+        }
 
         return paragraph;
     }
@@ -1028,44 +1077,39 @@ public class ExtractionWikipedia {
      * @return objeto List_
      */
     public List_ setList_Data(Element element, int countText, String title){
-        List_ list_ = new List_();
-        List<String> liList;
-
-        list_.setId( countText );
-        list_.setTextOrder( countText );
-        list_.setTitle(title);
-
-        liList = new ArrayList<>();
+        List_ list_ = null;
+        List<String> liList = new ArrayList<>();
         // Recorrido de la lista. Recorre los elementos <li> de un <ul>
         Elements li = element.select(Constants.HTML_LI); // select all li from ul
         for (int i = 0; i < li.size(); i++) {
             // Agrega las filas a la lista de elementos de una lista
             liList.add( li.get(i).text() );
         }
-        // Agrega la lista al objeto lista "List_"
-        list_.setBulletList( liList );
+        if (liList.size() > 0){
+            list_ = new List_();
+            list_.setId( countText );
+            list_.setTextOrder( countText );
+            list_.setTitle(title);
+            // Agrega la lista al objeto lista "List_"
+            list_.setBulletList( liList );
 
-        // Agrega la lista de enlaces al objeto lista "List_"
-        list_.setUrlList( getTextUrls( element ) );
+            // Agrega la lista de enlaces al objeto lista "List_"
+            list_.setUrlList( getTextUrls( element ) );
+        }
 
         return list_;
     }
 
     public Table extractWikitableTexts(Elements trElements, int countText, String title){
-        Table table = new Table();
-        List<Tr> trList = new ArrayList<>();;
+        Table table = null;
         String head = "";
         String body = "";
-
-        table.setId( countText );
-        table.setTextOrder( countText );
-        table.setTitle(title);System.out.println("Wikitable: " + title);
 
         for (Element tr : trElements) {
             Elements tds = tr.getElementsByTag("td");
             Elements ths = tr.getElementsByTag("th");
             for (Element th_: ths) {
-                head += "<***>" + th_.text() + "<<==>>";
+                head += th_.text() + "|||";
                 //System.out.println("th: " + th_.text());
             }
             for (Element td_: tds) {
@@ -1075,20 +1119,22 @@ public class ExtractionWikipedia {
         }
 
         if (!common.isEmpty(head) && !common.isEmpty(body)){
-            Tr oTr_head = new Tr(head);
+            table = new Table();
+            List<Tr> trList = new ArrayList<>();;
+            table.setId( countText );
+            table.setTextOrder( countText );
+            table.setTitle(title);System.out.println("Wikitable: " + title);
+            Tr oTr_head = new Tr(head + "<***>");
             Tr oTr_body = new Tr(body);
             trList.add(oTr_head);
             trList.add(oTr_body);
+            table.setTrList(trList);
+            //System.out.println("th: " + head);
+            //System.out.println("td: " + body);
+
+            // Agrega la lista de enlaces al objeto lista "List_"
+            table.setUrlList( getTableTextUrls( trElements ) );
         }
-
-        table.setTrList(trList);
-
-        //System.out.println("th: " + head);
-        //System.out.println("td: " + body);
-
-        // Agrega la lista de enlaces al objeto lista "List_"
-        table.setUrlList( getTableTextUrls( trElements ) );
-
         return table;
     }
 
