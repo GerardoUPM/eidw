@@ -78,16 +78,16 @@ public class TextHelperNative {
             }
             if (!textList.equals(""))
                 textList = common.cutStringPerformance(0, 1, textList);
-            text_ = (!text.getTitle().equals(""))?text.getTitle() + " => ":"" +textList;
+            text_ = (!text.getTitle().equals(""))?text.getTitle() + " => "+textList:"" +textList;
             textService.insertNative( textId, ContentType.LIST.getClave(), text_.trim() );
         } else if (text instanceof Table){
             //System.out.println(((Table) text).getTrList().toString());
             String textList = "";
             List<Tr> trList = ( (Table) text ).getTrList();
             for (Tr oTr: trList) {
-                textList += oTr.getTd() + "<<|||>>";
+                textList += oTr.getTd() + " ";
             }
-            text_ = (!text.getTitle().equals(""))?text.getTitle() + " => ":"" +textList;
+            text_ = (!text.getTitle().equals(""))?text.getTitle() + " => "+textList:"" +textList;
             textService.insertNative( textId, ContentType.TABLE.getClave(), text_.trim() );
         }
 

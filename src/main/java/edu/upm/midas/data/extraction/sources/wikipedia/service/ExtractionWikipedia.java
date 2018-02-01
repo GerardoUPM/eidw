@@ -1109,11 +1109,11 @@ public class ExtractionWikipedia {
             Elements tds = tr.getElementsByTag("td");
             Elements ths = tr.getElementsByTag("th");
             for (Element th_: ths) {
-                head += th_.text() + "|||";
+                head += th_.text() + " ";
                 //System.out.println("th: " + th_.text());
             }
             for (Element td_: tds) {
-                body += td_.text() + "<<==>>";
+                body += td_.text() + " ";
                 //System.out.println("td: " + td_.text());
             }
         }
@@ -1124,7 +1124,7 @@ public class ExtractionWikipedia {
             table.setId( countText );
             table.setTextOrder( countText );
             table.setTitle(title);System.out.println("Wikitable: " + title);
-            Tr oTr_head = new Tr(head + "<***>");
+            Tr oTr_head = new Tr(head + " headingBody ");
             Tr oTr_body = new Tr(body);
             trList.add(oTr_head);
             trList.add(oTr_body);
