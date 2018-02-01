@@ -266,7 +266,7 @@ public class ExtractionWikipedia {
                                         // Guarda la información extraida de un párrafo wikipedia en un objeto
                                         // Se crea un párrafo y se extrae su información
                                         paragraph = setParagraphData(nextElementBro, countText, title);
-                                        if (paragraph!=null) {System.out.println("ENTRA_paragraph");
+                                        if (paragraph!=null) {//System.out.println("ENTRA_paragraph");
                                             isText = true;
                                             // Agrega el párrafo a la lista de textos
                                             textList.add(paragraph);
@@ -277,7 +277,7 @@ public class ExtractionWikipedia {
                                         //<editor-fold desc="EXTRAE TEXTO DE UN PARRAFO Y LO ALMACENA EN UN OBJETO LIST_">
                                         // Guarda la información extraida de una lista wikipedia en un objeto
                                         list_ = setList_Data(nextElementBro, countText, title);
-                                        if (list_!=null) {System.out.println("ENTRA_list_");
+                                        if (list_!=null) {//System.out.println("ENTRA_list_");
                                             isText = true;
                                             // Agrega la lista "List_" a la lista de textos
                                             textList.add(list_);
@@ -291,7 +291,7 @@ public class ExtractionWikipedia {
                                             // Guarda la información extraida de una wikitable en un objeto
                                             table = extractWikitableTexts(trs, countText, title);
                                             // Agrega la lista "List_" a la lista de textos
-                                            if (table!=null) {System.out.println("ENTRA_table");
+                                            if (table!=null) {//System.out.println("ENTRA_table");
                                                 isText = true;
                                                 textList.add(table);
                                             }
@@ -299,7 +299,7 @@ public class ExtractionWikipedia {
                                     } else if (nextElementBro.tagName() == Constants.HTML_DIV){
                                         //Verifica dentro del DIV si:
                                         boolean findList = verifyList(nextElementBro, isText, list_, countText, title, textList);
-                                        if (findList){System.out.println("ENTRA_insideDIVtoFindLists");
+                                        if (findList){//System.out.println("ENTRA_insideDIVtoFindLists");
                                             countText = textList.size();
                                             isText = true;
                                         }
@@ -366,7 +366,7 @@ public class ExtractionWikipedia {
         Elements luChildrens = element.children();//System.out.println(element.toString() +" - " + nextElementBro.toString());
         for (Element childElement: luChildrens) {
             if (childElement != null && (childElement.tagName() == Constants.HTML_UL || childElement.tagName() == Constants.HTML_OL) ){
-                System.out.println("ENTRA_3");
+                //System.out.println("ENTRA_3");
                 res = verifyExistList(childElement, isText, list_, countText, title, textList);
                 if (res){
                     countText++;
