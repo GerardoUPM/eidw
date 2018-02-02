@@ -93,7 +93,7 @@ public class Resource {
     }
 
     @Basic
-    @Column(name = "name", nullable = false, length = 50)
+    @Column(name = "name", nullable = false, length = 100)
     public String getName() {
         return name;
     }

@@ -56,10 +56,10 @@ public class SymptomHelperNative {
         if ( symptom == null ){
             symptomService.insertNative( concept.getCui(), concept.getName() );
             setSemanticType( concept, "" );
-            setHasSymptom(textId, concept.getCui(), false);
+            setHasSymptom(textId, concept.getCui(), false, concept.getMatchedWords().toString(), concept.getPositionalInfo());
         }else{
             setSemanticType( concept, "" );
-            setHasSymptom(textId, concept.getCui(), false);
+            setHasSymptom(textId, concept.getCui(), false, concept.getMatchedWords().toString(), concept.getPositionalInfo());
         }
     }
 
@@ -85,13 +85,13 @@ public class SymptomHelperNative {
      * @param cui
      * @param validated
      */
-    public void setHasSymptom(String textId, String cui, boolean validated){
+    public void setHasSymptom(String textId, String cui, boolean validated, String matchedWords, String positionalInfo){
         HasSymptomPK hasSymptomPK = new HasSymptomPK();
         hasSymptomPK.setCui( cui );
         hasSymptomPK.setTextId( textId );
         HasSymptom hasSymptom = hasSymptomService.findById( hasSymptomPK );
         if ( hasSymptom == null ){
-            hasSymptomService.insertNative(textId, cui, validated);
+            hasSymptomService.insertNative(textId, cui, validated, matchedWords, positionalInfo);
         }
     }
 

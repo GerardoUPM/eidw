@@ -69,6 +69,10 @@ public class Common {
 
     }
 
+    public String getUnicode(char character){
+        return "\\u" + Integer.toHexString(character | 0x10000).substring(1);
+    }
+
     public String replaceSpecialCharactersToUnicode(String text){
         return StringEscapeUtils.escapeJava(text);
     }

@@ -45,8 +45,8 @@ public class HasSymptomServiceImpl implements HasSymptomService {
     }
 
     @Override
-    public int insertNative(String textId, String cui, boolean validated) {
-        return daoHasSymptom.insertNative( textId, cui, validated );
+    public int insertNative(String textId, String cui, boolean validated, String matchedWords, String positionalInfo) {
+        return daoHasSymptom.insertNative( textId, cui, validated, matchedWords, positionalInfo );
     }
 
     @Transactional(propagation= Propagation.REQUIRED)

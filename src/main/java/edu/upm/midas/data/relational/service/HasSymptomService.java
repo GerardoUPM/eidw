@@ -22,7 +22,7 @@ public interface HasSymptomService {
 
     void save(HasSymptom hasSymptom);
 
-    int insertNative(String textId, String cui, boolean validated);
+    int insertNative(String textId, String cui, boolean validated, String matchedWords, String positionalInfo);
 
     boolean updateFindFull(HasSymptom hasSymptom, HasSymptomPK hasSymptomPK);
 

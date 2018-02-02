@@ -28,7 +28,7 @@ public interface HasSymptomRepository {
 
     void persist(HasSymptom hasSymptom);
 
-    int insertNative(String textId, String cui, boolean validated);
+    int insertNative(String textId, String cui, boolean validated, String matchedWords, String positionalInfo);
 
     boolean deleteById(HasSymptomPK hasSymptomPK);
 

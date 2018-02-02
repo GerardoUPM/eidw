@@ -1123,7 +1123,7 @@ public class ExtractionWikipedia {
             List<Tr> trList = new ArrayList<>();;
             table.setId( countText );
             table.setTextOrder( countText );
-            table.setTitle(title);System.out.println("Wikitable: " + title);
+            table.setTitle(title);//System.out.println("Wikitable: " + title);
             Tr oTr_head = new Tr(head + " headingBody ");
             Tr oTr_body = new Tr(body);
             trList.add(oTr_head);

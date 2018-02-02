@@ -30,14 +30,14 @@ import java.util.Objects;
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = "HasSymptom.findByIdNative",
-                query = "SELECT h.text_id, h.cui, h.validated "
+                query = "SELECT h.text_id, h.cui, h.validated, h.matched_words, h.positional_info "
                         + "FROM has_symptom h WHERE h.text_id = :textId AND h.cui = :cui"//,
                 //resultSetMapping="HasSymptomMapping"
 
         ),
         @NamedNativeQuery(
                 name = "HasSymptom.findByIdNativeResultClass",
-                query = "SELECT h.text_id, h.cui, h.validated "
+                query = "SELECT h.text_id, h.cui, h.validated, h.matched_words, h.positional_info "
                         + "FROM has_symptom h WHERE h.text_id = :textId AND h.cui = :cui",
                 resultClass = HasSymptom.class
         ),
@@ -45,8 +45,8 @@ import java.util.Objects;
 
         @NamedNativeQuery(
                 name = "HasSymptom.insertNative",
-                query = "INSERT INTO has_symptom (text_id, cui, validated) "
-                        + "VALUES (:textId, :cui, :validated)"
+                query = "INSERT INTO has_symptom (text_id, cui, validated, matched_words, positional_info) "
+                        + "VALUES (:textId, :cui, :validated, :matchedWords, :positionalInfo)"
         ),
 
 
@@ -68,7 +68,9 @@ import java.util.Objects;
                         fields = {
                                 @FieldResult(name = "textId", column = "text"),
                                 @FieldResult(name = "cui", column = "symptom"),
-                                @FieldResult(name = "validated", column = "validated")
+                                @FieldResult(name = "validated", column = "validated"),
+                                @FieldResult(name = "matched_words", column = "matchedWords"),
+                                @FieldResult(name = "positional_info", column = "positionalInfo")
                         }
                 )
         )
@@ -81,10 +83,12 @@ public class HasSymptom {
     private String cui;
     private Byte validated;
     private Text textByTextId;
+    private String matchedWords;
+    private String positionalInfo;
     private Symptom symptomByCui;
 
     @Id
-    @Column(name = "text_id", nullable = false, length = 55)
+    @Column(name = "text_id", nullable = false, length = 255)
     public String getTextId() {
         return textId;
     }
@@ -113,6 +117,26 @@ public class HasSymptom {
         this.validated = validated;
     }
 
+    @Basic
+    @Column(name = "matched_words", nullable = false)
+    public String getMatchedWords() {
+        return matchedWords;
+    }
+
+    public void setMatchedWords(String matchedWords) {
+        this.matchedWords = matchedWords;
+    }
+
+    @Basic
+    @Column(name = "positional_info", nullable = false)
+    public String getPositionalInfo() {
+        return positionalInfo;
+    }
+
+    public void setPositionalInfo(String positionalInfo) {
+        this.positionalInfo = positionalInfo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -125,7 +149,7 @@ public class HasSymptom {
 
     @Override
     public int hashCode() {
-        return Objects.hash(textId, cui, validated);
+        return Objects.hash(textId, cui, validated, matchedWords, positionalInfo);
     }
 
     @ManyToOne

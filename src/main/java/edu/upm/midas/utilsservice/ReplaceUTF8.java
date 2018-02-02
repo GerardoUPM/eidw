@@ -45,6 +45,7 @@
 */
 package edu.upm.midas.utilsservice;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -61,6 +62,9 @@ import java.util.HashMap;
  */
 @Service
 public class ReplaceUTF8 {
+
+    @Autowired
+    private Common common;
 
         private static HashMap<Character, String> char_map =
                 new HashMap <> ();
@@ -1630,6 +1634,20 @@ public class ReplaceUTF8 {
             char_map.put(new Character('\ub1cc'), new String(""));
             char_map.put(new Character('\ub450'), new String(""));
             char_map.put(new Character('\uf030'), new String(""));
+
+            //Special case ʻ, ≈, \, image of Unicode Character 'FUNCTION APPLICATION' (U+2061)
+            char_map.put(new Character('\u02bb'), new String(""));//ʻ
+            char_map.put(new Character('\u034c'), new String(""));//≈
+            char_map.put(new Character('\u2248'), new String(""));//≈
+            char_map.put(new Character('\u2061'), new String(""));
+            char_map.put(new Character('\u2060'), new String(""));//WORD JOINER
+            char_map.put(new Character('\u1fd6'), new String(""));//ῖ
+            char_map.put(new Character('\u2191'), new String(""));//↑
+            char_map.put(new Character('\u2193'), new String(""));//↓
+            char_map.put(new Character('\u02da'), new String(""));//˚
+            char_map.put(new Character('\u030a'), new String(""));//̊
+            //char_map.put(new Character('\n'), new String(""));//salto linea
+            char_map.put(new Character('\u27f6'), new String(""));//⟶
         }
 
         //Replaces special characters with look-like ASCII chars
@@ -1645,6 +1663,11 @@ public class ReplaceUTF8 {
                 {
                     String rep_char = char_map.get( new Character(input.charAt(i)) );
 //                    System.out.println("INPUT("+ input.charAt(i)+"): " + input.charAt(i) + " REPLACE: " + rep_char);
+                    //System.out.println( common.getUnicode(input.charAt(i)) );
+                    if (rep_char == null){//Si entra aquí convertiremos el caracter a "". Puede ser caracter asiatico o
+                        //algun otro caracter que no esté incluido arriba
+                        rep_char = "";
+                    }
                     if(rep_char != null )
                         tempBuf.append(rep_char);
 

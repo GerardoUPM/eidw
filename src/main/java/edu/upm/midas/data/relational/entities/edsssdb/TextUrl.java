@@ -21,7 +21,7 @@ public class TextUrl {
     private Url urlByUrlId;
 
     @Id
-    @Column(name = "text_id", nullable = false, length = 55)
+    @Column(name = "text_id", nullable = false, length = 255)
     public String getTextId() {
         return textId;
     }

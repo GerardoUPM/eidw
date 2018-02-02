@@ -63,7 +63,7 @@ public class TextHelperNative {
 
         if(text instanceof Paragraph){
             //System.out.println(((Paragraph) text).getTitle() + " =>" +((Paragraph) text).getText());
-            text_ = (!(text.getTitle().equals(""))?(text.getTitle() + " => " + ( (Paragraph) text).getText()):"" + ( (Paragraph) text).getText());
+            text_ = (!(text.getTitle().equals(""))?(text.getTitle() + " => " + ( (Paragraph) text).getText()):( (Paragraph) text).getText());
             textService.insertNative( textId, ContentType.PARA.getClave(), text_.trim() );
         }else if (text instanceof List_){
             //System.out.println(((List_) text).getBulletList().toString());
@@ -78,7 +78,7 @@ public class TextHelperNative {
             }
             if (!textList.equals(""))
                 textList = common.cutStringPerformance(0, 1, textList);
-            text_ = (!text.getTitle().equals(""))?text.getTitle() + " => "+textList:"" +textList;
+            text_ = (!text.getTitle().equals(""))?text.getTitle() + " => "+ textList:textList;
             textService.insertNative( textId, ContentType.LIST.getClave(), text_.trim() );
         } else if (text instanceof Table){
             //System.out.println(((Table) text).getTrList().toString());
@@ -87,7 +87,7 @@ public class TextHelperNative {
             for (Tr oTr: trList) {
                 textList += oTr.getTd() + " ";
             }
-            text_ = (!text.getTitle().equals(""))?text.getTitle() + " => "+textList:"" +textList;
+            text_ = (!text.getTitle().equals(""))?text.getTitle() + " => "+ textList:textList;
             textService.insertNative( textId, ContentType.TABLE.getClave(), text_.trim() );
         }
 

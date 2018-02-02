@@ -81,12 +81,14 @@ public class HasSymptomRepositoryImpl extends AbstractDao<HasSymptomPK, HasSympt
     }
 
     @Override
-    public int insertNative(String textId, String cui, boolean validated) {
+    public int insertNative(String textId, String cui, boolean validated, String matchedWords, String positionalInfo) {
         return getEntityManager()
                 .createNamedQuery("HasSymptom.insertNative")
                 .setParameter("textId", textId)
                 .setParameter("cui", cui)
-                .setParameter("validated", validated)
+                .setParameter("validated", validated)//, String matchedWords, String positionalInfo
+                .setParameter("matchedWords", matchedWords)
+                .setParameter("positionalInfo", positionalInfo)
                 .executeUpdate();
     }
 
