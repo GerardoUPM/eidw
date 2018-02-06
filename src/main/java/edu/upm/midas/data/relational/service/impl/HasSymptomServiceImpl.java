@@ -96,4 +96,9 @@ public class HasSymptomServiceImpl implements HasSymptomService {
     public int updateValidatedNative(String version, String sourceId, String cui, boolean validated) {
         return daoHasSymptom.updateValidatedNative(version, sourceId, cui, validated);
     }
+
+    @Override
+    public int updateMatchedWordsAndPositionalInfoNative(String textId, String cui, String matchedWords, String positionalInfo) {
+        return daoHasSymptom.updateMatchedWordsAndPositionalInfoNative(textId, cui, matchedWords, positionalInfo);
+    }
 }

@@ -107,6 +107,8 @@ public class MetamapService {
                         concept.setCui( conceptEv.getConceptId() );
                         concept.setName( conceptEv.getConceptName() );
                         concept.setSemanticTypes( conceptEv.getSemanticTypes() );
+                        concept.setMatchedWords(conceptEv.getMatchedWords());
+                        concept.setPositionalInfo(conceptEv.getPositionalInfo().toString());
 
                         System.out.println( "   Insert symptom..." + concept.toString() );
                         symptomHelperNative.insertIfExist(concept, responseText.getTextId());
@@ -126,6 +128,119 @@ public class MetamapService {
     }
 
 
+
+
+
+    /**
+     *
+     * @param consult
+     * @return
+     * @throws Exception
+     */
+
+    @Transactional
+    public void filterByParts(Consult consult) throws Exception {
+        Request request = new Request();//VALIDAR CONSULT
+        Configuration conf = new Configuration();
+        List<Text> texts = new ArrayList<>();
+        String sourceId = "";
+        Date version = null;
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        conf.setOptions("-y -R");
+        List<String> sources = new ArrayList<>();
+        sources.add("SNOMEDCT_US");
+        conf.setSources(sources);
+        conf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
+
+        request.setConfiguration( conf );
+
+        System.out.println("Get all texts by version and source...");
+        List<ResponseText> responseTexts = consultHelper.findTextsByVersionAndSource( consult );
+        System.out.println("size: " + responseTexts.size());
+        if (responseTexts != null) {
+            int countRT = 1;
+            for (ResponseText responseText : responseTexts) {
+                if (countRT == 1){
+                    sourceId = responseText.getSourceId();
+                    version = responseText.getVersion();
+                }
+
+                Text text = new Text();
+                text.setId( responseText.getTextId() );
+                text.setText( responseText.getText() );
+                texts.add(text);
+                //System.out.println(responseText.getTextId());
+                //System.out.println("LLAMAR("+countRT+"): " + responseText.isCall());
+                if (responseText.isCall()){
+                    // Se agregan los textos hasta el momento
+
+                    //request.setTextList( texts );
+                    //System.out.println("textsList size is: " + texts.size() + " AND request.textList is:" + request.getTextList().size());
+
+                    //System.out.println( gson.toJson( request ) );
+
+                    //<editor-fold desc="BLOQUE QUE LLAMA Y OBTIENE RESULTADOS DE LA API">
+                    request.setTextList( texts );
+                    request.setToken(Constants.TOKEN);
+
+                    System.out.println( "Connection_ with METAMAP API..." );
+                    System.out.println( "Founding medical concepts in a texts... please wait, this process can take from minutes to hours... " );
+                    Response response = metamapResourceService.filterTexts( request );
+                    System.out.println( "Texts Size request..." + request.getTextList().size());
+                    System.out.println( "Filter Texts Size response..." + response.getTextList().size() );
+                    response.setAuthorized(response.getTextList().size()>=request.getTextList().size());
+                    System.out.println("Authorization: "+ response.isAuthorized());
+
+                    if (response.isAuthorized()) {
+
+                        System.out.println("Insert symptoms starting...");
+                        System.out.println(request.getTextList().size());
+                        int count = 1;//VALIDAR
+                        if (response.getTextList() != null) {
+                            for (edu.upm.midas.data.validation.metamap.model.response.Text filterText : response.getTextList()) {
+                                System.out.println("TEXT_ID: " + filterText.getId() + " | CONCEPTS(" + filterText.getConcepts().size() + "): ");
+                                int countSymptoms = 1;
+                                for (edu.upm.midas.data.validation.metamap.model.response.Concept concept : filterText.getConcepts()) {
+                                    System.out.println("Concept{ cui: " + concept.getCui() + " name: " + concept.getName() + " semTypes:" + concept.getSemanticTypes().toString() + "}");
+                                    symptomHelperNative.insertIfExist(concept, filterText.getId());//text.getId()
+                                    countSymptoms++;
+                                }
+                                count++;
+                            }
+                            System.out.println("Insert symptoms ready!...");
+
+                        } else {
+                            System.out.println("ERROR");
+                /*System.out.println(gson.toJson( response ) );*/
+                        }
+                        //</editor-fold>
+
+
+                    }else{
+                        System.out.println("Authorization message: " + response.getAuthorizationMessage() + " | token: " + response.getToken());
+                    }
+
+
+                    // Se eliminan los textos hasta el momento para dar paso a los nuevos y no superar nunca envíos
+                    // de mas de 300 elementos.
+                    request.getTextList().clear();
+                    texts.clear();
+                }
+                countRT++;
+            }
+
+
+            System.out.println("Insert configuration...");
+            String configurationJson = gson.toJson(request.getConfiguration());
+            configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
+            //System.out.println("Insert configuration ready!...");
+
+
+
+        }
+
+    }
 
 
 

@@ -122,4 +122,15 @@ public class HasSymptomRepositoryImpl extends AbstractDao<HasSymptomPK, HasSympt
                 .setParameter("validated", validated)
                 .executeUpdate();
     }
+
+    @Override
+    public int updateMatchedWordsAndPositionalInfoNative(String textId, String cui, String matchedWords, String positionalInfo) {
+        return getEntityManager()
+                .createNamedQuery("HasSymptom.updateMatchedWordsAndPositionalInfoNative")
+                .setParameter("textId", textId)
+                .setParameter("cui", cui)
+                .setParameter("matchedWords", matchedWords)
+                .setParameter("positionalInfo", positionalInfo)
+                .executeUpdate();
+    }
 }

@@ -40,4 +40,6 @@ public interface HasSymptomRepository {
 
     int updateValidatedNative(String version, String sourceId, String cui, boolean validated);
 
+    int updateMatchedWordsAndPositionalInfoNative(String textId, String cui, String matchedWords, String positionalInfo);
+
 }

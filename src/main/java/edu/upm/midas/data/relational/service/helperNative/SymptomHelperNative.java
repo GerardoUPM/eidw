@@ -92,6 +92,13 @@ public class SymptomHelperNative {
         HasSymptom hasSymptom = hasSymptomService.findById( hasSymptomPK );
         if ( hasSymptom == null ){
             hasSymptomService.insertNative(textId, cui, validated, matchedWords, positionalInfo);
+        }else{
+            String matchedWords_ = hasSymptom.getMatchedWords() + "&" + matchedWords;
+            String positionalInfo_ = hasSymptom.getPositionalInfo() + "&" + positionalInfo;
+            hasSymptomService.updateMatchedWordsAndPositionalInfoNative(hasSymptom.getTextId(),
+                                                                        hasSymptom.getCui(),
+                                                                        matchedWords_,
+                                                                        positionalInfo_);
         }
     }
 

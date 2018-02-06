@@ -57,7 +57,18 @@ import java.util.Objects;
                         "WHERE h.text_id LIKE :version " +
                         "AND h.text_id LIKE :sourceId " +
                         "AND h.cui = :cui "
+        ),
+
+        @NamedNativeQuery(
+                name = "HasSymptom.updateMatchedWordsAndPositionalInfoNative",
+                query = "UPDATE has_symptom h " +
+                        "SET h.matched_words = :matchedWords, " +
+                        "h.positional_info = :positionalInfo " +
+                        "WHERE h.text_id LIKE :textId " +
+                        "AND h.cui = :cui "
         )
+
+
 })
 
 @SqlResultSetMappings({
