@@ -1,11 +1,17 @@
 package edu.upm.midas.controller;
 
+import edu.upm.midas.data.extraction.xml.model.XmlLink;
+import edu.upm.midas.data.relational.entities.edsssdb.*;
+import edu.upm.midas.data.relational.service.DocumentService;
 import edu.upm.midas.data.relational.service.impl.PopulateDbNative;
 import edu.upm.midas.service.ExtractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by gerardo on 05/07/2017.
@@ -24,6 +30,8 @@ public class ExtractionController {
     private PopulateDbNative populateDbNative;
     @Autowired
     private ExtractService extractService;
+    @Autowired
+    private DocumentService documentService;
 
     @RequestMapping(path = { "/extract/wikipedia" }, //wikipedia extraction
             method = RequestMethod.GET)
@@ -74,10 +82,52 @@ public class ExtractionController {
         extractService.checkCodes();
     }
 
-    @RequestMapping(path = { "extract_only/wikipedia" }, //wikipedia extraction
+    @RequestMapping(path = { "/wikipedia/report" }, //wikipedia extraction
             method = RequestMethod.GET)
     public void extractOnly() throws Exception {
-        extractService.onlyExtract();
+        List<XmlLink> xmlLinks = new ArrayList<>();
+        List<Document> documents = documentService.findAll();
+        System.out.println("size: "+documents.size());
+        int count = 1;
+        for (Document document: documents) {
+            if (document.getDate().toString().equals("2018-02-15")){
+                List<HasDisease> hasDiseases = document.getHasDiseases();
+                String diseaseName = "";
+                for (HasDisease hasDisease:hasDiseases){
+                    Disease disease = hasDisease.getDiseaseByDiseaseId();
+                    diseaseName = diseaseName + disease.getName() + "; ";
+                }
+                List<DocumentUrl> documentUrls = document.getDocumentUrls();
+                String urls = "";
+                XmlLink xmlLink = new XmlLink();
+                for (DocumentUrl documentUrl: documentUrls) {
+                    String urlId = documentUrl.getUrlId();
+                    Url url = documentUrl.getUrlByUrlId();
+                    urls = urls + url.getUrl() + "; ";
+
+                    xmlLink.setUrl(url.getUrl());
+                    xmlLink.setConsult(diseaseName);
+                    break;
+                }
+                System.out.println("Disease: (" + count +")" + xmlLink.getConsult() + " | URL: " + xmlLink.getUrl());
+                xmlLinks.add(xmlLink);
+                count++;
+            }
+        }
+        extractService.onlyExtract(xmlLinks);
+
+        //extractService.onlyExtract();
+//        Gson gson = new Gson();
+//        String fileName = "2018-02-01_metamap_filter.json";//adis = disease album
+//        String path = Constants.EXTRACTION_HISTORY_FOLDER + fileName;
+//
+//        BufferedReader br = new BufferedReader( new FileReader(path));
+//
+//        ProcessedText resp = gson.fromJson(br, ProcessedText.class );
+//
+//        for (Text text: resp.getTexts()) {
+//            System.out.println("TextId: " + text.getId() + " | Concepts: " + text.getConcepts().toString());
+//        }
     }
 
 
