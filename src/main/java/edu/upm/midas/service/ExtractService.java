@@ -44,11 +44,11 @@ public class ExtractService {
         return res;
     }
 
-    public boolean onlyExtract() throws Exception {
+    public boolean onlyExtract(List<XmlLink> externalDiseaseLinkList) throws Exception {
         boolean res = false;
         String inicio = utilDate.getTime();
         Date version = utilDate.getSqlDate();
-        populateDbNative.onlyExtract();
+        populateDbNative.onlyExtract(externalDiseaseLinkList);
         System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
 
         return res;

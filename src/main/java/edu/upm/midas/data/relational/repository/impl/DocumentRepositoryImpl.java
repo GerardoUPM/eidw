@@ -73,7 +73,8 @@ public class DocumentRepositoryImpl extends AbstractDao<DocumentPK, Document>
     public List<Document> findAllQuery() {
         return (List<Document>) getEntityManager()
                 .createNamedQuery("Document.findAll")
-                .setMaxResults(10)
+//                .setMaxResults(10)
+                .setMaxResults(0)
                 .getResultList();
     }
 

@@ -189,7 +189,7 @@ public class ExtractionWikipedia {
                         // Almacena información de la enfermdad
                         disease.setId(countDoc);
                         disease.setName(document.getElementById(idElementName).text());
-
+                        //System.out.println("name; " + xmlLink.getConsult() + " ;url; " + xmlLink.getUrl() + " ;extractName; " + disease.getName());
                         // Agrega la enfermedad al documento. En un documento se habla de una enfermedad
                         doc.setDisease(disease);
                         //</editor-fold>
@@ -958,70 +958,70 @@ public class ExtractionWikipedia {
      *
      * @throws Exception
      */
-    public void extractionReport() throws Exception {
+    public void extractionReport(List<XmlLink> externalDiseaseLinkList) throws Exception {
 
         List<Integer> countCharacteresList = new ArrayList<>();
 
         long time_start, time_end;
 
         time_start = System.currentTimeMillis();
-        List<Source> sourceList = extract(null);
+        List<Source> sourceList = extract(externalDiseaseLinkList);
         time_end = System.currentTimeMillis();
 
 
-        System.out.println("-------------------- EXTRACTION REPORT --------------------");
-        for (Source source :
-                sourceList) {
-
-            System.out.println("\n");
-            System.out.println("-------------------- SOURCE(" + source.getId() + "_" + source.getName() + ") --------------------");
-
-            for (Doc document: source.getDocList()) {
-
-                System.out.println("Document(" + document.getId() + "_" + document.getDate() + ") => " + document.getUrl().getUrl());
-                System.out.println("    Disease(" + document.getDisease().getId() + "_" + document.getDisease().getName() + ") ");
-
-                System.out.println("    Codes list...:");
-                for (Code code:
-                        document.getCodeList()) {
-                    System.out.println("        Code_" + code.getId() + "[" + code.getResource().getName() + "]: " + code.getCode() + " URL_CODE:" + code.getLink().getUrl() );
-                }
-
-                for (Section section:
-                        document.getSectionList()) {
-                    System.out.println("    Section(" + section.getId() + ") " + section.getName() );
-
-                    for (Text text :
-                            section.getTextList()) {
-                        System.out.println("    ------------ TEXT(" + text.getTitle() + ") -----------");
-                        System.out.println("        Text_" + text.getTextOrder() + "(" + text.getId() + ") (" + text.getClass() + ")" );
-
-                        String aux = "";
-                        if(text instanceof Paragraph){
-                            System.out.println("            " + ( (Paragraph) text).getText() );
-                            countCharacteresList.add( ( (Paragraph) text).getText().length() );
-                        }else if(text instanceof List_){
-                            for (String bullet: ( (List_) text).getBulletList() ) {
-                                System.out.println("            -" + bullet);
-                                aux = aux + bullet + "&";
-                            }
-                            //if(aux.length() > 2){aux = aux.substring(0, aux.length()-1);}
-                            //System.out.println(" aux = " + aux);
-                            countCharacteresList.add( aux.length() );
-                        }
-
-                        System.out.println("        ------------ LINKS -----------");
-                        for (Link url:
-                                text.getUrlList()) {
-                            System.out.println("            Key: " + url.getId() + ": URL(" + url.getDescription() + "): " + url.getUrl() );
-                        }
-
-                    }
-                }
-
-            }
-
-        }
+//        System.out.println("-------------------- EXTRACTION REPORT --------------------");
+//        for (Source source :
+//                sourceList) {
+//
+//            System.out.println("\n");
+//            System.out.println("-------------------- SOURCE(" + source.getId() + "_" + source.getName() + ") --------------------");
+//
+//            for (Doc document: source.getDocList()) {
+//
+//                System.out.println("Document(" + document.getId() + "_" + document.getDate() + ") => " + document.getUrl().getUrl());
+//                System.out.println("    Disease(" + document.getDisease().getId() + "_" + document.getDisease().getName() + ") ");
+//
+//                System.out.println("    Codes list...:");
+//                for (Code code:
+//                        document.getCodeList()) {
+//                    System.out.println("        Code_" + code.getId() + "[" + code.getResource().getName() + "]: " + code.getCode() + " URL_CODE:" + code.getLink().getUrl() );
+//                }
+//
+//                for (Section section:
+//                        document.getSectionList()) {
+//                    System.out.println("    Section(" + section.getId() + ") " + section.getName() );
+//
+//                    for (Text text :
+//                            section.getTextList()) {
+//                        System.out.println("    ------------ TEXT(" + text.getTitle() + ") -----------");
+//                        System.out.println("        Text_" + text.getTextOrder() + "(" + text.getId() + ") (" + text.getClass() + ")" );
+//
+//                        String aux = "";
+//                        if(text instanceof Paragraph){
+//                            System.out.println("            " + ( (Paragraph) text).getText() );
+//                            countCharacteresList.add( ( (Paragraph) text).getText().length() );
+//                        }else if(text instanceof List_){
+//                            for (String bullet: ( (List_) text).getBulletList() ) {
+//                                System.out.println("            -" + bullet);
+//                                aux = aux + bullet + "&";
+//                            }
+//                            //if(aux.length() > 2){aux = aux.substring(0, aux.length()-1);}
+//                            //System.out.println(" aux = " + aux);
+//                            countCharacteresList.add( aux.length() );
+//                        }
+//
+//                        System.out.println("        ------------ LINKS -----------");
+//                        for (Link url:
+//                                text.getUrlList()) {
+//                            System.out.println("            Key: " + url.getId() + ": URL(" + url.getDescription() + "): " + url.getUrl() );
+//                        }
+//
+//                    }
+//                }
+//
+//            }
+//
+//        }
 
 
 

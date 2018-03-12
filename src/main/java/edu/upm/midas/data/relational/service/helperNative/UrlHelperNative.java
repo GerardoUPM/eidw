@@ -3,6 +3,7 @@ package edu.upm.midas.data.relational.service.helperNative;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.upm.midas.data.extraction.model.Link;
+import edu.upm.midas.data.relational.entities.edsssdb.Url;
 import edu.upm.midas.data.relational.service.UrlService;
 import edu.upm.midas.utilsservice.Common;
 import edu.upm.midas.utilsservice.UniqueId;
@@ -54,6 +55,31 @@ public class UrlHelperNative {
 
 
     /**
+     * @param link
+     * @param id
+     * @return
+     * @throws JsonProcessingException
+     */
+    public String getSimpleUrlId(Link link, int id) throws JsonProcessingException {
+        String urlId = uniqueId.generateDocumentUrlId( id );
+        Url url = urlService.findById(urlId);
+        if (url!=null){
+            String newUrl = urlId + "_" + uniqueId.generate(6);
+            if (urlService.insertNative( newUrl, link.getUrl() ) > 0)
+                return newUrl;
+            else
+                return "";
+        }else{
+            if (urlService.insertNative( urlId, link.getUrl() ) > 0)
+                return urlId;
+            else
+                return "";
+        }
+
+    }
+
+
+    /**
      * @param links
      * @param id
      * @return
@@ -69,6 +95,13 @@ public class UrlHelperNative {
         }
 
         return urls;
+    }
+
+
+    public Url findUrl(String url){
+        Url oUrl = urlService.findByName(url);
+        if (oUrl != null) return oUrl;
+        else return null;
     }
 
 

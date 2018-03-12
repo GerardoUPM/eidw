@@ -45,7 +45,7 @@ public class Constants {
     public static final String VERSION_PROJECT = "1.0";
 
     public static final String TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJncmFyZG9sYWdhckBob3RtYWlsLmNvbSIsImF1ZCI6IndlYiIsIm5hbWUiOiJHZXJhcmRvIExhZ3VuZXMiLCJ1c2VyIjp0cnVlLCJpYXQiOjE1MDk2MTQyNjh9.uVhDgfLrAgdnj02Hsbgfj9tkVlfni89i0hKVYW31eHApCHpheikK9ae1MhbzRhiyUcFGMKwtiyVgff5NCMY3PA";
-
+    public static final String EXTRACTION_HISTORY_FOLDER = "tmp/mm/";
 
     public static final String IMAGE_PATTERN =
             "([^\\s]+(\\.(?i)(jpg|png|gif|bmp))$)";

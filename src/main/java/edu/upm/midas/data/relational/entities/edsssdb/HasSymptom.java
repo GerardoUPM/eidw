@@ -93,9 +93,9 @@ public class HasSymptom {
     private String textId;
     private String cui;
     private Byte validated;
-    private Text textByTextId;
     private String matchedWords;
     private String positionalInfo;
+    private Text textByTextId;
     private Symptom symptomByCui;
 
     @Id

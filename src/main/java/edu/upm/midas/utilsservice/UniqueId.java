@@ -58,6 +58,11 @@ public class UniqueId {
         return id + ".U" + u;
     }
 
+    public String generateDocumentUrlId(int documentId){
+        String u = (documentId < 10)?String.format("%02d", documentId):documentId+"";
+        return "DOC.U" + documentId;
+    }
+
     public String generateConfiguration(String source, String version){
         String configurationId = source + ":" + version + "_" + utilDate.getTimestampNumber();
         return configurationId;

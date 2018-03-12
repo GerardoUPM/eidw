@@ -2,6 +2,7 @@ package edu.upm.midas.data.relational.service.helperNative;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.upm.midas.data.extraction.model.Doc;
+import edu.upm.midas.data.relational.entities.edsssdb.Url;
 import edu.upm.midas.data.relational.service.DocumentService;
 import edu.upm.midas.utilsservice.Common;
 import edu.upm.midas.utilsservice.UniqueId;
@@ -50,8 +51,13 @@ public class DocumentHelperNative {
         //Cambio para la siguiente version 2018-01-15
         if ( documentService.insertNative( documentId, version ) > 0 ) {
             String docId = documentHelperNative.getDocumentId( documentId, version );
-            String urlId = urlHelperNative.getUrl(document.getUrl(), docId);
-            documentService.insertNativeUrl( documentId, version, urlId );
+            Url url = urlHelperNative.findUrl(document.getUrl().getUrl());
+            if (url!=null){
+                documentService.insertNativeUrl( documentId, version, url.getUrlId() );
+            }else {
+                String urlId = urlHelperNative.getSimpleUrlId(document.getUrl(), document.getId());
+                documentService.insertNativeUrl(documentId, version, urlId);
+            }
             documentService.insertNativeHasSource( documentId, version, sourceId );
             return documentId;
         }else

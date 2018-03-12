@@ -25,6 +25,7 @@ public class Configuration {
     @NotNull(message = Constants.ERR_NO_PARAMETER)
     @Size(min = 1, message = Constants.ERR_EMPTY_PARAMETER)
     private String options;
+    private boolean concept_location;
 
 
     public List<String> getSemanticTypes() {return semanticTypes;}
@@ -47,5 +48,13 @@ public class Configuration {
 
     public void setOptions(String options) {
         this.options = options;
+    }
+
+    public boolean isConcept_location() {
+        return concept_location;
+    }
+
+    public void setConcept_location(boolean concept_location) {
+        this.concept_location = concept_location;
     }
 }

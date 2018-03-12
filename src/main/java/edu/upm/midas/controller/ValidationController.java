@@ -34,11 +34,27 @@ public class ValidationController {
     public String metamapFilter() throws Exception {
 
         Consult consult = new Consult("wikipedia",
-                "2018-02-01");
+                "2018-02-15");
 
         String inicio = utilDate.getTime();
         //metamapService.localFilter( consult );
         metamapService.filter( consult );
+        System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
+
+        return "It has been successfully filtered with Metamap";
+    }
+
+
+    @RequestMapping(path = { "/metamap/json" }, //Term Validation Procedure
+            method = RequestMethod.GET)
+    public String metamapFilterWithJSON() throws Exception {
+
+        Consult consult = new Consult("wikipedia",
+                "2018-02-15");
+
+        String inicio = utilDate.getTime();
+        //metamapService.filterAndStorageInJASON(consult);
+        metamapService.populateTextsStoredJSON( consult );
         System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
 
         return "It has been successfully filtered with Metamap";
@@ -63,7 +79,7 @@ public class ValidationController {
     public String tvpValidation() throws Exception {
 
         Consult consult = new Consult("wikipedia",
-                "2018-02-01");
+                "2018-02-15");
 
         String inicio = utilDate.getTime();
         tvpService.validation( consult );
