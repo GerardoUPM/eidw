@@ -303,7 +303,14 @@ public class Constants {
         add("dsyn");
         add("fndg");
         add("lbpr");
-        add("lbtr"); }};
+        add("lbtr");
+
+        add("inpr");
+        add("menp");
+        add("mobd");
+        add("patf");
+    }};
+
 
     /**
      * Fuentes de extracción

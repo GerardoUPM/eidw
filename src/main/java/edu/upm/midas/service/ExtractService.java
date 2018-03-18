@@ -44,6 +44,10 @@ public class ExtractService {
         return res;
     }
 
+
+
+
+
     public boolean onlyExtract(List<XmlLink> externalDiseaseLinkList) throws Exception {
         boolean res = false;
         String inicio = utilDate.getTime();

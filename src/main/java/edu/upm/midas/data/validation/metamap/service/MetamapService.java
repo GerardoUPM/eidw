@@ -364,6 +364,7 @@ public class MetamapService {
         conf.setOptions("-y -R");
         List<String> sources = new ArrayList<>();
         sources.add("SNOMEDCT_US");
+        //sources.add("DSM-5");
         conf.setSources(sources);
         conf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
         conf.setConcept_location(true);
@@ -421,6 +422,7 @@ public class MetamapService {
                 ProcessedText processedText = new ProcessedText();
                 processedText.setTexts(response.getTextList());
                 writeJSONFile(gson.toJson(processedText), utilDate.dateFormatyyyMMdd(version) /*utilDate.getNowFormatyyyyMMdd()*/);
+                System.out.println("save metamap end...");
             }else{
                 System.out.println("Authorization message: " + response.getAuthorizationMessage() + " | token: " + response.getToken());
             }

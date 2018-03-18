@@ -20,6 +20,7 @@ public class Doc {
     private Date date;
     private Link url;
     private boolean hasConnected;
+    private boolean diseaseArticle;
 
     private Disease disease;
     private List<Section> sectionList;
@@ -75,4 +76,11 @@ public class Doc {
         this.codeList = codeList;
     }
 
+    public boolean isDiseaseArticle() {
+        return diseaseArticle;
+    }
+
+    public void setDiseaseArticle(boolean diseaseArticle) {
+        this.diseaseArticle = diseaseArticle;
+    }
 }
