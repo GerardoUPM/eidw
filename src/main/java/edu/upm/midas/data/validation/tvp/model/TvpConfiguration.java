@@ -10,23 +10,32 @@ package edu.upm.midas.data.validation.tvp.model;
  */
 public class TvpConfiguration {
 
-    private int numSymptomsFound;
-    private int numSymptomsFoundValidated;
+    private int termsFound;
+    private int nonRepetedTerms;
+    private int validatedNonRepetedTerms;
 
 
-    public int getNumSymptomsFound() {
-        return numSymptomsFound;
+    public int getTermsFound() {
+        return termsFound;
     }
 
-    public void setNumSymptomsFound(int numSymptomsFound) {
-        this.numSymptomsFound = numSymptomsFound;
+    public void setTermsFound(int termsFound) {
+        this.termsFound = termsFound;
     }
 
-    public int getNumSymptomsFoundValidated() {
-        return numSymptomsFoundValidated;
+    public int getNonRepetedTerms() {
+        return nonRepetedTerms;
     }
 
-    public void setNumSymptomsFoundValidated(int numSymptomsFoundValidated) {
-        this.numSymptomsFoundValidated = numSymptomsFoundValidated;
+    public void setNonRepetedTerms(int nonRepetedTerms) {
+        this.nonRepetedTerms = nonRepetedTerms;
+    }
+
+    public int getValidatedNonRepetedTerms() {
+        return validatedNonRepetedTerms;
+    }
+
+    public void setValidatedNonRepetedTerms(int validatedNonRepetedTerms) {
+        this.validatedNonRepetedTerms = validatedNonRepetedTerms;
     }
 }

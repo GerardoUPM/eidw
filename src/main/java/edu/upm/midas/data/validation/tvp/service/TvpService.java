@@ -72,10 +72,11 @@ public class TvpService {
         System.out.println( "Source: " + sourceId);
         System.out.println( "Read symptoms to the DB..." );
         List<ResponseSymptom> responseSymptoms = consultHelper.findSymptomsByVersionAndSource( consult );
-        tvpConfiguration.setNumSymptomsFound(responseSymptoms.size());
-        System.out.println( "Symptoms found: " + tvpConfiguration.getNumSymptomsFound() );
+        tvpConfiguration.setTermsFound(responseSymptoms.size());
+        System.out.println( "Symptoms found: " + tvpConfiguration.getTermsFound() );
         System.out.println( "Removing repeated symptoms..." );
         List<Concept> nonRepetedSymptoms = getConceptList(responseSymptoms );
+        tvpConfiguration.setNonRepetedTerms(nonRepetedSymptoms.size());
         System.out.println( "NonRepetedSymptoms: " + nonRepetedSymptoms.size() );
         System.out.println( "Creating request..." );
         Request request = new Request();
@@ -103,7 +104,7 @@ public class TvpService {
                 }
             }
             System.out.println("Start insert configuration...");
-            tvpConfiguration.setNumSymptomsFoundValidated(validatedSymptoms);
+            tvpConfiguration.setValidatedNonRepetedTerms(validatedSymptoms);
             String configurationJson = gson.toJson(tvpConfiguration);
             configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, consult.getDate(), constants.SERVICE_TVP_CODE + " - " + constants.SERVICE_TVP_NAME, configurationJson);
             System.out.println("End insert configuration ready!...");

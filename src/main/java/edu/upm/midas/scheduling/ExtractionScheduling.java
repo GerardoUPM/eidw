@@ -74,7 +74,7 @@ public class ExtractionScheduling {
      */
     //@Scheduled(cron = "0 15 14 15 * ?" )
     //@Scheduled(cron="*/5 * * * * ?")
-    @Scheduled(cron = "0 0 12 29 * ?")
+    //@Scheduled(cron = "0 0 12 29 * ?")
     public void extractionEvery15thDayOfTheMonth() throws Exception {
         try {
             System.out.println("Scheduled for the 15th of each month at midnight." + timeProvider.getNowFormatyyyyMMdd());
