@@ -18,6 +18,7 @@ public class ConfigurationDiseaseAlbum {
     private String source;
     private List<String> requests;
     private String serviceCode;
+    private boolean useDiseaseSafeList;
 
 
     public String getAlbumId() {
@@ -66,5 +67,13 @@ public class ConfigurationDiseaseAlbum {
 
     public void setServiceCode(String serviceCode) {
         this.serviceCode = serviceCode;
+    }
+
+    public boolean isUseDiseaseSafeList() {
+        return useDiseaseSafeList;
+    }
+
+    public void setUseDiseaseSafeList(boolean useDiseaseSafeList) {
+        this.useDiseaseSafeList = useDiseaseSafeList;
     }
 }

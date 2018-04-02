@@ -294,6 +294,7 @@ public class PopulateDbNative {
                 conf.setNumberDiseases(album.getNumberDiseases());
                 conf.setSource(Constants.SOURCE_WIKIPEDIA_CODE);
                 conf.setServiceCode(constants.SERVICE_DIALIST_CODE);
+                conf.setUseDiseaseSafeList(response.isUseDiseaseSafeList());
                 List<String> requestList = new ArrayList<String>(){{
                     add(constants.SERVICE_DIALIST_PATH_LAST);
                     add(constants.SERVICE_DIALIST_PATH_GET);
