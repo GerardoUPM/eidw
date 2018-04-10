@@ -15,6 +15,15 @@ public class Link {
     private int id;
     private String url;
     private String description;
+    private Source source;
+
+    public Link() {
+    }
+
+    public Link(String url, Source source) {
+        this.url = url;
+        this.source = source;
+    }
 
 
 
@@ -53,5 +62,15 @@ public class Link {
     @Override
     public int hashCode() {
         return Objects.hash(getUrl());
+    }
+
+    @Override
+    public String toString() {
+        return "Link{" +
+                "id=" + id +
+                ", url='" + url + '\'' +
+                ", description='" + description + '\'' +
+                ", source=" + source +
+                '}';
     }
 }

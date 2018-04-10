@@ -150,6 +150,7 @@ public class Disease {
     private String name;
     private String cui;
     private List<HasDisease> hasDiseasesByDiseaseId;
+    private List<DiseaseSynonym> diseaseSynonymsByDiseaseId;
 
     @Id
     @Column(name = "disease_id", nullable = false, length = 150)
@@ -203,5 +204,14 @@ public class Disease {
 
     public void setHasDiseasesByDiseaseId(List<HasDisease> hasDiseasesByDiseaseId) {
         this.hasDiseasesByDiseaseId = hasDiseasesByDiseaseId;
+    }
+
+    @OneToMany(mappedBy = "diseaseByDiseaseId")
+    public List<DiseaseSynonym> getDiseaseSynonymsByDiseaseId() {
+        return diseaseSynonymsByDiseaseId;
+    }
+
+    public void setDiseaseSynonymsByDiseaseId(List<DiseaseSynonym> diseaseSynonymsByDiseaseId) {
+        this.diseaseSynonymsByDiseaseId = diseaseSynonymsByDiseaseId;
     }
 }

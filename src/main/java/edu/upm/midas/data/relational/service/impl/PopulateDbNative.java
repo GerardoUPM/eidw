@@ -174,7 +174,7 @@ public class PopulateDbNative {
             System.out.println("Insert documents start!");
             //</editor-fold>
             int docsCount = 1, invalidCount = 1;
-            for (Doc document: source.getDocList()) {
+            for (Doc document: source.getDocuments()) {
                 //Solo inserta aquellos documentos que al menos tengan códigos o secciones
                 if (document.isDiseaseArticle()) {
                     String documentId = documentHelperNative.insert(sourceId, document, version);
@@ -219,6 +219,81 @@ public class PopulateDbNative {
 
     }
 
+
+    /**
+     * @throws Exception
+     */
+    @Transactional
+    public void populatePubMedDatas(List<XmlLink> externalDiseaseLinkList, Date version) throws Exception {
+
+        //LLAMAR A LA REST API DE EXTRACCION DE PUBMED
+
+        List<Source> sourceList = extractionWikipedia.extract(externalDiseaseLinkList);
+
+        removeInvalidDocumentsProcedure(sourceList);
+
+        //Date version = dateVersion;//date.getSqlDate();
+
+        System.out.println("-------------------- POPULATE DATABASE --------------------");
+        System.out.println("Populate start...");
+        for (Source source: sourceList) {
+            String sourceId = sourceHelperNative.insertIfExist( source );
+            System.out.println("Source: " + sourceId + " - " + source.getName());
+
+            //<editor-fold desc="PERSISTIR TODAS LAS SECCIONES">
+            System.out.println("Insert all sections, if exists...");
+            sectionHelperNative.insertIfExist( source.getSectionMap() );
+            System.out.println("Insert all sections ready!");
+            System.out.println("Insert documents start!");
+            //</editor-fold>
+            int docsCount = 1, invalidCount = 1;
+            for (Doc document: source.getDocuments()) {
+                //Solo inserta aquellos documentos que al menos tengan códigos o secciones
+                if (document.isDiseaseArticle()) {
+                    String documentId = documentHelperNative.insert(sourceId, document, version);
+
+                    System.out.println(docsCount + " Insert document: " + document.getDisease().getName() + "_" + documentId);
+
+                    //<editor-fold desc="PERSISTIR ENFERMEDAD DEL DOCUMENTO">
+                    String diseaseId = diseaseHelperNative.insertIfExist(document, documentId, version);
+                    //</editor-fold>
+
+                    //<editor-fold desc="PERSISTIR CÓDIGOS DEL DOCUMENTO">
+                    codeHelperNative.insertIfExist(document.getCodeList(), documentId, version);
+                    //</editor-fold>
+
+                    //<editor-fold desc="RECORRIDO DE SECCIONES PARA ACCEDER A LOS TEXTOS">
+                    for (edu.upm.midas.data.extraction.model.Section section : document.getSectionList()) {
+                        //<editor-fold desc="PERSISTIR has_section">
+                        String sectionId = hasSectionHelperNative.insert(documentId, version, section);
+                        //</editor-fold>
+
+                        int textCount = 0;
+                        for (edu.upm.midas.data.extraction.model.text.Text text : section.getTextList()) {
+                            //<editor-fold desc="INSERTAR TEXTO">
+                            textHelperNative.insert(text, sectionId, documentId, version);
+                            //</editor-fold>
+
+                            textCount++;
+                        }// Textos
+
+                    }// Secciones
+                    //</editor-fold>
+                    docsCount++;
+                }else{
+                    invalidCount++;
+                }
+            }// Documentos
+            System.out.println("Inserted Documents: " + docsCount);
+            System.out.println("No inserted Documents(invalid): " + invalidCount);
+        }// Fuentes "Sources"
+        System.out.println("Populate end...");
+        //extractionWikipedia.extractionReport();
+
+    }
+
+
+
     public void removeInvalidDocumentsProcedure(List<Source> sources){
         boolean hasCodes = false;
         boolean hasSections = false;
@@ -227,7 +302,7 @@ public class PopulateDbNative {
 
         System.out.println("-------------------- VALIDATION DOCUMENT PROCEDURE --------------------");
         for (Source source : sources) {
-            for (Doc document : source.getDocList()) {
+            for (Doc document : source.getDocuments()) {
                 if (document.getCodeList().size() > 0) hasCodes = true;
                 if (document.getSectionList().size() > 0) hasSections = true;
                 if (hasCodes || hasSections) {
@@ -238,9 +313,9 @@ public class PopulateDbNative {
                 }
                 //System.out.println("Document(|" + document.getId() + " | " + document.getDate() + " | " + document.isDiseaseArticle() + " | " + document.getUrl().getUrl());
             }
-            System.out.println("All Documents: " + source.getDocList().size());
+            System.out.println("All Documents: " + source.getDocuments().size());
             System.out.println("Valid Documents: " + countValid);
-            System.out.println("Invalid Documents: " + (source.getDocList().size() - countValid));
+            System.out.println("Invalid Documents: " + (source.getDocuments().size() - countValid));
         }
     }
 

@@ -20,6 +20,7 @@ public class Section {
     private String name;
     private String description;
 
+    private Integer textCount;
     private List<Text> textList;
 
 
@@ -48,12 +49,32 @@ public class Section {
         this.description = description;
     }
 
+    public Integer getTextCount() {
+        return textCount;
+    }
+
+    public void setTextCount(Integer textCount) {
+        this.textCount = textCount;
+    }
+
     public List<Text> getTextList() {
         return textList;
     }
 
     public void setTextList(List<Text> textList) {
         this.textList = textList;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Section{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", textCount=" + textCount +
+                ", textList=" + textList +
+                '}';
     }
 
 }

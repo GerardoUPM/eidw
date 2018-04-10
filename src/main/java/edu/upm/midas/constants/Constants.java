@@ -305,10 +305,13 @@ public class Constants {
         add("lbpr");
         add("lbtr");
 
-        add("inpr");
+        add("inpr");//todas las siguientes para encontrar enfermedades mentales
         add("menp");
         add("mobd");
         add("patf");
+
+        add("fngs");
+        add("cgab");//para encontrar Coma
     }};
 
 
@@ -317,6 +320,12 @@ public class Constants {
      * */
     public static final String SOURCE_WIKIPEDIA = "wikipedia";
     public static final String SOURCE_WIKIPEDIA_CODE = "SO01";
+
+    public static final String SOURCE_PUBMED = "pubmed";
+    public static final String SOURCE_PUBMED_CODE = "SO02";
+
+    public static final String ABSTRACT_SECTION = "abstract";
+
 
     /** Constantes para insertar en la base de datos */
 

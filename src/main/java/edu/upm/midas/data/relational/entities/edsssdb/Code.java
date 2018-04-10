@@ -86,6 +86,7 @@ public class Code {
     private Resource resourceByResourceId;
     private List<CodeUrl> codeUrls;
     private List<HasCode> hasCodes;
+    private List<SynonymCode> synonymCodes;
 
     @Id
     @Column(name = "code", nullable = false, length = 150)
@@ -148,5 +149,15 @@ public class Code {
     public void setHasCodes(List<HasCode> hasCodes) {
         this.hasCodes = hasCodes;
     }
+
+    @OneToMany(mappedBy = "code_0")
+    public List<SynonymCode> getSynonymCodes() {
+        return synonymCodes;
+    }
+
+    public void setSynonymCodes(List<SynonymCode> synonymCodes) {
+        this.synonymCodes = synonymCodes;
+    }
+
 
 }

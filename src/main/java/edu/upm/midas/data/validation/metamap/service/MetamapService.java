@@ -422,7 +422,7 @@ public class MetamapService {
                 ProcessedText processedText = new ProcessedText();
                 processedText.setTexts(response.getTextList());
                 writeJSONFile(gson.toJson(processedText), utilDate.dateFormatyyyMMdd(version) /*utilDate.getNowFormatyyyyMMdd()*/);
-                System.out.println("save metamap end...");
+                System.out.println("save metamap ready...");
             }else{
                 System.out.println("Authorization message: " + response.getAuthorizationMessage() + " | token: " + response.getToken());
             }

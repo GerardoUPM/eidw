@@ -80,6 +80,7 @@ public class Resource {
     private Integer resourceId;
     private String name;
     private List<Code> codesByResourceId;
+    private List<Term> termsByResourceId;
 
     @Id
     @Column(name = "resource_id", nullable = false)
@@ -124,4 +125,14 @@ public class Resource {
     public void setCodesByResourceId(List<Code> codesByResourceId) {
         this.codesByResourceId = codesByResourceId;
     }
+
+    @OneToMany(mappedBy = "resourceByResourceId")
+    public List<Term> getTermsByResourceId() {
+        return termsByResourceId;
+    }
+
+    public void setTermsByResourceId(List<Term> termsByResourceId) {
+        this.termsByResourceId = termsByResourceId;
+    }
+
 }

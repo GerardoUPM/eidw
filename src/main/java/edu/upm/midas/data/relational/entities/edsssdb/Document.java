@@ -197,6 +197,7 @@ public class Document {
     private List<HasDisease> hasDiseases;
     private List<HasSection> hasSections;
     private List<HasSource> hasSources;
+    private List<DocumentSet> documentSets;
 
     @Id
     @Column(name = "document_id", nullable = false, length = 30)
@@ -276,5 +277,15 @@ public class Document {
     public void setHasSources(List<HasSource> hasSources) {
         this.hasSources = hasSources;
     }
+
+    @OneToMany(mappedBy = "document")
+    public List<DocumentSet> getDocumentSets() {
+        return documentSets;
+    }
+
+    public void setDocumentSets(List<DocumentSet> documentSets) {
+        this.documentSets = documentSets;
+    }
+
 
 }

@@ -23,8 +23,12 @@ public class Doc {
     private boolean diseaseArticle;
 
     private Disease disease;
+    private Integer sectionCount;
     private List<Section> sectionList;
+    private Integer codeCount;
     private List<Code> codeList;
+    private Integer paperCount;
+    private List<PubMedDoc> paperList;
 
 
 
@@ -82,5 +86,45 @@ public class Doc {
 
     public void setDiseaseArticle(boolean diseaseArticle) {
         this.diseaseArticle = diseaseArticle;
+    }
+
+    public boolean isHasConnected() {
+        return hasConnected;
+    }
+
+    public void setHasConnected(boolean hasConnected) {
+        this.hasConnected = hasConnected;
+    }
+
+    public Integer getSectionCount() {
+        return sectionCount;
+    }
+
+    public void setSectionCount(Integer sectionCount) {
+        this.sectionCount = sectionCount;
+    }
+
+    public Integer getCodeCount() {
+        return codeCount;
+    }
+
+    public void setCodeCount(Integer codeCount) {
+        this.codeCount = codeCount;
+    }
+
+    public Integer getPaperCount() {
+        return paperCount;
+    }
+
+    public void setPaperCount(Integer paperCount) {
+        this.paperCount = paperCount;
+    }
+
+    public List<PubMedDoc> getPaperList() {
+        return paperList;
+    }
+
+    public void setPaperList(List<PubMedDoc> paperList) {
+        this.paperList = paperList;
     }
 }

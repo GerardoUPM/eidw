@@ -54,9 +54,9 @@ public class ValidationController {
 
         String inicio = utilDate.getTime();
         //Cuando se realice el filtro
-        metamapService.filterAndStorageInJASON(consult);
+        //metamapService.filterAndStorageInJASON(consult);
         //Cuando se consuma el JSON y se almacene la información
-        //metamapService.populateTextsStoredJSON( consult );
+        metamapService.populateTextsStoredJSON( consult );
         System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
 
         return "It has been successfully filtered with Metamap";

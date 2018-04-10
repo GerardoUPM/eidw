@@ -151,7 +151,7 @@ public class ExtractionWikipediaThreads {
                     }
                         //docList.add( getWikipediaDocument( xmlSource, xmlLink, countDoc ) );
                         // Relaciona (agrega) la lista de documentos a la fuente "Source"
-                        source.setDocList(docList);
+                        source.setDocuments(docList);
 
 
                 }//end for String link: source.getLinkList()
@@ -888,7 +888,7 @@ public class ExtractionWikipediaThreads {
             System.out.println("-------------------- SOURCE(" + source.getId() + "_" + source.getName() + ") --------------------");
 
             for (Doc document:
-                    source.getDocList()) {
+                    source.getDocuments()) {
 
                 System.out.println("Document(" + document.getId() + "_" + document.getDate() + ") => " + document.getUrl().getUrl());
                 System.out.println("    Disease(" + document.getDisease().getId() + "_" + document.getDisease().getName() + ") ");

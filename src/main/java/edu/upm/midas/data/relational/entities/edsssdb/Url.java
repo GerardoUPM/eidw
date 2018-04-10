@@ -78,6 +78,7 @@ public class Url {
     private List<DocumentUrl> documentUrlsByUrlId;
     private List<SourceUrl> sourceUrlsByUrlId;
     private List<TextUrl> textUrlsByUrlId;
+    private List<PaperUrl> paperUrlsByUrlId;
 
     @Id
     @Column(name = "url_id", nullable = false, length = 250)
@@ -148,4 +149,14 @@ public class Url {
     public void setTextUrlsByUrlId(List<TextUrl> textUrlsByUrlId) {
         this.textUrlsByUrlId = textUrlsByUrlId;
     }
+
+    @OneToMany(mappedBy = "urlByUrlId")
+    public List<PaperUrl> getPaperUrlsByUrlId() {
+        return paperUrlsByUrlId;
+    }
+
+    public void setPaperUrlsByUrlId(List<PaperUrl> paperUrlsByUrlId) {
+        this.paperUrlsByUrlId = paperUrlsByUrlId;
+    }
+
 }
