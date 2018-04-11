@@ -2,12 +2,14 @@ package edu.upm.midas.data.relational.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.upm.midas.constants.Constants;
-import edu.upm.midas.data.extraction.album.diseaseAlbumApiResponse.DiseaseAlbumResourceService;
 import edu.upm.midas.data.extraction.model.Doc;
 import edu.upm.midas.data.extraction.model.Source;
+import edu.upm.midas.data.extraction.sources.pubmed.model.Request;
+import edu.upm.midas.data.extraction.sources.pubmed.model.Response;
+import edu.upm.midas.data.extraction.sources.pubmed.pubMedTextExtractionApiResponse.PubMedTextExtractionResourceService;
 import edu.upm.midas.data.extraction.sources.wikipedia.service.ExtractionWikipedia;
-import edu.upm.midas.data.extraction.xml.model.XmlLink;
 import edu.upm.midas.data.relational.service.helperNative.*;
+import edu.upm.midas.enums.StatusHttpEnum;
 import edu.upm.midas.utilsservice.Common;
 import edu.upm.midas.utilsservice.UniqueId;
 import edu.upm.midas.utilsservice.UtilDate;
@@ -18,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by gerardo on 29/06/2017.
@@ -77,7 +78,7 @@ public class PopulatePubMedTextsDbNative {
     private Common common;
 
     @Autowired
-    private DiseaseAlbumResourceService diseaseAlbumResource;
+    private PubMedTextExtractionResourceService pubMedTextExtractionResource;
 
 
     
@@ -85,15 +86,15 @@ public class PopulatePubMedTextsDbNative {
      * @throws Exception
      */
     @Transactional
-    public void populate(List<XmlLink> externalDiseaseLinkList, Date version) throws Exception {
+    public void populate(String snapshot) throws Exception {
 
-        List<Source> sourceList = extractionWikipedia.extract(externalDiseaseLinkList);
+        Source source = getPubMedSource(snapshot);
 
-        //Date version = dateVersion;//date.getSqlDate();
+        Date version = date.stringToDate(snapshot);
 
         System.out.println("-------------------- POPULATE DATABASE --------------------");
         System.out.println("Populate start...");
-        for (Source source: sourceList) {
+        if (source!=null) {
             String sourceId = sourceHelperNative.insertIfExist( source );
             System.out.println("Source: " + sourceId + " - " + source.getName());
 
@@ -143,10 +144,32 @@ public class PopulatePubMedTextsDbNative {
             }// Documentos
             System.out.println("Inserted Documents: " + docsCount);
             System.out.println("No inserted Documents(invalid): " + invalidCount);
-        }// Fuentes "Sources"
+        }// Fuente "Source"
         System.out.println("Populate end...");
         //extractionWikipedia.extractionReport();
 
+    }
+
+
+    public Source getPubMedSource(String snapshot){
+        Request request = new Request();
+        Source source = null;
+        //request.setSnapshot("2018-04-03");
+        request.setSnapshot(snapshot);
+        request.setJson(true);
+        System.out.println("Start Connection_ with PUBMED TEXT EXTRACTION REST API...");
+        System.out.println("Get PubMed Information by JSON... please wait, this process can take from minutes... ");
+        System.out.println(request);
+        Response response = pubMedTextExtractionResource.getPubMedTextsByJSON(request);
+        System.out.println("End Connection_ with PUBMED TEXT EXTRACTION REST API...");
+        System.out.println("Response...");
+        System.out.println("Response code: " + response.getResponseCode());
+        System.out.println("Response message: " + response.getResponseMessage());
+        //System.out.println("Response resources: " + response.getResourceHashMap());
+        System.out.println("Response message: " + response.getSource().getDocumentCount());
+        if (response.getResponseCode().equals(StatusHttpEnum.OK.getClave()))
+            source = response.getSource();
+        return source;
     }
 
 

@@ -59,7 +59,7 @@ public class ExtractionScheduling {
     public void extractionEveryFirstDayOfTheMonth() throws Exception {
         try {
             System.out.println("Scheduled task for the first of each month at midnight." + timeProvider.getNowFormatyyyyMMdd());
-            extractService.extract();
+            extractService.wikipediaExtract();
         }catch (Exception e){
             System.out.println("EIDW_ERR (1stOfTheMonth): " + e.getMessage());
         }
@@ -78,7 +78,7 @@ public class ExtractionScheduling {
     public void extractionEvery15thDayOfTheMonth() throws Exception {
         try {
             System.out.println("Scheduled for the 15th of each month at midnight." + timeProvider.getNowFormatyyyyMMdd());
-            extractService.extract();
+            extractService.wikipediaExtract();
         }catch (Exception e){
             System.out.println("EIDW_ERR (15thOfTheMonth): " + e.getMessage());
         }

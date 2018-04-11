@@ -1,7 +1,8 @@
-package edu.upm.midas.data.extraction.sources.pubmed;
+package edu.upm.midas.data.extraction.sources.pubmed.model;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
-import es.upm.disnet.pubmed.model.document_structure.Source;
-import es.upm.disnet.pubmed.model.document_structure.code.Resource;
+import edu.upm.midas.data.extraction.model.Source;
+import edu.upm.midas.data.extraction.model.code.Resource;
 
 import java.util.HashMap;
 

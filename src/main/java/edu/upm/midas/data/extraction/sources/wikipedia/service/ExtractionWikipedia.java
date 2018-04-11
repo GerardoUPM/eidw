@@ -167,7 +167,7 @@ public class ExtractionWikipedia {
                     disease = new Disease();
                     // Se verifica si hubo conexión con el documento (enlace Web)
                     // Se pinta en pantalla el status OK (esta disponible el enlace)
-                    System.out.println(countDoc + " extract " + xmlLink.getUrl() + " ==> " + connection_.getStatus() + "("+connection_.getStatusCode()+")");
+                    System.out.println(countDoc + " wikipediaExtract " + xmlLink.getUrl() + " ==> " + connection_.getStatus() + "("+connection_.getStatusCode()+")");
                     if (connection_.getStatus().equals(StatusHttpEnum.OK.getDescripcion()) && connection_.getoDoc() != null) {
                         // Se obtiene el documento HTML (página wikipedia)
                         //<editor-fold desc="DOCUMENTOS">
@@ -465,7 +465,7 @@ public class ExtractionWikipedia {
                     connection_ = connectDocument.connect(oXmlLink.getUrl());
 
                     //Verificación de la conexión del enlace >
-                    System.out.println(x + " extract codes (" + oXmlLink.getUrl() + ") ==> " + connection_.getStatus() + "("+connection_.getStatusCode()+")");
+                    System.out.println(x + " wikipediaExtract codes (" + oXmlLink.getUrl() + ") ==> " + connection_.getStatus() + "("+connection_.getStatusCode()+")");
                     if (connection_.getStatus().equals(StatusHttpEnum.OK.getDescripcion()) && connection_.getoDoc() != null) {
 
                         //Se obtiene el documento html "DOM"

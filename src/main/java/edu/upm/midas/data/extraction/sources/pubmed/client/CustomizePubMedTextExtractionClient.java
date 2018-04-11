@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
         url = "${my.service.client.disease_album.url}",
         fallback = DiseaseAlbumClientFallback.class,
         configuration = FeignConfiguration.class)
-public interface CustomizeDiseaseAlbumClient {
+public interface CustomizePubMedTextExtractionClient {
 
     @RequestMapping(value = "${my.service.client.disease_album.path.last}", method = RequestMethod.POST)
     ResponseLA getDiseaseAlbum(@RequestBody RequestFather request);

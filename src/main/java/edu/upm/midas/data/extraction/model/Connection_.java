@@ -15,7 +15,7 @@ public class Connection_ {
 
     private String link;
     private String status;
-    private int statusCode;
+    private String statusCode;
     private Document oDoc;
 
     public String getLink() {
@@ -34,11 +34,11 @@ public class Connection_ {
         this.status = status;
     }
 
-    public int getStatusCode() {
+    public String getStatusCode() {
         return statusCode;
     }
 
-    public void setStatusCode(int statusCode) {
+    public void setStatusCode(String statusCode) {
         this.statusCode = statusCode;
     }
 

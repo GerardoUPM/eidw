@@ -10,7 +10,7 @@ import edu.upm.midas.data.extraction.album.model.response.ResponseLA;
  * @author Gerardo Lagunes G. ${EMAIL}
  * @version ${<VERSION>}
  * @project eidw
- * @className DiseaseAlbumResourceService
+ * @className PubMedTextExtractionResourceService
  * @see
  */
 public interface DiseaseAlbumResourceService {

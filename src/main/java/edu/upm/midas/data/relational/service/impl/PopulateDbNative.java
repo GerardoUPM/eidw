@@ -126,7 +126,7 @@ public class PopulateDbNative {
     @Transactional //CAMBIAR A NATIVOS
     public void populateSections() throws Exception {
         System.out.println("INSERT SECTIONS...");
-//        List<edu.upm.Source> sourceList = extractionWikipedia.extract();
+//        List<edu.upm.Source> sourceList = extractionWikipedia.wikipediaExtract();
 //        sectionHelperNative.insertIfExist( source.getSectionMap() );
         System.out.println("INSERT SECTIONS READY!");
     }
@@ -312,7 +312,7 @@ public class PopulateDbNative {
 
 
     public void onlyExtract(List<XmlLink> externalDiseaseLinkList) throws Exception {
-        //extractionWikipedia.extract(null);
+        //extractionWikipedia.wikipediaExtract(null);
         extractionWikipedia.extractionReport(externalDiseaseLinkList);
     }
 

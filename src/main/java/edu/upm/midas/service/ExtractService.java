@@ -1,6 +1,7 @@
 package edu.upm.midas.service;
 import edu.upm.midas.data.extraction.xml.model.XmlLink;
 import edu.upm.midas.data.relational.service.impl.PopulateDbNative;
+import edu.upm.midas.data.relational.service.impl.PopulatePubMedTextsDbNative;
 import edu.upm.midas.utilsservice.UtilDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,12 @@ public class ExtractService {
     @Autowired
     private PopulateDbNative populateDbNative;
     @Autowired
+    private PopulatePubMedTextsDbNative populatePubMedTextsDbNative;
+
+    @Autowired
     private UtilDate utilDate;
 
-    public boolean extract() throws Exception {
+    public boolean wikipediaExtract() throws Exception {
         boolean res = false;
         String inicio = utilDate.getTime();
         Date version = utilDate.getSqlDate();
@@ -44,6 +48,21 @@ public class ExtractService {
         return res;
     }
 
+
+    public boolean pubMedExtract(String version) throws Exception {
+        boolean res = false;
+        String inicio = utilDate.getTime();
+        //Date version = utilDate.getSqlDate();
+        try {
+            populatePubMedTextsDbNative.populate(version);
+            res = true;
+        }catch (Exception e){
+            System.out.println("ERROR pubmed text extraction");
+        }
+        System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
+
+        return res;
+    }
 
 
 
@@ -78,7 +97,7 @@ public class ExtractService {
     }
 
     public void checkCodes() throws Exception {
-        //extractionWikipedia.extract(null);
+        //extractionWikipedia.wikipediaExtract(null);
         //extractionWikipedia.extractResource(null);
 
         String inicio = utilDate.getTime();

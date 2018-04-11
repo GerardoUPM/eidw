@@ -52,7 +52,7 @@ public class ConnectDocument {
             //oResponse = connection.execute(); || Jsoup.connect(Constants.HTTP_HEADER + connection_.getLink()
             connection_.setoDoc( connection.get()/*getHtmlDocument(connection)*/ );
             connection_.setStatus( connection.execute().statusMessage() );
-            connection_.setStatusCode( connection.execute().statusCode() );
+            connection_.setStatusCode( connection.execute().statusCode()+"" );
         } catch (Exception e) {
             System.out.println("Exception to connect with the page: (" + connection_.getLink() + ") " + e.getMessage() + " " +e.getStackTrace());
             connection_ = tryConnect(connection_);
@@ -78,7 +78,7 @@ public class ConnectDocument {
             //oResponse = connection.execute(); || Jsoup.connect(Constants.HTTP_HEADER + connection_.getLink()
             connection_.setoDoc( connection.get()/*getHtmlDocument(connection)*/ );
             connection_.setStatus( connection.execute().statusMessage() );
-            connection_.setStatusCode( connection.execute().statusCode() );
+            connection_.setStatusCode( connection.execute().statusCode()+"" );
         } catch (Exception e) {
             System.out.println("Exception to connect with the page: (" + connection_.getLink() + ") " + e.getMessage() + " " +e.getStackTrace());
             connection_.setStatus( StatusHttpEnum.NOT_FOUND.getDescripcion() );

@@ -36,7 +36,7 @@ public class ExtractionController {
     @RequestMapping(path = { "/extract/wikipedia" }, //wikipedia extraction
             method = RequestMethod.GET)
     public String extract() throws Exception {
-        extractService.extract();
+        extractService.wikipediaExtract();
 /*
         String g ="http://en.wikipedia.org/wiki/Odonto–tricho–ungual–digital–palmar_syndrome";
         String m = "http://en.wikipedia.org/wiki/Bannayan–Riley–Ruvalcaba_syndrome";
@@ -68,6 +68,16 @@ public class ExtractionController {
 
         return "Successful extraction and insertion in a DB!";
     }
+
+
+    @RequestMapping(path = { "/extract/pubmed" }, //pubmed extraction
+            method = RequestMethod.GET)
+    public String pubMedExtract() throws Exception {
+        String version = "2018-04-03";
+        extractService.pubMedExtract(String version);
+        return "PubMed Text Extraction successfully";
+    }
+
 
     @RequestMapping(path = { "/wikipedia/check" }, //wikipedia extraction
             method = RequestMethod.GET)

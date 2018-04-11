@@ -209,7 +209,7 @@ public class ExtractionWikipediaThreads {
         // Se verifica si hubo conexión con el documento (enlace Web)
         if (connection_.getStatus().equals(StatusHttpEnum.OK.toString())) {
             // Se pinta en pantalla el status OK (esta disponible el enlace)
-            System.out.println(countDoc + " extract " + xmlLink.getUrl() + " ==> " + connection_.getStatus());
+            System.out.println(countDoc + " wikipediaExtract " + xmlLink.getUrl() + " ==> " + connection_.getStatus());
             // Se obtiene el documento HTML (página wikipedia)
             //<editor-fold desc="DOCUMENTOS">
             document = connection_.getoDoc();
@@ -402,7 +402,7 @@ public class ExtractionWikipediaThreads {
                         String diseaseName = oDoc.getElementById( idElementName ).text();
 //                    System.out.println("Disease: " + oDoc.getElementById( idElementName ).text() );
 
-                    System.out.println(x + " extract codes " + diseaseName + " (" + oXmlLink.getUrl() + ") ==> " + connection_.getStatus());
+                    System.out.println(x + " wikipediaExtract codes " + diseaseName + " (" + oXmlLink.getUrl() + ") ==> " + connection_.getStatus());
 
                     /*
                         Se obtiene el elemento (tabla) con clase "infobox" NOTA. infobox es un elemento Highlight
