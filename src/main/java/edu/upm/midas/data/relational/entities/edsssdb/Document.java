@@ -168,16 +168,6 @@ import java.util.Objects;
                 query = "INSERT INTO has_symptom (text_id, cui, validated) "
                         + "VALUES (:textId, :cui, :validated)"
         )
-        //Para insertar textos de articulos tipo pubmed
-        //INSERTS
-        ,
-        @NamedNativeQuery(
-                name = "DocumentSet.insertNative",
-                query = "INSERT INTO has_symptom (text_id, cui, validated) "
-                        + "VALUES (:textId, :cui, :validated)"
-        )
-
-
 
 })
 

@@ -17,6 +17,14 @@ public class DiseaseSynonymPK implements Serializable {
     private String diseaseId;
     private Integer synonymId;
 
+    public DiseaseSynonymPK() {
+    }
+
+    public DiseaseSynonymPK(String diseaseId, Integer synonymId) {
+        this.diseaseId = diseaseId;
+        this.synonymId = synonymId;
+    }
+
     @Column(name = "disease_id", nullable = false, length = 150)
     @Id
     public String getDiseaseId() {

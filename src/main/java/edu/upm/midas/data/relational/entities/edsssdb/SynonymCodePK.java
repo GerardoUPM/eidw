@@ -18,6 +18,15 @@ public class SynonymCodePK implements Serializable {
     private String code;
     private Integer resourceId;
 
+    public SynonymCodePK() {
+    }
+
+    public SynonymCodePK(Integer synonymId, String code, Integer resourceId) {
+        this.synonymId = synonymId;
+        this.code = code;
+        this.resourceId = resourceId;
+    }
+
     @Column(name = "synonym_id", nullable = false)
     @Id
     public Integer getSynonymId() {

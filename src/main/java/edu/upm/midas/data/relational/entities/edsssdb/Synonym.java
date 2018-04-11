@@ -23,9 +23,44 @@ import java.util.Objects;
 @XmlRootElement
 @NamedQueries({
         @NamedQuery(name = "Synonym.findAll", query = "SELECT s FROM Synonym s")
+        , @NamedQuery(name = "Synonym.findById", query = "SELECT s FROM Synonym s WHERE s.synonymId = :synonymId")
         , @NamedQuery(name = "Synonym.findBySynonymId", query = "SELECT s FROM Synonym s WHERE s.synonymId = :synonymId")
         , @NamedQuery(name = "Synonym.findByName", query = "SELECT s FROM Synonym s WHERE s.name = :name")
 })
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = "Synonym.findByIdNative",
+                query = "SELECT s.synonym_id, s.name " +
+                        "FROM synonym s WHERE s.synonym_id = :synonymId",
+                resultSetMapping = "SynonymMapping"
+
+        ),
+        @NamedNativeQuery(
+                name = "Synonym.findByIdNativeResultClass",
+                query = "SELECT s.synonym_id, s.name " +
+                        "FROM synonym s WHERE s.synonym_id = :synonymId",
+                resultClass = Synonym.class
+        ),
+        @NamedNativeQuery(
+                name = "Synonym.findByNameNative",
+                query = "SELECT s.synonym_id, s.name " +
+                        "FROM synonym s WHERE s.name COLLATE utf8_bin = :name",
+                resultClass = Synonym.class
+        ),
+        @NamedNativeQuery(
+                name = "Synonym.findIdByNameNative",
+                query = "SELECT s.synonym_id " +
+                        "FROM synonym s WHERE s.name COLLATE utf8_bin = :name"
+        ),
+
+
+        @NamedNativeQuery(
+                name = "Synonym.insertNative",
+                query = "INSERT INTO synonym (name) " +
+                        "VALUES (:name)"
+        )
+})
+
 @SqlResultSetMappings({
         @SqlResultSetMapping(
                 name = "SynonymMapping",
@@ -48,6 +83,7 @@ public class Synonym {
 
     @Id
     @Column(name = "synonym_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getSynonymId() {
         return synonymId;
     }

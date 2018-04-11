@@ -1,6 +1,10 @@
 package edu.upm.midas.data.relational.entities.edsssdb;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
 /**
@@ -14,7 +18,53 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "synonym_code", schema = "edsssdb", catalog = "")
+@XmlRootElement
+@NamedQueries({
+        @NamedQuery(name = "SynonymCode.findAll", query = "SELECT s FROM SynonymCode s ")
+        , @NamedQuery(name = "SynonymCode.findById", query = "SELECT s FROM SynonymCode s  WHERE s.synonymId = :synonymId AND s.code = :code AND s.resourceId = :resourceId")
+        , @NamedQuery(name = "SynonymCode.findBySynonymId", query = "SELECT s FROM SynonymCode s  WHERE s.synonymId = :synonymId")
+        , @NamedQuery(name = "SynonymCode.findByCode", query = "SELECT s FROM SynonymCode s  WHERE s.code = :code")
+        , @NamedQuery(name = "SynonymCode.findByResourceId", query = "SELECT s FROM SynonymCode s  WHERE s.resourceId = :resourceId")
+})
+
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = "SynonymCode.findByIdNative",
+                query = "SELECT s.synonym_id, s.code, s.resource_id " +
+                        "FROM synonym_code s WHERE s.synonym_id = :synonymId AND s.code = :code AND s.resource_id = :resourceId",
+                resultSetMapping="SynonymCodeMapping"
+
+        ),
+        @NamedNativeQuery(
+                name = "SynonymCode.findByIdNativeResultClass",
+                query = "SELECT s.synonym_id, s.code, s.resource_id " +
+                        "FROM synonym_code s WHERE s.synonym_id = :synonymId AND s.code = :code AND s.resource_id = :resourceId",
+                resultClass = SynonymCode.class
+        )
+
+        ,
+        @NamedNativeQuery(
+                name = "SynonymCode.insertNative",
+                query = "INSERT INTO synonym_code (synonym_id, code, resource_id) " +
+                        "VALUES (:synonymId, :code, :resourceId)"
+        )
+})
+@SqlResultSetMappings({
+        @SqlResultSetMapping(
+                name = "SynonymCodeMapping",
+                entities = @EntityResult(
+                        entityClass = SynonymCode.class,
+                        fields = {
+                                @FieldResult(name = "synonymId", column = "synonym_id"),
+                                @FieldResult(name = "code", column = "code"),
+                                @FieldResult(name = "resourceId", column = "resource_id")
+                        }
+                )
+        )
+})
+
 @IdClass(SynonymCodePK.class)
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="SynonymCodePK")
 public class SynonymCode {
     private Integer synonymId;
     private String code;

@@ -1,6 +1,10 @@
 package edu.upm.midas.data.relational.entities.edsssdb;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
 /**
@@ -14,7 +18,51 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "disease_synonym", schema = "edsssdb", catalog = "")
+@XmlRootElement
+@NamedQueries({
+        @NamedQuery(name = "DiseaseSynonym.findAll", query = "SELECT d FROM DiseaseSynonym d")
+        , @NamedQuery(name = "DiseaseSynonym.findById", query = "SELECT d FROM DiseaseSynonym d WHERE d.diseaseId = :diseaseId AND d.synonymId = :synonymId")
+        , @NamedQuery(name = "DiseaseSynonym.findByDiseaseId", query = "SELECT d FROM DiseaseSynonym d WHERE d.diseaseId = :diseaseId")
+        , @NamedQuery(name = "DiseaseSynonym.findBySynonymId", query = "SELECT d FROM DiseaseSynonym d WHERE d.synonymId = :synonymId")
+})
+
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = "DiseaseSynonym.findByIdNative",
+                query = "SELECT d.disease_id, d.synonym_id " +
+                        "FROM disease_synonym d WHERE d.disease_id = :diseaseId AND d.synonym_id = :synonymId",
+                resultSetMapping="DiseaseSynonymMapping"
+
+        ),
+        @NamedNativeQuery(
+                name = "DiseaseSynonym.findByIdNativeResultClass",
+                query = "SELECT d.disease_id, d.synonym_id " +
+                        "FROM disease_synonym d WHERE d.disease_id = :diseaseId AND d.synonym_id = :synonymId",
+                resultClass = DiseaseSynonym.class
+        )
+
+        ,
+        @NamedNativeQuery(
+                name = "DiseaseSynonym.insertNative",
+                query = "INSERT INTO disease_synonym (disease_id, synonym_id) " +
+                        "VALUES (:diseaseId, :synonymId)"
+        )
+})
+@SqlResultSetMappings({
+        @SqlResultSetMapping(
+                name = "DiseaseSynonymMapping",
+                entities = @EntityResult(
+                        entityClass = DiseaseSynonym.class,
+                        fields = {
+                                @FieldResult(name = "diseaseId", column = "disease_id"),
+                                @FieldResult(name = "synonymId", column = "synonym_id")
+                        }
+                )
+        )
+})
+
 @IdClass(DiseaseSynonymPK.class)
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="DiseaseSynonymPK")
 public class DiseaseSynonym {
     private String diseaseId;
     private Integer synonymId;

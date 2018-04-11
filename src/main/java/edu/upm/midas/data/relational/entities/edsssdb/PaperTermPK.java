@@ -17,6 +17,14 @@ public class PaperTermPK implements Serializable {
     private String paperId;
     private Integer termId;
 
+    public PaperTermPK() {
+    }
+
+    public PaperTermPK(String paperId, Integer termId) {
+        this.paperId = paperId;
+        this.termId = termId;
+    }
+
     @Column(name = "paper_id", nullable = false, length = 250)
     @Id
     public String getPaperId() {

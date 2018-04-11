@@ -19,6 +19,15 @@ public class DocumentSetPK implements Serializable {
     private Date date;
     private String paperId;
 
+    public DocumentSetPK() {
+    }
+
+    public DocumentSetPK(String documentId, Date date, String paperId) {
+        this.documentId = documentId;
+        this.date = date;
+        this.paperId = paperId;
+    }
+
     @Column(name = "document_id", nullable = false, length = 30)
     @Id
     public String getDocumentId() {

@@ -17,6 +17,14 @@ public class PaperUrlPK implements Serializable {
     private String paperId;
     private String urlId;
 
+    public PaperUrlPK() {
+    }
+
+    public PaperUrlPK(String paperId, String urlId) {
+        this.paperId = paperId;
+        this.urlId = urlId;
+    }
+
     @Column(name = "paper_id", nullable = false, length = 250)
     @Id
     public String getPaperId() {

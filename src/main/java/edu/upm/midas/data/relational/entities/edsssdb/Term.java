@@ -23,9 +23,46 @@ import java.util.Objects;
 @XmlRootElement
 @NamedQueries({
         @NamedQuery(name = "Term.findAll", query = "SELECT t FROM Term t")
+        , @NamedQuery(name = "Term.findById", query = "SELECT t FROM Term t WHERE t.termId = :termId")
         , @NamedQuery(name = "Term.findByTermId", query = "SELECT t FROM Term t WHERE t.termId = :termId")
         , @NamedQuery(name = "Term.findByName", query = "SELECT t FROM Term t WHERE t.name = :name")
+        , @NamedQuery(name = "Term.findByResourceId", query = "SELECT t FROM Term t WHERE t.resourceId = :resourceId")
 })
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = "Term.findByIdNative",
+                query = "SELECT t.term_id, t.resource_id, t.name " +
+                        "FROM term t WHERE t.term_id = :termId",
+                resultSetMapping = "TermMapping"
+
+        ),
+        @NamedNativeQuery(
+                name = "Term.findByIdNativeResultClass",
+                query = "SELECT t.term_id, t.resource_id, t.name " +
+                        "FROM term t WHERE t.term_id = :termId",
+                resultClass = Term.class
+
+        ),
+        @NamedNativeQuery(
+                name = "Term.findByNameNative",
+                query = "SELECT t.term_id, t.resource_id, t.name " +
+                        "FROM term t WHERE t.name COLLATE utf8_bin = :name",
+                resultClass = Term.class
+        ),
+        @NamedNativeQuery(
+                name = "Term.findIdByNameNative",
+                query = "SELECT t.term_id, t.resource_id " +
+                        "FROM term t WHERE t.name COLLATE utf8_bin = :name"
+        ),
+
+
+        @NamedNativeQuery(
+                name = "Term.insertNative",
+                query = "INSERT INTO term (resource_id, name) " +
+                        "VALUES (:resourceId, :name)"
+        )
+})
+
 @SqlResultSetMappings({
         @SqlResultSetMapping(
                 name = "TermMapping",
@@ -50,6 +87,7 @@ public class Term {
 
     @Id
     @Column(name = "term_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getTermId() {
         return termId;
     }

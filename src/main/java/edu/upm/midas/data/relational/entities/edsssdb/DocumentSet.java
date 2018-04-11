@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Date;
 import java.util.Objects;
 
@@ -18,7 +19,37 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "document_set", schema = "edsssdb", catalog = "")
+@XmlRootElement
+@NamedQueries({
+        @NamedQuery(name = "DocumentSet.findAll", query = "SELECT d FROM DocumentSet d")
+        , @NamedQuery(name = "DocumentSet.findById", query = "SELECT d FROM DocumentSet d WHERE d.documentId = :documentId AND d.date = :version AND d.paperId = :paperId")
+        , @NamedQuery(name = "DocumentSet.findByDocumentId", query = "SELECT d FROM DocumentSet d WHERE d.documentId = :documentId")
+        , @NamedQuery(name = "DocumentSet.findByDate", query = "SELECT d FROM DocumentSet d WHERE d.date = :date")
+        , @NamedQuery(name = "DocumentSet.findByPaperId", query = "SELECT d FROM DocumentSet d WHERE d.paperId = :paperId")
+})
 
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = "DocumentSet.findByIdNative",
+                query = "SELECT d.document_id, d.date, d.paper_id " +
+                        "FROM document_set d WHERE d.document_id = :documentId AND d.date = :version AND d.paper_id = :paperId",
+                resultSetMapping="DocumentSetMapping"
+
+        ),
+        @NamedNativeQuery(
+                name = "DocumentSet.findByIdNativeResultClass",
+                query = "SELECT d.document_id, d.date, d.paper_id " +
+                        "FROM document_set d WHERE d.document_id = :documentId AND d.date = :version AND d.paper_id = :paperId",
+                resultClass = DocumentSet.class
+        )
+
+        ,
+        @NamedNativeQuery(
+                name = "DocumentSet.insertNative",
+                query = "INSERT INTO document_set (document_id, date, paper_id) " +
+                        "VALUES (:documentId, :version, :paperId)"
+        )
+})
 @SqlResultSetMappings({
         @SqlResultSetMapping(
                 name = "DocumentSetMapping",
@@ -41,6 +72,8 @@ public class DocumentSet {
     private String paperId;
     private Document document;
     private Paper paperByPaperId;
+
+
 
     @Id
     @Column(name = "document_id", nullable = false, length = 30)

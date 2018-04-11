@@ -22,6 +22,7 @@ import java.util.Objects;
 @XmlRootElement
 @NamedQueries({
         @NamedQuery(name = "Paper.findAll", query = "SELECT p FROM Paper p")
+        , @NamedQuery(name = "Paper.findById", query = "SELECT p FROM Paper p WHERE p.paperId = :paperId")
         , @NamedQuery(name = "Paper.findByPaperId", query = "SELECT p FROM Paper p WHERE p.paperId = :paperId")
         , @NamedQuery(name = "Paper.findByDoi", query = "SELECT p FROM Paper p WHERE p.doi = :doi")
         , @NamedQuery(name = "Paper.findByAlternativeId", query = "SELECT p FROM Paper p WHERE p.alternativeId = :alternativeId")
@@ -30,6 +31,30 @@ import java.util.Objects;
         , @NamedQuery(name = "Paper.findByKeywords", query = "SELECT p FROM Paper p WHERE p.keywords = :keywords")
         , @NamedQuery(name = "Paper.findByFreeText", query = "SELECT p FROM Paper p WHERE p.freeText = :freeText")
 
+})
+
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = "Paper.findByIdNative",
+                query = "SELECT p.paper_id, p.doi, p.alternative_id, p.title, p.authors, p.keywords, p.free_text " +
+                        "FROM paper p WHERE p.paper_id = :paperId",
+                resultSetMapping = "PaperMapping"
+
+        ),
+        @NamedNativeQuery(
+                name = "Paper.findByIdNativeResultClass",
+                query = "SELECT p.paper_id, p.doi, p.alternative_id, p.title, p.authors, p.keywords, p.free_text " +
+                        "FROM paper p WHERE p.paper_id = :paperId",
+                resultClass = Paper.class
+
+        ),
+
+
+        @NamedNativeQuery(
+                name = "Paper.insertNative",
+                query = "INSERT INTO paper (paper_id, doi, alternative_id, title, authors, keywords, free_text) " +
+                        "VALUES (:paperId, :doi, :alternativeId, :title, :authors, :keywords, :freeText)"
+        )
 })
 @SqlResultSetMappings({
         @SqlResultSetMapping(
