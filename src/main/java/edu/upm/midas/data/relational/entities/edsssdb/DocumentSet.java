@@ -1,5 +1,8 @@
 package edu.upm.midas.data.relational.entities.edsssdb;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
@@ -15,7 +18,23 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "document_set", schema = "edsssdb", catalog = "")
+
+@SqlResultSetMappings({
+        @SqlResultSetMapping(
+                name = "DocumentSetMapping",
+                entities = @EntityResult(
+                        entityClass = DocumentSet.class,
+                        fields = {
+                                @FieldResult(name = "documentId", column = "document_id"),
+                                @FieldResult(name = "date", column = "date"),
+                                @FieldResult(name = "paperId", column = "paper_id")
+                        }
+                )
+        )
+})
+
 @IdClass(DocumentSetPK.class)
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="DocumentSetPK")
 public class DocumentSet {
     private String documentId;
     private Date date;

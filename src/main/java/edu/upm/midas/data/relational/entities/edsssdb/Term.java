@@ -1,6 +1,10 @@
 package edu.upm.midas.data.relational.entities.edsssdb;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +19,28 @@ import java.util.Objects;
  * @see
  */
 @Entity
+@Table(name = "term", catalog = "edsssdb", schema = "")
+@XmlRootElement
+@NamedQueries({
+        @NamedQuery(name = "Term.findAll", query = "SELECT t FROM Term t")
+        , @NamedQuery(name = "Term.findByTermId", query = "SELECT t FROM Term t WHERE t.termId = :termId")
+        , @NamedQuery(name = "Term.findByName", query = "SELECT t FROM Term t WHERE t.name = :name")
+})
+@SqlResultSetMappings({
+        @SqlResultSetMapping(
+                name = "TermMapping",
+                entities = @EntityResult(
+                        entityClass = Term.class,
+                        fields = {
+                                @FieldResult(name = "termId", column = "term_id"),
+                                @FieldResult(name = "resourceId", column = "resource_id"),
+                                @FieldResult(name = "name", column = "name")
+                        }
+                )
+        )
+})
+
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="termId")
 public class Term {
     private Integer termId;
     private Integer resourceId;

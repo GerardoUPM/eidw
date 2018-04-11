@@ -272,18 +272,17 @@ public class MetamapService {
                 text.setText( responseText.getText() );
                 texts.add(text);
                 //System.out.println(responseText.getTextId());
-                //System.out.println("LLAMAR("+countRT+"): " + responseText.isCall());
+                System.out.println("TotalSize: " + responseTexts.size() +" - CALL("+countRT+"): " + responseText.isCall());
                 if (responseText.isCall()){
                     // Se agregan los textos hasta el momento
-
-                    //request.setTextList( texts );
-                    //System.out.println("textsList size is: " + texts.size() + " AND request.textList is:" + request.getTextList().size());
-
                     //System.out.println( gson.toJson( request ) );
 
                     //<editor-fold desc="BLOQUE QUE LLAMA Y OBTIENE RESULTADOS DE LA API">
                     request.setTextList( texts );
                     request.setToken(Constants.TOKEN);
+
+                    //request.setTextList( texts );
+                    System.out.println("textsList size is: " + texts.size() + " AND request.textList is:" + request.getTextList().size());
 
                     System.out.println( "Connection_ with METAMAP API..." );
                     System.out.println( "Founding medical concepts in a texts... please wait, this process can take from minutes to hours... " );

@@ -38,7 +38,8 @@ public class ValidationController {
 
         String inicio = utilDate.getTime();
         //metamapService.localFilter( consult );
-        metamapService.filter( consult );
+        //metamapService.filter( consult );
+        metamapService.filterByParts( consult );
         System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
 
         return "It has been successfully filtered with Metamap";

@@ -1,5 +1,9 @@
 package edu.upm.midas.data.relational.entities.edsssdb;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +18,38 @@ import java.util.Objects;
  * @see
  */
 @Entity
+@Table(name = "paper", catalog = "edsssdb", schema = "")
+@XmlRootElement
+@NamedQueries({
+        @NamedQuery(name = "Paper.findAll", query = "SELECT p FROM Paper p")
+        , @NamedQuery(name = "Paper.findByPaperId", query = "SELECT p FROM Paper p WHERE p.paperId = :paperId")
+        , @NamedQuery(name = "Paper.findByDoi", query = "SELECT p FROM Paper p WHERE p.doi = :doi")
+        , @NamedQuery(name = "Paper.findByAlternativeId", query = "SELECT p FROM Paper p WHERE p.alternativeId = :alternativeId")
+        , @NamedQuery(name = "Paper.findByTitle", query = "SELECT p FROM Paper p WHERE p.title = :title")
+        , @NamedQuery(name = "Paper.findByAuthors", query = "SELECT p FROM Paper p WHERE p.authors = :authors")
+        , @NamedQuery(name = "Paper.findByKeywords", query = "SELECT p FROM Paper p WHERE p.keywords = :keywords")
+        , @NamedQuery(name = "Paper.findByFreeText", query = "SELECT p FROM Paper p WHERE p.freeText = :freeText")
+
+})
+@SqlResultSetMappings({
+        @SqlResultSetMapping(
+                name = "PaperMapping",
+                entities = @EntityResult(
+                        entityClass = Paper.class,
+                        fields = {
+                                @FieldResult(name = "paperId", column = "paper_id"),
+                                @FieldResult(name = "doi", column = "doi"),
+                                @FieldResult(name = "alternativeId", column = "alternative_id"),
+                                @FieldResult(name = "title", column = "title"),
+                                @FieldResult(name = "authors", column = "authors"),
+                                @FieldResult(name = "keywords", column = "keywords"),
+                                @FieldResult(name = "freeText", column = "freeText")
+                        }
+                )
+        )
+})
+
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="paperId")
 public class Paper {
     private String paperId;
     private String doi;

@@ -1,6 +1,10 @@
 package edu.upm.midas.data.relational.entities.edsssdb;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +19,27 @@ import java.util.Objects;
  * @see
  */
 @Entity
+@Table(name = "synonym", catalog = "edsssdb", schema = "")
+@XmlRootElement
+@NamedQueries({
+        @NamedQuery(name = "Synonym.findAll", query = "SELECT s FROM Synonym s")
+        , @NamedQuery(name = "Synonym.findBySynonymId", query = "SELECT s FROM Synonym s WHERE s.synonymId = :synonymId")
+        , @NamedQuery(name = "Synonym.findByName", query = "SELECT s FROM Synonym s WHERE s.name = :name")
+})
+@SqlResultSetMappings({
+        @SqlResultSetMapping(
+                name = "SynonymMapping",
+                entities = @EntityResult(
+                        entityClass = Synonym.class,
+                        fields = {
+                                @FieldResult(name = "synonymId", column = "synonym_id"),
+                                @FieldResult(name = "name", column = "name")
+                        }
+                )
+        )
+})
+
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="synonymId")
 public class Synonym {
     private Integer synonymId;
     private String name;
