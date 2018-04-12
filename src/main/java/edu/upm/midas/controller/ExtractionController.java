@@ -73,8 +73,8 @@ public class ExtractionController {
     @RequestMapping(path = { "/extract/pubmed" }, //pubmed extraction
             method = RequestMethod.GET)
     public String pubMedExtract() throws Exception {
-        String version = "2018-04-03";
-        extractService.pubMedExtract(String version);
+        String version = "2018-04-03";//"2018-03-23";
+        extractService.pubMedExtract(version);
         return "PubMed Text Extraction successfully";
     }
 

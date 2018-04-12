@@ -1,6 +1,6 @@
 package edu.upm.midas.data.extraction.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import es.upm.disnet.pubmed.model.document_structure.code.Code;
+import edu.upm.midas.data.extraction.model.code.Code;
 
 import java.util.List;
 

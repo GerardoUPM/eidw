@@ -27,7 +27,7 @@ public interface PaperTermRepository {
 
     void persist(PaperTerm paperTerm);
 
-    int insertNative(String paperId, String termId);
+    int insertNative(String paperId, Integer termId);
 
     boolean deleteById(PaperTermPK paperTermPK);
 

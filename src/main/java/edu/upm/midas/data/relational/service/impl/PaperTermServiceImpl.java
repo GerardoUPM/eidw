@@ -53,7 +53,7 @@ daoPaperTerm.persist(paperTerm);
 
     @Override
     @Transactional(propagation= Propagation.REQUIRED)
-    public int insertNative(String paperId, String termId) {
+    public int insertNative(String paperId, Integer termId) {
         return daoPaperTerm.insertNative(paperId, termId);
     }
 

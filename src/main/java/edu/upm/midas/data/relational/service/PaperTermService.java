@@ -24,7 +24,7 @@ public interface PaperTermService {
 
     void save(PaperTerm paperTerm);
 
-    int insertNative(String paperId, String termId);
+    int insertNative(String paperId, Integer termId);
 
     boolean updateFindFull(PaperTerm documentSet, PaperTermPK paperTermPK);
 

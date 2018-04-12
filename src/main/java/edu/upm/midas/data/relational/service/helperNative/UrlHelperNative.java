@@ -47,10 +47,15 @@ public class UrlHelperNative {
      */
     public String getUrl(Link link, String id) throws JsonProcessingException {
         String urlId = uniqueId.generateUrl( id, link.getId() );
-        if (urlService.insertNative( urlId, link.getUrl() ) > 0)
-            return urlId;
-        else
-            return "";
+        Url existUrl = urlService.findById(urlId);
+        if (existUrl!=null) {
+            return existUrl.getUrlId();
+        }else{
+            if (urlService.insertNative(urlId, link.getUrl()) > 0)
+                return urlId;
+            else
+                return "";
+        }
     }
 
 

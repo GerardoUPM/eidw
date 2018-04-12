@@ -51,8 +51,10 @@ public class SourceHelperNative {
         }else{
             String sourceId = getLastId();
             sourceService.insertNative( sourceId, source.getName() );
-            String urlId = urlHelperNative.getUrl( source.getUrl(), sourceId );
-            if ( !urlId.equals("") ) sourceService.insertNativeUrl( sourceId, urlId );
+            if(source.getUrl()!=null) {
+                String urlId = urlHelperNative.getUrl(source.getUrl(), sourceId);
+                if (!urlId.equals("")) sourceService.insertNativeUrl(sourceId, urlId);
+            }
 
             return sourceId;
         }

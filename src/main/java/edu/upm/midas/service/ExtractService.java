@@ -53,12 +53,12 @@ public class ExtractService {
         boolean res = false;
         String inicio = utilDate.getTime();
         //Date version = utilDate.getSqlDate();
-        try {
+        //try {
             populatePubMedTextsDbNative.populate(version);
             res = true;
-        }catch (Exception e){
-            System.out.println("ERROR pubmed text extraction");
-        }
+        //}catch (Exception e){
+        //    System.out.println("ERROR pubmed text extraction");
+        //}
         System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
 
         return res;

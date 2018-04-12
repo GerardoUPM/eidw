@@ -71,6 +71,14 @@ public class ResourceHelperNative {
         return resources;
     }
 
+    public int insertIfExist(String name){
+        int resourceId = resourceService.findIdByNameQuery(name.trim());
+        if (resourceId <= 0){
+            resourceId = resourceService.insertNative(name.trim());
+        }
+        return resourceId;
+    }
+
 
     /**
      * @param nameResource

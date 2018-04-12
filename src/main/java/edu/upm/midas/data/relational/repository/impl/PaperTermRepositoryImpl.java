@@ -68,7 +68,7 @@ public class PaperTermRepositoryImpl extends AbstractDao<PaperTermPK, PaperTerm>
     }
 
     @Override
-    public int insertNative(String paperId, String termId) {
+    public int insertNative(String paperId, Integer termId) {
         return getEntityManager()
                 .createNamedQuery("PaperTerm.insertNative")
                 .setParameter("paperId", paperId)

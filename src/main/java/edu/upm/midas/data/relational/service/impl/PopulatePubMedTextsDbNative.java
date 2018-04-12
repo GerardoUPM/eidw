@@ -1,6 +1,7 @@
 package edu.upm.midas.data.relational.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import edu.upm.midas.constants.Constants;
 import edu.upm.midas.data.extraction.model.Doc;
 import edu.upm.midas.data.extraction.model.Source;
@@ -17,8 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.Date;
 
 /**
@@ -85,12 +87,14 @@ public class PopulatePubMedTextsDbNative {
     /**
      * @throws Exception
      */
-    @Transactional
+    //@Transactional
     public void populate(String snapshot) throws Exception {
 
-        Source source = getPubMedSource(snapshot);
+        //Source source = getPubMedSource(snapshot);
+        Source source = readPubMedRetrievalJSON(snapshot);
 
         Date version = date.stringToDate(snapshot);
+
 
         System.out.println("-------------------- POPULATE DATABASE --------------------");
         System.out.println("Populate start...");
@@ -104,16 +108,14 @@ public class PopulatePubMedTextsDbNative {
             System.out.println("Insert all sections ready!");
             System.out.println("Insert documents start!");
             //</editor-fold>
-            int docsCount = 1, invalidCount = 1;
+            int docsCount = 1;
             for (Doc document: source.getDocuments()) {
                 //Solo inserta aquellos documentos que al menos tengan códigos o secciones
-                if (document.isDiseaseArticle()) {
-                    String documentId = documentHelperNative.insert(sourceId, document, version);
-
+                    String documentId = documentHelperNative.insertPubMedArticles(sourceId, document, version);
                     System.out.println(docsCount + " Insert document: " + document.getDisease().getName() + "_" + documentId);
 
                     //<editor-fold desc="PERSISTIR ENFERMEDAD DEL DOCUMENTO">
-                    String diseaseId = diseaseHelperNative.insertIfExist(document, documentId, version);
+                    String diseaseId = diseaseHelperNative.insertIfExistPubMedArticles(document, documentId, version);
                     //</editor-fold>
 
                     //<editor-fold desc="PERSISTIR CÓDIGOS DEL DOCUMENTO">
@@ -138,12 +140,8 @@ public class PopulatePubMedTextsDbNative {
                     }// Secciones
                     //</editor-fold>
                     docsCount++;
-                }else{
-                    invalidCount++;
-                }
             }// Documentos
             System.out.println("Inserted Documents: " + docsCount);
-            System.out.println("No inserted Documents(invalid): " + invalidCount);
         }// Fuente "Source"
         System.out.println("Populate end...");
         //extractionWikipedia.extractionReport();
@@ -151,16 +149,18 @@ public class PopulatePubMedTextsDbNative {
     }
 
 
-    public Source getPubMedSource(String snapshot){
+    public Source getPubMedSource(String snapshot) throws Exception {
         Request request = new Request();
         Source source = null;
         //request.setSnapshot("2018-04-03");
         request.setSnapshot(snapshot);
         request.setJson(true);
+        request.setNumOfArticles(100);
         System.out.println("Start Connection_ with PUBMED TEXT EXTRACTION REST API...");
         System.out.println("Get PubMed Information by JSON... please wait, this process can take from minutes... ");
         System.out.println(request);
         Response response = pubMedTextExtractionResource.getPubMedTextsByJSON(request);
+        //Response response = readPubMedRetrievalJSON(snapshot);
         System.out.println("End Connection_ with PUBMED TEXT EXTRACTION REST API...");
         System.out.println("Response...");
         System.out.println("Response code: " + response.getResponseCode());
@@ -169,6 +169,39 @@ public class PopulatePubMedTextsDbNative {
         System.out.println("Response message: " + response.getSource().getDocumentCount());
         if (response.getResponseCode().equals(StatusHttpEnum.OK.getClave()))
             source = response.getSource();
+        return source;
+    }
+
+
+    /**
+     * @param snapshot
+     * @return
+     * @throws Exception
+     */
+    public Source readPubMedRetrievalJSON(String snapshot) throws Exception {
+        Source source = null;
+        Gson gson = new Gson();
+        String fileName = snapshot + Constants.PM_RETRIEVAL_FILE_NAME + Constants.DOT_JSON;
+        String path = Constants.PM_RETRIEVAL_HISTORY_FOLDER + fileName;
+        System.out.println("Read JSON!..." + path);
+
+        try {
+            /*File file = new File(path);
+            if (file.exists()){
+                System.out.println("length: "+*//*(*//*file.length()*//*//*(1024*1024))*//*+" mb");
+                System.out.println("getTotalSpace: "+file.getTotalSpace());
+            }*/
+            BufferedReader br = new BufferedReader(new FileReader(path));
+            source = gson.fromJson(br, Source.class);
+        }catch (Exception e){
+            System.out.println("Error to read or convert JSON!...");
+        }
+
+        /*for (edu.upm.midas.data.validation.metamap.model.response.Text text: resp.getTexts()) {
+            System.out.println("TextId: " + text.getId() + " | Concepts: " + text.getConcepts().toString());
+        }*/
+        //System.out.println("source: "+source);
+
         return source;
     }
 

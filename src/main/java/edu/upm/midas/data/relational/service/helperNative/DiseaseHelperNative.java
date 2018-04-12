@@ -67,6 +67,33 @@ public class DiseaseHelperNative {
 
 
     /**
+     * @param document
+     * @param documentId
+     * @param version
+     * @return
+     * @throws JsonProcessingException
+     */
+    public String insertIfExistPubMedArticles(Doc document, String documentId, Date version) throws JsonProcessingException {
+        String diseaseName = document.getDisease().getName();
+        String url = document.getUrl().getUrl();
+
+        Disease diseaseEntity = diseaseService.findByName( diseaseName );
+        //System.out.println(diseaseName+ "DIS: "+ diseaseEntity);
+        if ( diseaseEntity == null ){
+            String diseaseId = getDiseaseId();
+            diseaseService.insertNative( diseaseId, diseaseName, "" );
+            diseaseService.insertNativeHasDisease( documentId, version, diseaseId );
+            //Insertar sinonimos y sus códigos
+            return diseaseId;
+        }else{
+            //System.out.println("HasDisease: "+ documentId + " | " + version + " | " + diseaseEntity.getDiseaseId() );
+            diseaseService.insertNativeHasDisease( documentId, version, diseaseEntity.getDiseaseId() );
+            return diseaseEntity.getDiseaseId();
+        }
+    }
+
+
+    /**
      * @param diseaseName
      * @return
      */
