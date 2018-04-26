@@ -5,11 +5,16 @@ import edu.upm.midas.data.relational.entities.edsssdb.*;
 import edu.upm.midas.data.relational.service.DocumentService;
 import edu.upm.midas.data.relational.service.impl.PopulateDbNative;
 import edu.upm.midas.service.ExtractService;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +28,7 @@ import java.util.List;
  * @see
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/first/api")
 public class ExtractionController {
 
     @Autowired
@@ -71,9 +76,10 @@ public class ExtractionController {
 
 
     @RequestMapping(path = { "/extract/pubmed" }, //pubmed extraction
-            method = RequestMethod.GET)
-    public String pubMedExtract() throws Exception {
-        String version = "2018-04-03";//"2018-03-23";
+            method = RequestMethod.GET,
+            params = {"version"})
+    public String pubMedExtract(@RequestParam(value = "version") @Valid @NotBlank @NotNull @NotEmpty String version) throws Exception {
+        //String version = "2018-03-23";//"2018-04-03";
         extractService.pubMedExtract(version);
         return "PubMed Text Extraction successfully";
     }

@@ -29,6 +29,7 @@ public class Request {
     @NotNull(message = Constants.ERR_NO_PARAMETER)
     @Size(min = 1, message = Constants.ERR_EMPTY_PARAMETER)
     private List<Text> textList;
+    private String snapshot;
 
 
     public String getToken() {
@@ -53,5 +54,23 @@ public class Request {
 
     public void setTextList(List<Text> textList) {
         this.textList = textList;
+    }
+
+    public String getSnapshot() {
+        return snapshot;
+    }
+
+    public void setSnapshot(String snapshot) {
+        this.snapshot = snapshot;
+    }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "token='" + token + '\'' +
+                ", configuration=" + configuration +
+                ", textList=" + textList +
+                ", snapshot='" + snapshot + '\'' +
+                '}';
     }
 }

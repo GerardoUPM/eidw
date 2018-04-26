@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -39,10 +40,20 @@ public class HasSectionHelperNative {
     ObjectMapper objectMapper;
 
 
+    /**
+     * @param documentId
+     * @param version
+     * @param section
+     * @return
+     */
+    @Transactional
     public String insert(String documentId, Date version, Section section){
-        edu.upm.midas.data.relational.entities.edsssdb.Section sectionEntity = sectionService.findByName( section.getName() );
-        hasSectionService.insertNative( documentId, version, sectionEntity.getSectionId() );
-        return sectionEntity.getSectionId();
+        //Busca la sección que ya debe existir
+        edu.upm.midas.data.relational.entities.edsssdb.Section existSection = sectionService.findByName( section.getName() );
+        //inserta la relación entre el documento y la sección (insert ignore)
+        hasSectionService.insertNative( documentId, version, existSection.getSectionId() );
+        //retorna el id de la sección
+        return existSection.getSectionId();
     }
 
 

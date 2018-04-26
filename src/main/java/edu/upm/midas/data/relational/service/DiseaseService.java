@@ -20,6 +20,8 @@ public interface DiseaseService {
 
     Disease findByName(String diseaseName);
 
+    Disease findByNameNativeUnrestricted(String diseaseName);
+
     Disease findByCui(String cui);
 
     Disease findLastDiseaseQuery();
@@ -33,6 +35,12 @@ public interface DiseaseService {
     Object[] findByIdAndSourceAndVersionNative(String diseaseId, String sourceName, Date version);
 
     Object[] findByCuiAndSourceAndVersionNative(String cui, String sourceName, Date version);
+
+    List<Disease> findBySourceAndVersionAndCode(String sourceName, Date version, String code, String resourceName);
+
+    Disease findOneBySourceAndVersionAndCode(String sourceName, Date version, String code, String resourceName);
+
+    Disease findBySourceAndVersionAndCodeAndDiseaseName(String sourceName, Date version, String code, String resourceName, String diseaseName);
 
     void save(Disease disease);
 

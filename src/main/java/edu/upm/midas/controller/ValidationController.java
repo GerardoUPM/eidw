@@ -4,10 +4,16 @@ import edu.upm.midas.data.validation.metamap.service.MetamapService;
 import edu.upm.midas.data.validation.model.Consult;
 import edu.upm.midas.data.validation.tvp.service.TvpService;
 import edu.upm.midas.utilsservice.UtilDate;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by gerardo on 05/07/2017.
@@ -19,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @see
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/first/api")
 public class ValidationController {
 
     @Autowired
@@ -34,7 +40,7 @@ public class ValidationController {
     public String metamapFilter() throws Exception {
 
         Consult consult = new Consult("wikipedia",
-                "2018-04-01");
+                "2018-04-15");
 
         String inicio = utilDate.getTime();
         //metamapService.localFilter( consult );
@@ -47,11 +53,12 @@ public class ValidationController {
 
 
     @RequestMapping(path = { "/metamap/json" }, //Term Validation Procedure
-            method = RequestMethod.GET)
-    public String metamapFilterWithJSON() throws Exception {
+            method = RequestMethod.GET,
+            params = {"snapshot"})
+    public String metamapFilterWithJSON(@RequestParam(value = "snapshot") @Valid @NotBlank @NotNull @NotEmpty String snapshot) throws Exception {
 
         Consult consult = new Consult("wikipedia",
-                "2018-04-01");
+                snapshot);//"2018-04-15"
 
         String inicio = utilDate.getTime();
         //Cuando se realice el filtro
@@ -82,7 +89,7 @@ public class ValidationController {
     public String tvpValidation() throws Exception {
 
         Consult consult = new Consult("wikipedia",
-                "2018-04-01");
+                "2018-04-15");
 
         String inicio = utilDate.getTime();
         tvpService.validation( consult );

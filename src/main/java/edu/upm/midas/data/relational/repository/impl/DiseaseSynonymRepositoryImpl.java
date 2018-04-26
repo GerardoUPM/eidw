@@ -68,7 +68,7 @@ public class DiseaseSynonymRepositoryImpl extends AbstractDao<DiseaseSynonymPK, 
     }
 
     @Override
-    public int insertNative(String diseaseId, String synonymId) {
+    public int insertNative(String diseaseId, int synonymId) {
         return getEntityManager()
                 .createNamedQuery("DiseaseSynonym.insertNative")
                 .setParameter("diseaseId", diseaseId)

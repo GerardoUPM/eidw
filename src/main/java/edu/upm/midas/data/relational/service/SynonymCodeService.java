@@ -24,7 +24,7 @@ public interface SynonymCodeService {
 
     void save(SynonymCode synonymCode);
 
-    int insertNative(String synonymId, String code, String resourceId);
+    int insertNative(int synonymId, String code, int resourceId);
 
     boolean updateFindFull(SynonymCode synonymCode, SynonymCodePK synonymCodePK);
 

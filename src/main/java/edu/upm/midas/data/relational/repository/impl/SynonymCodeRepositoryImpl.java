@@ -70,7 +70,7 @@ public class SynonymCodeRepositoryImpl extends AbstractDao<SynonymCodePK, Synony
     }
 
     @Override
-    public int insertNative(String synonymId, String code, String resourceId) {
+    public int insertNative(int synonymId, String code, int resourceId) {
         return getEntityManager()
                 .createNamedQuery("SynonymCode.insertNative")
                 .setParameter("synonymId", synonymId)

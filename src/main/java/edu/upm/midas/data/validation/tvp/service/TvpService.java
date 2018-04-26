@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -85,7 +87,11 @@ public class TvpService {
         //printConcepstJSON( nonRepetedSymptoms );
         System.out.println( "Connection_ with TVP API..." );
         System.out.println( "Validating symptoms... please wait, this process can take from minutes to hours... " );
+
+        //VERDADERO Y NO FUNCIONA AHORA, NO SE PORQUE
         Response response = tvpResource.getValidateSymptoms( request );
+        //CONSUMIR UN JSON
+        //Response response = readTVPValidationJSON(consult.getVersion());
         System.out.println("Authorization: "+ response.isAuthorized());
 
 
@@ -148,6 +154,29 @@ public class TvpService {
 
     public void printConcepstJSON(List<Concept> concepts) throws JsonProcessingException {
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(concepts));
+    }
+
+
+    /**
+     * @param snapshot
+     * @return
+     * @throws Exception
+     */
+    public Response readTVPValidationJSON(String snapshot) throws Exception {
+        Response response = null;
+        Gson gson = new Gson();
+        String fileName = snapshot + Constants.TVP_RETRIEVAL_FILE_NAME + Constants.DOT_JSON;
+        String path = Constants.TVP_RETRIEVAL_HISTORY_FOLDER + fileName;
+        System.out.println("Read JSON!..." + path);
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(path));
+            response = gson.fromJson(br, Response.class);
+        }catch (Exception e){
+            System.out.println("Error to read or convert JSON!...");
+        }
+
+        return response;
     }
 
 }

@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class TvpResourceServiceImpl implements TvpResourceService {
 
     @Autowired
-    @Lazy
+//    @Lazy
     private TvpClient tvpClient;
 
     //@HystrixCommand(groupKey = "tp-notification-service", fallbackMethod = "notificationsAreDown")

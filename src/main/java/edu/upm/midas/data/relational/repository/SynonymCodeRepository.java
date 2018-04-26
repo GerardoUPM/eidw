@@ -27,7 +27,7 @@ public interface SynonymCodeRepository {
 
     void persist(SynonymCode synonymCode);
 
-    int insertNative(String synonymId, String code, String resourceId);
+    int insertNative(int synonymId, String code, int resourceId);
 
     boolean deleteById(SynonymCodePK synonymCodePK);
 

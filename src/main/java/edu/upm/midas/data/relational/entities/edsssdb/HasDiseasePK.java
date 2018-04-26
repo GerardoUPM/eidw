@@ -19,6 +19,15 @@ public class HasDiseasePK implements Serializable {
     private Date date;
     private String diseaseId;
 
+    public HasDiseasePK() {
+    }
+
+    public HasDiseasePK(String documentId, Date date, String diseaseId) {
+        this.documentId = documentId;
+        this.date = date;
+        this.diseaseId = diseaseId;
+    }
+
     @Column(name = "document_id", nullable = false, length = 30)
     @Id
     public String getDocumentId() {

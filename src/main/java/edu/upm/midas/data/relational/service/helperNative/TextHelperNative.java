@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -56,15 +57,17 @@ public class TextHelperNative {
      * @return
      * @throws JsonProcessingException
      */
-    public String insert(Text text, String sectionId, String documentId, Date version) throws JsonProcessingException {
+    @Transactional
+    public String insert(Text text, String sectionId, String documentId, Date version, String paperId) throws JsonProcessingException {
         //System.out.println(text+" - "+ sectionId+" - "+ documentId +" - "+ version);
-        String textId = getTextId( documentId, version, sectionId, text.getId() );
+        String textId = getTextId( documentId, version, sectionId, text.getId(), paperId);
         String text_;
+        //System.out.println();
 
         if(text instanceof Paragraph){
-            //System.out.println(((Paragraph) text).getTitle() + " =>" +((Paragraph) text).getText());
-            text_ = (!(text.getTitle().equals(""))?(text.getTitle() + " => " + ( (Paragraph) text).getText()):( (Paragraph) text).getText());
-            textService.insertNative( textId, ContentType.PARA.getClave(), text_.trim() );
+            //System.out.println(((Paragraph) text).getTitle() + " =>" + ((Paragraph) text).getText());
+            text_ = (!(text.getTitle().equals("")) ? (text.getTitle() + " => " + ((Paragraph) text).getText()) : ((Paragraph) text).getText());
+            textService.insertNative(textId, ContentType.PARA.getClave(), text_.trim());
         }else if (text instanceof List_){
             //System.out.println(((List_) text).getBulletList().toString());
             String textList = "";int bulletCount = 1;
@@ -92,13 +95,59 @@ public class TextHelperNative {
         }
 
         //<editor-fold desc="INSERTAR URLS">
-        List<String> urlList = urlHelperNative.getUrl( text.getUrlList(), textId );
-        for (String urlId:
-             urlList) {
-            textService.insertNativeUrl( textId, urlId );
+        if (text.getUrlList()!=null) {
+            List<String> urlList = urlHelperNative.getUrl(text.getUrlList(), textId);
+            for (String urlId :
+                    urlList) {
+                textService.insertNativeUrl(textId, urlId);
+            }
         }
         //</editor-fold>
+        //System.out.println(documentId+"|"+ version+"|"+ sectionId+"|"+ textId +"|"+ text.getTextOrder());
+        hasTextService.insertNative( documentId, version, sectionId, textId, text.getTextOrder() );
 
+        return textId;
+
+    }
+
+
+    /**
+     * @param text
+     * @param sectionId
+     * @param documentId
+     * @param version
+     * @return
+     * @throws JsonProcessingException
+     */
+    @Transactional
+    public String insertPubMedTextArticles(Text text, String sectionId, String documentId, Date version, String paperId) throws JsonProcessingException {
+        //System.out.println(text+" - "+ sectionId+" - "+ documentId +" - "+ version);
+        String textId = getTextId( documentId, version, sectionId, text.getId(), paperId);
+        String text_;
+        //System.out.println();
+
+        if(text instanceof Paragraph || text instanceof Text){
+            if (text instanceof Paragraph) {
+                //System.out.println(((Paragraph) text).getTitle() + " =>" + ((Paragraph) text).getText());
+                text_ = (!(text.getTitle().equals("")) ? (text.getTitle() + " => " + ((Paragraph) text).getText()) : ((Paragraph) text).getText());
+                textService.insertNative(textId, ContentType.PARA.getClave(), text_.trim());
+            }else{
+                //System.out.println((text.getTitle() + " =>" + text.getText()));
+                text_ = text.getText();
+                textService.insertNative(textId, ContentType.PARA.getClave(), text_.trim());
+            }
+        }
+
+        //<editor-fold desc="INSERTAR URLS">
+        if (text.getUrlList()!=null) {
+            List<String> urlList = urlHelperNative.getUrl(text.getUrlList(), textId);
+            for (String urlId :
+                    urlList) {
+                textService.insertNativeUrl(textId, urlId);
+            }
+        }
+        //</editor-fold>
+        //System.out.println(documentId+"|"+ version+"|"+ sectionId+"|"+ textId +"|"+ text.getTextOrder());
         hasTextService.insertNative( documentId, version, sectionId, textId, text.getTextOrder() );
 
         return textId;
@@ -113,9 +162,13 @@ public class TextHelperNative {
      * @param textId
      * @return
      */
-    public String getTextId(String documentId, Date version, String sectionId, int textId) {
+    public String getTextId(String documentId, Date version, String sectionId, int textId, String paperId) {
         String docId = documentHelperNative.getDocumentId( documentId, version );
-        return uniqueId.generateText( docId, sectionId, textId );
+        if (!common.isEmpty(paperId)){
+            return uniqueId.generateTextFromPaperAbstract(docId, sectionId, textId, paperId);
+        }else {
+            return uniqueId.generateText(docId, sectionId, textId);
+        }
     }
 
 }

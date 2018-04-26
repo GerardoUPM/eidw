@@ -21,6 +21,8 @@ public interface DiseaseRepository {
     Disease findByIdQuery(String diseaseId);
 
     Object[] findByNameNative(String diseaseName);
+    //Sin restricciones de mayusculas o minuscilas
+    Object[] findByNameNativeUnrestricted(String diseaseName);
 
     Disease findByCuiQuery(String cui);
 
@@ -39,6 +41,10 @@ public interface DiseaseRepository {
     Object[] findByIdAndSourceAndVersionNative(String diseaseId, String sourceName, Date version);
 
     Object[] findByCuiAndSourceAndVersionNative(String cui, String sourceName, Date version);
+
+    List<Object[]> findBySourceAndVersionAndCode(String sourceName, Date version, String code, String resourceName);
+
+    Object[] findBySourceAndVersionAndCodeAndDiseaseName(String sourceName, Date version, String code, String resourceName, String diseaseName);
 
     void persist(Disease disease);
 

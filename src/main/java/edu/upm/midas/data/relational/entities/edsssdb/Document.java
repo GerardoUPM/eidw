@@ -41,6 +41,11 @@ import java.util.Objects;
                         + "FROM document d WHERE d.document_id = :documentId AND d.date = :date ",
                 resultClass = Document.class
         ),
+        @NamedNativeQuery(
+                name = "Document.findLastVersionNative",
+                query = "SELECT MAX(date) 'last' "
+                        + "FROM document d "
+        ),
 
         // INSERTS
 

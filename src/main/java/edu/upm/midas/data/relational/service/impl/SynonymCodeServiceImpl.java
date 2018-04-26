@@ -53,7 +53,7 @@ daoSynonymCode.persist(synonymCode);
 
     @Override
     @Transactional(propagation= Propagation.REQUIRED)
-    public int insertNative(String synonymId, String code, String resourceId) {
+    public int insertNative(int synonymId, String code, int resourceId) {
         return daoSynonymCode.insertNative(synonymId, code, resourceId);
     }
 

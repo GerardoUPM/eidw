@@ -53,6 +53,11 @@ public class UniqueId {
         return documentId + "." + sectionId + ".T" + txt;
     }
 
+    public String generateTextFromPaperAbstract(String documentId, String sectionId, int text, String paperId){
+        String txt = (text < 10)?String.format("%02d", text):text+"";
+        return documentId + "." + sectionId + ".T" + txt + ".PAPERID" + paperId;
+    }
+
     public String generateUrl(String id, int url){
         String u = (url < 10)?String.format("%02d", url):url+"";
         return id + ".U" + u;

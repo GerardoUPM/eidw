@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ public class SectionHelperNative {
      * @param sectionMap
      * @throws Exception
      */
+    @Transactional
     public void insertIfExist(TreeMap<String, String> sectionMap) throws Exception{
         for (Map.Entry<String, String> section:
                 sectionMap.entrySet()) {

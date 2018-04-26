@@ -24,7 +24,7 @@ public interface DiseaseSynonymService {
 
     void save(DiseaseSynonym diseaseSynonym);
 
-    int insertNative(String diseaseId, String synonymId);
+    int insertNative(String diseaseId, int synonymId);
 
     boolean updateFindFull(DiseaseSynonym hasSection, DiseaseSynonymPK diseaseSynonymPK);
 

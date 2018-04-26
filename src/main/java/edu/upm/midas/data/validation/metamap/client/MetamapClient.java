@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 
 @FeignClient(name = "metamap-client",
-        //url = "138.4.130.6:11063/api/metamap",
-        url =  "http://localhost:8080/api/metamap",
+        url = "138.4.130.6:11063/api/metamap",
+        //url =  "http://localhost:8080/api/metamap",
         fallback = MetamapClientFallback.class,
         configuration = FeignConfiguration.class)
 public interface MetamapClient {
 
-    @RequestMapping(value = "/filter", method = RequestMethod.POST)
+    @RequestMapping(value = "/filter/json", method = RequestMethod.POST)
     Response filterTexts(@RequestBody Request request);
 
 }

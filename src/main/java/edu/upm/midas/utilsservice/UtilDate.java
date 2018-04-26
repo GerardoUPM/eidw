@@ -49,4 +49,9 @@ public class UtilDate {
         return new SimpleDateFormat("yyyy-MM-dd").parse(date);
     }
 
+    public java.sql.Date convertSQLDateToUtilDate(java.util.Date date){
+        java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());
+        return sqlStartDate;
+    }
+
 }

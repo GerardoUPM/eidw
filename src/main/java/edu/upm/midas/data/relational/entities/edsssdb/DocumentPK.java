@@ -18,6 +18,14 @@ public class DocumentPK implements Serializable {
     private String documentId;
     private Date date;
 
+    public DocumentPK() {
+    }
+
+    public DocumentPK(String documentId, Date date) {
+        this.documentId = documentId;
+        this.date = date;
+    }
+
     @Column(name = "document_id", nullable = false, length = 30)
     @Id
     public String getDocumentId() {

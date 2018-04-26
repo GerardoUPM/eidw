@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +39,20 @@ public class DiseaseServiceImpl implements DiseaseService {
     public Disease findByName(String diseaseName) {
         Disease disease = null;
         Object[] oQuery = daoDisease.findByNameNative(diseaseName);
+        if (oQuery != null){
+            disease = new Disease();
+            disease.setDiseaseId( (String) oQuery[0] );
+            disease.setName( (String) oQuery[1] );
+            disease.setCui( (String) oQuery[2] );
+        }
+        return disease;
+    }
+
+    @Override
+    @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
+    public Disease findByNameNativeUnrestricted(String diseaseName) {
+        Disease disease = null;
+        Object[] oQuery = daoDisease.findByNameNativeUnrestricted(diseaseName);
         if (oQuery != null){
             disease = new Disease();
             disease.setDiseaseId( (String) oQuery[0] );
@@ -81,18 +96,67 @@ public class DiseaseServiceImpl implements DiseaseService {
     }
 
     @Override
+    @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
     public List<Object[]> findAllBySourceAndVersionNative(String sourceName, Date version) {
         return daoDisease.findAllBySourceAndVersionNative(sourceName, version);
     }
 
     @Override
+    @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
     public Object[] findByIdAndSourceAndVersionNative(String diseaseId, String sourceName, Date version) {
         return daoDisease.findByIdAndSourceAndVersionNative(diseaseId, sourceName, version);
     }
 
     @Override
+    @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
     public Object[] findByCuiAndSourceAndVersionNative(String cui, String sourceName, Date version) {
         return daoDisease.findByCuiAndSourceAndVersionNative(cui, sourceName, version);
+    }
+
+    @Override
+    @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
+    public List<Disease> findBySourceAndVersionAndCode(String sourceName, Date version, String code, String resourceName) {
+        List<Disease> diseases = null;
+        List<Object[]> objectDisease = daoDisease.findBySourceAndVersionAndCode(sourceName, version, code, resourceName);
+        if (objectDisease!=null){
+            diseases = new ArrayList<>();
+            for (Object[] o: objectDisease) {
+                Disease disease = new Disease();
+                disease.setDiseaseId((String) o[0]);
+                disease.setName((String) o[1]);
+                diseases.add(disease);
+            }
+        }
+        return diseases;
+    }
+
+    @Override
+    @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
+    public Disease findOneBySourceAndVersionAndCode(String sourceName, Date version, String code, String resourceName) {
+        Disease disease = null;
+        List<Object[]> objectDisease = daoDisease.findBySourceAndVersionAndCode(sourceName, version, code, resourceName);
+        if (objectDisease!=null){
+            for (Object[] o: objectDisease) {
+                disease = new Disease();
+                disease.setDiseaseId((String) o[0]);
+                disease.setName((String) o[1]);
+                break;
+            }
+        }
+        return disease;
+    }
+
+    @Override
+    @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
+    public Disease findBySourceAndVersionAndCodeAndDiseaseName(String sourceName, Date version, String code, String resourceName, String diseaseName) {
+        Disease disease = null;
+        Object[] objectDisease = daoDisease.findBySourceAndVersionAndCodeAndDiseaseName(sourceName, version, code, resourceName, diseaseName);
+        if (objectDisease!=null){
+            disease = new Disease();
+            disease.setDiseaseId((String) objectDisease[0]);
+            disease.setName((String) objectDisease[1]);
+        }
+        return disease;
     }
 
     @Transactional(propagation= Propagation.REQUIRED)

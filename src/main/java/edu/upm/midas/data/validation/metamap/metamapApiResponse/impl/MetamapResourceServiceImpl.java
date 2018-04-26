@@ -19,8 +19,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class MetamapResourceServiceImpl implements MetamapResourceService {
 
-    @Autowired
     private MetamapClient metamapClient;
+
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    public MetamapResourceServiceImpl(MetamapClient metamapClient) {
+        this.metamapClient = metamapClient;
+    }
 
     @Override
     //@HystrixCommand(fallbackMethod = "retrieveFallback")

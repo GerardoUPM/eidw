@@ -1,5 +1,6 @@
 package edu.upm.midas.data.relational.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import edu.upm.midas.constants.Constants;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -109,43 +111,95 @@ public class PopulatePubMedTextsDbNative {
             System.out.println("Insert documents start!");
             //</editor-fold>
             int docsCount = 1;
-            for (Doc document: source.getDocuments()) {
+            for (Doc document: source.getDocuments()) {//Poner todo esto en un metodo transaccional
                 //Solo inserta aquellos documentos que al menos tengan códigos o secciones
-                    String documentId = documentHelperNative.insertPubMedArticles(sourceId, document, version);
-                    System.out.println(docsCount + " Insert document: " + document.getDisease().getName() + "_" + documentId);
+                String documentId = documentHelperNative.insertPubMedArticles(sourceId, document, version);
+                System.out.println(docsCount + " Insert document: " + document.getDisease().getName() + "_" + documentId);
 
-                    //<editor-fold desc="PERSISTIR ENFERMEDAD DEL DOCUMENTO">
-                    String diseaseId = diseaseHelperNative.insertIfExistPubMedArticles(document, documentId, version);
-                    //</editor-fold>
+                //<editor-fold desc="PERSISTIR ENFERMEDAD DEL DOCUMENTO">
+                String diseaseId = diseaseHelperNative.insertIfExistPubMedArticles(document, documentId, version, source.getName());
+                //</editor-fold>
 
-                    //<editor-fold desc="PERSISTIR CÓDIGOS DEL DOCUMENTO">
+                //<editor-fold desc="PERSISTIR CÓDIGOS DEL DOCUMENTO">
+                if (document.getCodeList()!=null)
                     codeHelperNative.insertIfExist(document.getCodeList(), documentId, version);
-                    //</editor-fold>
+                //</editor-fold>
 
-                    //<editor-fold desc="RECORRIDO DE SECCIONES PARA ACCEDER A LOS TEXTOS">
+                //<editor-fold desc="RECORRIDO DE SECCIONES PARA ACCEDER A LOS TEXTOS">
+                if (document.getSectionList()!=null) {
                     for (edu.upm.midas.data.extraction.model.Section section : document.getSectionList()) {
+                        //Si la sección no tiene textos no se inserta en la relación has_section
+                        if (section.getTextList()!=null) {
                         //<editor-fold desc="PERSISTIR has_section">
+                        //inserta la sección para ese documento
                         String sectionId = hasSectionHelperNative.insert(documentId, version, section);
                         //</editor-fold>
 
+                        //Validar si hay textos
                         int textCount = 0;
-                        for (edu.upm.midas.data.extraction.model.text.Text text : section.getTextList()) {
-                            //<editor-fold desc="INSERTAR TEXTO">
-                            textHelperNative.insert(text, sectionId, documentId, version);
-                            //</editor-fold>
+                            for (edu.upm.midas.data.extraction.model.text.Text text : section.getTextList()) {
+                                //<editor-fold desc="INSERTAR TEXTO">
+                                textHelperNative.insertPubMedTextArticles(text, sectionId, documentId, version, text.getPaperId());
+                                //</editor-fold>
 
-                            textCount++;
-                        }// Textos
+                                textCount++;
+                            }// Textos
+                        }
 
                     }// Secciones
-                    //</editor-fold>
-                    docsCount++;
+                }
+                //</editor-fold>
+
+                //insertAllDataOfDocument(document, sourceId, version, source, docsCount);
+                docsCount++;
             }// Documentos
             System.out.println("Inserted Documents: " + docsCount);
         }// Fuente "Source"
         System.out.println("Populate end...");
         //extractionWikipedia.extractionReport();
 
+    }
+
+
+    @Transactional
+    public void insertAllDataOfDocument(Doc document, String sourceId, Date version, Source source, int docsCount) throws JsonProcessingException {
+        //Solo inserta aquellos documentos que al menos tengan códigos o secciones
+        String documentId = documentHelperNative.insertPubMedArticles(sourceId, document, version);
+        System.out.println(docsCount + " Insert document: " + document.getDisease().getName() + "_" + documentId);
+
+        //<editor-fold desc="PERSISTIR ENFERMEDAD DEL DOCUMENTO">
+        String diseaseId = diseaseHelperNative.insertIfExistPubMedArticles(document, documentId, version, source.getName());
+        //</editor-fold>
+
+        //<editor-fold desc="PERSISTIR CÓDIGOS DEL DOCUMENTO">
+        if (document.getCodeList()!=null)
+            codeHelperNative.insertIfExist(document.getCodeList(), documentId, version);
+        //</editor-fold>
+
+        //<editor-fold desc="RECORRIDO DE SECCIONES PARA ACCEDER A LOS TEXTOS">
+        if (document.getSectionList()!=null) {
+            for (edu.upm.midas.data.extraction.model.Section section : document.getSectionList()) {
+                //Si la sección no tiene textos no se inserta en la relación has_section
+                if (section.getTextList()!=null) {
+                    //<editor-fold desc="PERSISTIR has_section">
+                    //inserta la sección para ese documento
+                    String sectionId = hasSectionHelperNative.insert(documentId, version, section);
+                    //</editor-fold>
+
+                    //Validar si hay textos
+                    int textCount = 0;
+                    for (edu.upm.midas.data.extraction.model.text.Text text : section.getTextList()) {
+                        //<editor-fold desc="INSERTAR TEXTO">
+                        textHelperNative.insertPubMedTextArticles(text, sectionId, documentId, version, text.getPaperId());
+                        //</editor-fold>
+
+                        textCount++;
+                    }// Textos
+                }
+
+            }// Secciones
+        }
+        //</editor-fold>
     }
 
 
@@ -204,6 +258,9 @@ public class PopulatePubMedTextsDbNative {
 
         return source;
     }
+
+
+
 
 
 

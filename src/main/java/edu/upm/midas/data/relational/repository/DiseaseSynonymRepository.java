@@ -27,7 +27,7 @@ public interface DiseaseSynonymRepository {
 
     void persist(DiseaseSynonym diseaseSynonym);
 
-    int insertNative(String diseaseId, String synonymId);
+    int insertNative(String diseaseId, int synonymId);
 
     boolean deleteById(DiseaseSynonymPK diseaseSynonymPK);
 

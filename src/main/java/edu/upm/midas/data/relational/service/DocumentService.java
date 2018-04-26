@@ -19,6 +19,8 @@ public interface DocumentService {
 
     Document findById(DocumentPK documentPk);
 
+    Date findLastVersionNative();
+
     List<Document> findAll();
 
     void save(Document document);

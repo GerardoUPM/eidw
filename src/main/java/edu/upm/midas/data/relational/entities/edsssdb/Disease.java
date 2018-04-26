@@ -50,6 +50,11 @@ import java.util.Objects;
                         + "FROM disease d WHERE d.name COLLATE utf8_bin = :name"
         ),
         @NamedNativeQuery(
+                name = "Disease.findByNameNativeUnrestricted",
+                query = "SELECT d.disease_id, d.name, d.cui "
+                        + "FROM disease d WHERE d.name = :name"
+        ),
+        @NamedNativeQuery(
                 name = "Disease.findLastIdNative",
                 query = "SELECT d.disease_id, SUBSTRING( d.disease_id , 4) 'int_disease_id' " +
                         "FROM disease d " +
@@ -127,6 +132,43 @@ import java.util.Objects;
                         " WHERE s.name COLLATE utf8_bin = :sourceName " +
                         " AND doc.date = :version " +
                         " AND d.disease_id = :diseaseId "
+        ),
+        @NamedNativeQuery(
+                name = "Disease.findBySourceAndVersionAndCode",
+                query = " SELECT DISTINCT d.disease_id, d.name, hc.code , r.name 'resource'-- , doc.date, doc.document_id, getDocumentUrl(sce.name, doc.date, d.disease_id) 'url' \n" +
+                        "FROM disease d " +
+                        "INNER JOIN has_disease hd ON hd.disease_id = d.disease_id " +
+                        "INNER JOIN document doc ON doc.document_id = hd.document_id AND doc.date = hd.date " +
+                        "-- source\n" +
+                        "INNER JOIN has_source hs ON hs.document_id = doc.document_id AND hs.date = doc.date " +
+                        "INNER JOIN source sce ON sce.source_id = hs.source_id " +
+                        "-- codes\n" +
+                        "INNER JOIN has_code hc ON hc.document_id = doc.document_id AND hc.date = doc.date " +
+                        "INNER JOIN code c ON c.code = hc.code AND c.resource_id = hc.resource_id " +
+                        "INNER JOIN resource r ON r.resource_id = c.resource_id " +
+                        "WHERE -- sce.name = :source " +
+                        "-- AND doc.date = :version\n " +
+                        "c.code = :code " +
+                        "AND r.name = :resource "
+        ),
+        @NamedNativeQuery(
+                name = "Disease.findBySourceAndVersionAndCodeAndDiseaseName",
+                query = " SELECT DISTINCT d.disease_id, d.name, hc.code , r.name 'resource', doc.date, doc.document_id, getDocumentUrl(sce.name, doc.date, d.disease_id) 'url' " +
+                        "FROM disease d " +
+                        "INNER JOIN has_disease hd ON hd.disease_id = d.disease_id " +
+                        "INNER JOIN document doc ON doc.document_id = hd.document_id AND doc.date = hd.date " +
+                        "-- source\n" +
+                        "INNER JOIN has_source hs ON hs.document_id = doc.document_id AND hs.date = doc.date " +
+                        "INNER JOIN source sce ON sce.source_id = hs.source_id " +
+                        "-- codes\n" +
+                        "INNER JOIN has_code hc ON hc.document_id = doc.document_id AND hc.date = doc.date " +
+                        "INNER JOIN code c ON c.code = hc.code AND c.resource_id = hc.resource_id " +
+                        "INNER JOIN resource r ON r.resource_id = c.resource_id " +
+                        "WHERE -- sce.name = :source " +
+                        "-- AND doc.date = :version\n " +
+                        "c.code = :code " +
+                        "AND r.name = :resource " +
+                        "AND d.name = :diseaseName"
         )
 })
 

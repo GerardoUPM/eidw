@@ -25,6 +25,8 @@ public interface DocumentRepository {
 
     Document findByIdNativeResultClass(DocumentPK documentPK);
 
+    Date findLastVersionNative();
+
     List<Document> findAllQuery();
 
     void persist(Document document);

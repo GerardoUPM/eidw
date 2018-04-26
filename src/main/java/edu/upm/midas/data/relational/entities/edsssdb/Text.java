@@ -45,17 +45,17 @@ import java.util.Objects;
 
         @NamedNativeQuery(
                 name = "Text.insertNative",
-                query = "INSERT INTO text (text_id, content_type, text) "
+                query = "INSERT IGNORE INTO text (text_id, content_type, text) "
                         + "VALUES (:textId, :contentType, :text)"
         ),
         @NamedNativeQuery(
                 name = "HasText.insertNative_",
-                query = "INSERT INTO has_text (document_id, date, section_id, text_id, text_order) "
+                query = "INSERT IGNORE INTO has_text (document_id, date, section_id, text_id, text_order) "
                         + "VALUES (:documentId, :date, :sectionId, :textId, :textOrder)"
         ),
         @NamedNativeQuery(
                 name = "TextUrl.insertNative",
-                query = "INSERT INTO text_url (text_id, url_id) "
+                query = "INSERT IGNORE INTO text_url (text_id, url_id) "
                         + "VALUES (:textId, :urlId)"
         ),
 

@@ -49,6 +49,8 @@ public class Constants {
 
     public static final String PM_RETRIEVAL_HISTORY_FOLDER = "tmp/pubmed/";
     public static final String PM_RETRIEVAL_FILE_NAME = "_pubmed_retrieval";
+    public static final String TVP_RETRIEVAL_HISTORY_FOLDER = "tmp/tvp/";
+    public static final String TVP_RETRIEVAL_FILE_NAME = "_tvp_validation";
     public static final String PM_RETRIEVAL_DOCUMENT_FILE_NAME = "_document_pubmed_retrieval";
     public static final String PM_RETRIEVAL_DISEASE_LIST_FILE_NAME = "_disease_list_pubmed_retrieval";
     public static final String DOT_JSON = ".json";
@@ -331,6 +333,8 @@ public class Constants {
     public static final String SOURCE_PUBMED_CODE = "SO02";
 
     public static final String ABSTRACT_SECTION = "abstract";
+
+    public static final String MESH_RESOURCE_NAME = "MeSH";
 
 
     /** Constantes para insertar en la base de datos */

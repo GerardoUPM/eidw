@@ -53,7 +53,7 @@ public class DiseaseSynonymServiceImpl implements DiseaseSynonymService {
 
     @Override
     @Transactional(propagation= Propagation.REQUIRED)
-    public int insertNative(String diseaseId, String synonymId) {
+    public int insertNative(String diseaseId, int synonymId) {
         return daoDiseaseSynonym.insertNative(diseaseId, synonymId);
     }
 

@@ -20,7 +20,24 @@ public class Text {
     private String title;//EL nombre si tiene, será un <h3>
     private int textOrder;
 
+    private Integer urlCount;
     private List<Link> urlList;
+    private String paperId;
+    private String text;
+
+    public Text() {
+    }
+
+    public Text(int id, int textOrder) {
+        this.id = id;
+        this.textOrder = textOrder;
+    }
+
+    public Text(Integer id, int textOrder, String paperId) {
+        this.id = id;
+        this.textOrder = textOrder;
+        this.paperId = paperId;
+    }
 
 
 
@@ -48,6 +65,14 @@ public class Text {
         this.textOrder = textOrder;
     }
 
+    public Integer getUrlCount() {
+        return urlCount;
+    }
+
+    public void setUrlCount(Integer urlCount) {
+        this.urlCount = urlCount;
+    }
+
     public List<Link> getUrlList() {
         return urlList;
     }
@@ -56,4 +81,19 @@ public class Text {
         this.urlList = urlList;
     }
 
+    public String getPaperId() {
+        return paperId;
+    }
+
+    public void setPaperId(String paperId) {
+        this.paperId = paperId;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 }

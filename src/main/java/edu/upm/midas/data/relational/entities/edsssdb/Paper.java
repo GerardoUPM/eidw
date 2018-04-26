@@ -118,7 +118,7 @@ public class Paper {
     }
 
     @Basic
-    @Column(name = "title", nullable = false, length = 3000)
+    @Column(name = "title", nullable = false, length = -1)
     public String getTitle() {
         return title;
     }
@@ -128,7 +128,7 @@ public class Paper {
     }
 
     @Basic
-    @Column(name = "authors", nullable = true, length = 3000)
+    @Column(name = "authors", nullable = true, length = -1)
     public String getAuthors() {
         return authors;
     }
@@ -138,7 +138,7 @@ public class Paper {
     }
 
     @Basic
-    @Column(name = "keywords", nullable = true, length = 3000)
+    @Column(name = "keywords", nullable = true, length = -1)
     public String getKeywords() {
         return keywords;
     }

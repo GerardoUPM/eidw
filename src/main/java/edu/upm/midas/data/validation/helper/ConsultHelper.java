@@ -39,7 +39,7 @@ public class ConsultHelper {
     public List<ResponseText> findTextsByVersionAndSource(Consult consult){
         List<ResponseText> responseTextList = new ArrayList<>();
         List<Object[]> texts = textService.findBySourceAndVersionNative(consult.getDate(), consult.getSource());
-        int count = 1, call = 10;
+        int count = 1, call = 1;
         for (Object[] text: texts) {
             // Verificación del texto para evitar envíar textos vacíos a la api rest
             //if ( ((String) text[6]).isEmpty() ) continue;

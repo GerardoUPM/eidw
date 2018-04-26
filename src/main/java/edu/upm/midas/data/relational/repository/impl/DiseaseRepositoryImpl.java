@@ -54,6 +54,20 @@ public class DiseaseRepositoryImpl extends AbstractDao<String, Disease>
     }
 
     @SuppressWarnings("unchecked")
+    @Override
+    public Object[] findByNameNativeUnrestricted(String diseaseName) {
+        Object[] disease = null;
+        List<Object[]> diseaseList = (List<Object[]>) getEntityManager()
+                .createNamedQuery("Disease.findByNameNativeUnrestricted")
+                .setParameter("name", diseaseName)
+                .setMaxResults(1)
+                .getResultList();
+        if (CollectionUtils.isNotEmpty(diseaseList))
+            disease = diseaseList.get(0);
+        return disease;
+    }
+
+    @SuppressWarnings("unchecked")
     public Disease findByCuiQuery(String cui) {
         Disease disease = null;
         List<Disease> diseaseList = (List<Disease>) getEntityManager()
@@ -168,6 +182,41 @@ public class DiseaseRepositoryImpl extends AbstractDao<String, Disease>
                 .setParameter("sourceName", sourceName)
                 .setParameter("version", version)
                 //.setMaxResults(100)
+                .getResultList();
+        if (CollectionUtils.isNotEmpty(diseaseList))
+            disease = diseaseList.get(0);
+        return disease;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Object[]> findBySourceAndVersionAndCode(String sourceName, Date version, String code, String resourceName) {
+        List<Object[]> diseases = null;
+        List<Object[]> diseaseList = (List<Object[]>) getEntityManager()
+                .createNamedQuery("Disease.findBySourceAndVersionAndCode")
+                //.setParameter("source", sourceName)
+                //.setParameter("version", version)
+                .setParameter("code", code)
+                .setParameter("resource", resourceName)
+                //.setMaxResults(1)
+                .getResultList();
+        if (CollectionUtils.isNotEmpty(diseaseList))
+            diseases = diseaseList;//diseaseList.get(0);
+        return diseases;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Object[] findBySourceAndVersionAndCodeAndDiseaseName(String sourceName, Date version, String code, String resourceName, String diseaseName) {
+        Object[] disease = null;
+        List<Object[]> diseaseList = (List<Object[]>) getEntityManager()
+                .createNamedQuery("Disease.findBySourceAndVersionAndCodeAndDiseaseName")
+                //.setParameter("source", sourceName)
+                //.setParameter("version", version)
+                .setParameter("code", code)
+                .setParameter("resource", resourceName)
+                .setParameter("diseaseName", diseaseName)
+                .setMaxResults(1)
                 .getResultList();
         if (CollectionUtils.isNotEmpty(diseaseList))
             disease = diseaseList.get(0);

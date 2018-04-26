@@ -3,8 +3,6 @@ import edu.upm.midas.data.relational.entities.edsssdb.Document;
 import edu.upm.midas.data.relational.entities.edsssdb.DocumentPK;
 import edu.upm.midas.data.relational.repository.DocumentRepository;
 import edu.upm.midas.data.relational.service.DocumentService;
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -34,6 +32,12 @@ public class DocumentServiceImpl implements DocumentService {
         /*if(document!=null)
             Hibernate.initialize(document.getCodeList());*/
         return document;
+    }
+
+    @Override
+    @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
+    public Date findLastVersionNative() {
+        return daoDocument.findLastVersionNative();
     }
 
     @Transactional(propagation= Propagation.REQUIRED,readOnly=true)

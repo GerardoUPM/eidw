@@ -48,7 +48,7 @@ import java.util.Objects;
         ,
         @NamedNativeQuery(
                 name = "HasText.insertNative",
-                query = "INSERT INTO has_text (document_id, date, section_id, text_id, text_order) "
+                query = "INSERT IGNORE INTO has_text (document_id, date, section_id, text_id, text_order) "
                         + "VALUES (:documentId, :date, :sectionId, :textId, :textOrder)"
         )
 })

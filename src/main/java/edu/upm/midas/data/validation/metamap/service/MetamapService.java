@@ -253,6 +253,7 @@ public class MetamapService {
         sources.add("SNOMEDCT_US");
         conf.setSources(sources);
         conf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
+        conf.setConcept_location(true);
 
         request.setConfiguration( conf );
 
@@ -302,8 +303,8 @@ public class MetamapService {
                                 System.out.println("TEXT_ID: " + filterText.getId() + " | CONCEPTS(" + filterText.getConcepts().size() + "): ");
                                 int countSymptoms = 1;
                                 for (edu.upm.midas.data.validation.metamap.model.response.Concept concept : filterText.getConcepts()) {
-                                    System.out.println("Concept{ cui: " + concept.getCui() + " name: " + concept.getName() + " semTypes:" + concept.getSemanticTypes().toString() + "}");
-                                    symptomHelperNative.insertIfExist(concept, filterText.getId());//text.getId()
+                                    System.out.println("Concept{ cui: " + concept.getCui() + " name: " + concept.getName() + " semTypes:" + concept.getSemanticTypes().toString() + "Position: " + concept.getMatchedWords() + "}");
+                                    //symptomHelperNative.insertIfExist(concept, filterText.getId());//text.getId()
                                     countSymptoms++;
                                 }
                                 count++;
@@ -369,6 +370,7 @@ public class MetamapService {
         conf.setConcept_location(true);
 
         request.setConfiguration( conf );
+        request.setSnapshot(consult.getVersion());
 
         System.out.println("Get all texts by version and source...");
         List<ResponseText> responseTexts = consultHelper.findTextsByVersionAndSource( consult );
@@ -408,6 +410,7 @@ public class MetamapService {
             request.setTextList( texts );
             request.setToken(Constants.TOKEN);
 
+            System.out.println( "Request: " + request);
             System.out.println( "Connection_ with METAMAP API..." );
             System.out.println( "Founding medical concepts in a texts... please wait, this process can take from minutes to hours... " );
             Response response = metamapResourceService.filterTexts( request );

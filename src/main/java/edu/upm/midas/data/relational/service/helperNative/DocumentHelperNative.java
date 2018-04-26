@@ -8,10 +8,12 @@ import edu.upm.midas.data.relational.entities.edsssdb.*;
 import edu.upm.midas.data.relational.service.*;
 import edu.upm.midas.utilsservice.Common;
 import edu.upm.midas.utilsservice.UniqueId;
+import edu.upm.midas.utilsservice.UtilDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -51,6 +53,8 @@ public class DocumentHelperNative {
     private UniqueId uniqueId;
     @Autowired
     private Common common;
+    @Autowired
+    private UtilDate utilDate;
 
     private static final Logger logger = LoggerFactory.getLogger(DocumentHelperNative.class);
     @Autowired
@@ -78,29 +82,35 @@ public class DocumentHelperNative {
             return "";
     }
 
-
+    @Transactional
     public String insertPubMedArticles(String sourceId, Doc document, Date version) throws JsonProcessingException {
         String documentId = uniqueId.generateDocument( sourceId, document.getId() );
-        if ( documentService.insertNative( documentId, version ) > 0 ) {
-            //Se genera un identificador del documento para todas las entidades relacionadas con los documentos
-            String docId = documentHelperNative.getDocumentId( documentId, version );
-            //Insertar papers "document_set"
-            insertPapers(document, documentId, version);
-            //SI tiene url la inserta
-            if (document.getUrl()!=null) {
-                Url url = urlHelperNative.findUrl(document.getUrl().getUrl());
-                if (url != null) {
-                    documentService.insertNativeUrl(documentId, version, url.getUrlId());
-                } else {
-                    String urlId = urlHelperNative.getSimpleUrlId(document.getUrl(), document.getId());
-                    documentService.insertNativeUrl(documentId, version, urlId);
+        //Document existDocument = documentService.findById(new DocumentPK(documentId, utilDate.convertSQLDateToUtilDate(version)));
+        Document existDocument = documentService.findById(new DocumentPK(documentId, utilDate.convertSQLDateToUtilDate(version) ));
+        if (existDocument==null) {
+            if (documentService.insertNative(documentId, version) > 0) {
+                //Se genera un identificador del documento para todas las entidades relacionadas con los documentos
+                String docId = documentHelperNative.getDocumentId(documentId, version);
+                //Insertar papers "document_set"
+                insertPapers(document, documentId, version);
+                //SI tiene url la inserta
+                if (document.getUrl() != null) {
+                    Url url = urlHelperNative.findUrl(document.getUrl().getUrl());
+                    if (url != null) {
+                        documentService.insertNativeUrl(documentId, version, url.getUrlId());
+                    } else {
+                        String urlId = urlHelperNative.getSimpleUrlId(document.getUrl(), document.getId());
+                        documentService.insertNativeUrl(documentId, version, urlId);
+                    }
                 }
-            }
-            //inserta la relación entre el documento y la fuente
-            documentService.insertNativeHasSource( documentId, version, sourceId );
-            return documentId;
-        }else
-            return "";
+                //inserta la relación entre el documento y la fuente
+                documentService.insertNativeHasSource(documentId, version, sourceId);
+                return documentId;
+            } else
+                return "";
+        }else{
+            return existDocument.getDocumentId();
+        }
     }
 
 
@@ -113,9 +123,9 @@ public class DocumentHelperNative {
                 if (existPaper==null) {
                     String doi = (common.isEmpty(paper.getDoi()))?"":paper.getDoi();
                     String altId = (common.isEmpty(paper.getPmcID()))?"":paper.getPmcID();
-                    String title = (common.isEmpty(paper.getTitleText()))?"":paper.getTitleText();
-                    String authors = (common.isEmpty(paper.getAuthor()))?"":paper.getAuthor();
-                    String keywords = (common.isEmpty(paper.getKeyWords()))?"":paper.getKeyWords();
+                    String title = (common.isEmpty(paper.getTitleText()))?"":paper.getTitleText();//(common.isEmpty(paper.getTitleText()))?"":paper.getTitleText().substring(0, 2990);
+                    String authors = (common.isEmpty(paper.getAuthor()))?"":paper.getAuthor();//(common.isEmpty(paper.getAuthor()))?"":paper.getAuthor().substring(0, 2990);
+                    String keywords = (common.isEmpty(paper.getKeyWords()))?"":paper.getKeyWords();//(common.isEmpty(paper.getKeyWords()))?"":paper.getKeyWords().substring(0, 2990);
                     //Inserta el paper
                     if (paperService.insertNative(paperId, doi, altId, title, authors, keywords, paper.isHasFreeText()) > 0) {
                         //Insertar url si existe
@@ -138,7 +148,7 @@ public class DocumentHelperNative {
      */
     private void insertDocumentSet(String documentId, Date version, String paperId){
         //Busca si ya se encuentra la relación insertada
-        DocumentSet existDocumentSet = documentSetService.findById(new DocumentSetPK(documentId, (java.sql.Date) version, paperId));
+        DocumentSet existDocumentSet = documentSetService.findById(new DocumentSetPK(documentId, utilDate.convertSQLDateToUtilDate(version), paperId));
         if (existDocumentSet==null){
             documentSetService.insertNative(documentId, version, paperId);
         }
@@ -219,7 +229,11 @@ public class DocumentHelperNative {
      * @return
      */
     public String getDocumentId(String documentId, Date version){
-        return documentId + ".V" + version;
+        return documentId + ".V" + utilDate.dateFormatyyyMMdd(version);
+    }
+
+    public Date getLastVersion(){
+        return documentService.findLastVersionNative();
     }
 
 }
