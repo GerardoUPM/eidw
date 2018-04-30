@@ -39,8 +39,8 @@ public class ValidationController {
             method = RequestMethod.GET)
     public String metamapFilter() throws Exception {
 
-        Consult consult = new Consult("wikipedia",
-                "2018-04-15");
+        Consult consult = new Consult("pubmed", "2018-04-03");
+        //Consult consult = new Consult("wikipedia", "2018-04-15");
 
         String inicio = utilDate.getTime();
         //metamapService.localFilter( consult );
@@ -57,14 +57,15 @@ public class ValidationController {
             params = {"snapshot"})
     public String metamapFilterWithJSON(@RequestParam(value = "snapshot") @Valid @NotBlank @NotNull @NotEmpty String snapshot) throws Exception {
 
-        Consult consult = new Consult("wikipedia",
-                snapshot);//"2018-04-15"
+        //Consult consult = new Consult("wikipedia", snapshot);//"2018-04-15"
+        //Consult consult = new Consult("pubmed", "2018-04-03");
+        Consult consult = new Consult("pubmed", snapshot);//"2018-04-15"
 
         String inicio = utilDate.getTime();
         //Cuando se realice el filtro
-        //metamapService.filterAndStorageInJASON(consult);
+        metamapService.filterAndStorageInJASON(consult);
         //Cuando se consuma el JSON y se almacene la información
-        metamapService.populateTextsStoredJSON( consult );
+        //metamapService.populateTextsStoredJSON( consult );
         System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
 
         return "It has been successfully filtered with Metamap";

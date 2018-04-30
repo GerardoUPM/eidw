@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -50,6 +51,7 @@ public class SymptomHelperNative {
      * @return
      * @throws Exception
      */
+    @Transactional
     public void insertIfExist(Concept concept, String textId) throws Exception{
         List<Symptom> symptoms;
         Symptom symptom = symptomService.findById( concept.getCui() );

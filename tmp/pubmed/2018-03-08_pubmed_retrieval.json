@@ -1,0 +1,540 @@
+{
+  "id": 0,
+  "code": "SO02",
+  "name": "pubmed",
+  "documentCount": 1,
+  "documents": [
+    {
+      "id": 1,
+      "date": "Mar 8, 2018 12:00:00 AM",
+      "hasConnected": false,
+      "diseaseArticle": false,
+      "disease": {
+        "id": 1,
+        "name": "angiosarcoma",
+        "definition": "\"A malignant Vascular tumor that results_in rapidly proliferating, extensively infiltrating anaplastic cells derives_from blood vessels and derived_from the lining of irregular blood-filled spaces.\" [url:http\\://emedicine.medscape.com/article/276512-overview, url:http\\://en.wikipedia.org/wiki/Hemangiosarcoma, url:http\\://www.ncbi.nlm.nih.gov/pubmed/23327728]",
+        "meSHUI": "D006394",
+        "meSHMH": "Hemangiosarcoma",
+        "meSHTermCount": 1,
+        "meSHTerms": [
+          {
+            "id": 1,
+            "name": "Hemangiosarcoma",
+            "resource": {
+              "id": 1,
+              "name": "MeSH"
+            }
+          }
+        ],
+        "meSHMN": [
+          "C04.557.450.795.390",
+          "C04.557.645.390"
+        ],
+        "synonymCount": 1,
+        "synonyms": [
+          {
+            "id": 1,
+            "name": "hemangiosarcoma",
+            "codeCount": 0,
+            "codes": []
+          }
+        ],
+        "codeCount": 5,
+        "codes": [
+          {
+            "id": 1,
+            "code": "33176006",
+            "resource": {
+              "id": 5,
+              "name": "SNOMED_CT"
+            }
+          },
+          {
+            "id": 2,
+            "code": "39000009",
+            "resource": {
+              "id": 5,
+              "name": "SNOMED_CT"
+            }
+          },
+          {
+            "id": 3,
+            "code": "403977003",
+            "resource": {
+              "id": 5,
+              "name": "SNOMED_CT"
+            }
+          },
+          {
+            "id": 4,
+            "code": "C0018923",
+            "resource": {
+              "id": 6,
+              "name": "UMLS"
+            }
+          },
+          {
+            "id": 5,
+            "code": "C0854893",
+            "resource": {
+              "id": 6,
+              "name": "UMLS"
+            }
+          }
+        ],
+        "links": [
+          {
+            "id": 1,
+            "url": "emedicine.medscape.com/article/276512-overview, "
+          },
+          {
+            "id": 2,
+            "url": "en.wikipedia.org/wiki/Hemangiosarcoma, ",
+            "source": {
+              "id": 0,
+              "code": "SO01",
+              "name": "wikipedia"
+            }
+          },
+          {
+            "id": 3,
+            "url": "www.ncbi.nlm.nih.gov/pubmed/23327728]"
+          }
+        ]
+      },
+      "sectionCount": 1,
+      "sectionList": [
+        {
+          "id": 1,
+          "name": "abstract",
+          "description": "abstract",
+          "textCount": 2,
+          "textList": [
+            {
+              "text": "Angiosarcoma, a rare cutaneous malignancy, frequently arises in the scalp of older individuals. Because it characteristically initially mimics benign disease, such as a bruise, definitive diagnosis in the early stages is difficult. Angiosarcoma of the scalp is highly malignant and often accompanied by lung metastases that cause hemopneumothorax. Although surgery has been the standard and most reliable curative treatment for angiosarcoma of the scalp, there is a high probability of local recurrence, even after wide surgical excision. Therefore, postoperative radiation therapy has been administered in an attempt to minimize local recurrence. However, surgery is contraindicated in many older patients because of severe comorbidities or age. Definitive radiation therapy has been administered to such patients and has achieved good local control. In particular, total scalp irradiation may be a promising option for curative treatment of angiosarcoma of the scalp. Recent reports suggest that chemotherapy, particularly with taxanes, can prolong survival by reducing the rate of distant failure after radiation therapy. Thus, radiation therapy along with chemotherapy is now recommended for curative treatment of patients with inoperable disease and even some patients with operable disease. Technological developments in radiation therapy, such as intensity-modulated radiation therapy, will contribute to enhanced efficacy and reduced toxicities in the treatment of patients with angiosarcoma of the scalp.",
+              "id": 1,
+              "textOrder": 1,
+              "paperId": "29491047"
+            },
+            {
+              "text": "Primary angiosarcoma of the spleen (PAS) is a very rare malignant neoplasm that originates from endothelial cells of the splenic blood vessels. Without typical clinical presentations and specific radiological features, PAS is very difficult to be early identified and 1-year mortality is extremely high. Late detection and spleen rupture are considered as the most important risk factors for early metastasis.",
+              "id": 2,
+              "textOrder": 2,
+              "paperId": "29384853"
+            }
+          ]
+        }
+      ],
+      "codeCount": 5,
+      "codeList": [
+        {
+          "id": 1,
+          "code": "33176006",
+          "resource": {
+            "id": 5,
+            "name": "SNOMED_CT"
+          }
+        },
+        {
+          "id": 2,
+          "code": "39000009",
+          "resource": {
+            "id": 5,
+            "name": "SNOMED_CT"
+          }
+        },
+        {
+          "id": 3,
+          "code": "403977003",
+          "resource": {
+            "id": 5,
+            "name": "SNOMED_CT"
+          }
+        },
+        {
+          "id": 4,
+          "code": "C0018923",
+          "resource": {
+            "id": 6,
+            "name": "UMLS"
+          }
+        },
+        {
+          "id": 5,
+          "code": "C0854893",
+          "resource": {
+            "id": 6,
+            "name": "UMLS"
+          }
+        }
+      ],
+      "paperCount": 2,
+      "paperList": [
+        {
+          "id": 1,
+          "author": "Hata,Masaharu",
+          "pmID": "29491047",
+          "titleText": "Radiation Therapy for Angiosarcoma of the Scalp: Total Scalp Irradiation and Local Irradiation.",
+          "meshTerms": "Head and Neck Neoplasms,Hemangiosarcoma,Humans,Radiotherapy, Intensity-Modulated,Scalp,Skin Neoplasms,Treatment Outcome",
+          "keyWords": "Angiosarcoma,chemotherapy,radiation therapy,review,scalp,total scalp irradiation",
+          "abstractText": "idText: 1",
+          "disease": {
+            "id": 1,
+            "name": "angiosarcoma",
+            "definition": "\"A malignant Vascular tumor that results_in rapidly proliferating, extensively infiltrating anaplastic cells derives_from blood vessels and derived_from the lining of irregular blood-filled spaces.\" [url:http\\://emedicine.medscape.com/article/276512-overview, url:http\\://en.wikipedia.org/wiki/Hemangiosarcoma, url:http\\://www.ncbi.nlm.nih.gov/pubmed/23327728]",
+            "meSHUI": "D006394",
+            "meSHMH": "Hemangiosarcoma",
+            "meSHTermCount": 1,
+            "meSHTerms": [
+              {
+                "id": 1,
+                "name": "Hemangiosarcoma",
+                "resource": {
+                  "id": 1,
+                  "name": "MeSH"
+                }
+              }
+            ],
+            "meSHMN": [
+              "C04.557.450.795.390",
+              "C04.557.645.390"
+            ],
+            "synonymCount": 1,
+            "synonyms": [
+              {
+                "id": 1,
+                "name": "hemangiosarcoma",
+                "codeCount": 0,
+                "codes": []
+              }
+            ],
+            "codeCount": 5,
+            "codes": [
+              {
+                "id": 1,
+                "code": "33176006",
+                "resource": {
+                  "id": 5,
+                  "name": "SNOMED_CT"
+                }
+              },
+              {
+                "id": 2,
+                "code": "39000009",
+                "resource": {
+                  "id": 5,
+                  "name": "SNOMED_CT"
+                }
+              },
+              {
+                "id": 3,
+                "code": "403977003",
+                "resource": {
+                  "id": 5,
+                  "name": "SNOMED_CT"
+                }
+              },
+              {
+                "id": 4,
+                "code": "C0018923",
+                "resource": {
+                  "id": 6,
+                  "name": "UMLS"
+                }
+              },
+              {
+                "id": 5,
+                "code": "C0854893",
+                "resource": {
+                  "id": 6,
+                  "name": "UMLS"
+                }
+              }
+            ],
+            "links": [
+              {
+                "id": 1,
+                "url": "emedicine.medscape.com/article/276512-overview, "
+              },
+              {
+                "id": 2,
+                "url": "en.wikipedia.org/wiki/Hemangiosarcoma, ",
+                "source": {
+                  "id": 0,
+                  "code": "SO01",
+                  "name": "wikipedia"
+                }
+              },
+              {
+                "id": 3,
+                "url": "www.ncbi.nlm.nih.gov/pubmed/23327728]"
+              }
+            ]
+          },
+          "snapshot": "2018-03-08",
+          "termCount": 7,
+          "terms": [
+            {
+              "name": "Head and Neck Neoplasms",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Hemangiosarcoma",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Humans",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Radiotherapy, Intensity-Modulated",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Scalp",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Skin Neoplasms",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Treatment Outcome",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            }
+          ],
+          "hasFreeText": false,
+          "link": {
+            "id": 0,
+            "url": "https://www.ncbi.nlm.nih.gov/pubmed/29491047",
+            "source": {
+              "id": 0,
+              "code": "SO01",
+              "name": "wikipedia"
+            }
+          }
+        },
+        {
+          "id": 2,
+          "author": "Chen,Xuchun;;Li,Hong;;Wang,Fengshan;;Liu,Hao",
+          "pmID": "29384853",
+          "pmcID": "PMC5805425",
+          "doi": "10.1097/MD.0000000000009718",
+          "titleText": "Early detection and integral resection are keys to extend survival in patients suffered from primary angiosarcoma of the spleen: A care-compliant case report and literature review.",
+          "meshTerms": "Adult,Diagnosis, Differential,Early Diagnosis,Fatal Outcome,Female,Hemangiosarcoma,Humans,Incidental Findings,Lymphoma,Splenic Neoplasms",
+          "abstractText": "idText: 2",
+          "disease": {
+            "id": 1,
+            "name": "angiosarcoma",
+            "definition": "\"A malignant Vascular tumor that results_in rapidly proliferating, extensively infiltrating anaplastic cells derives_from blood vessels and derived_from the lining of irregular blood-filled spaces.\" [url:http\\://emedicine.medscape.com/article/276512-overview, url:http\\://en.wikipedia.org/wiki/Hemangiosarcoma, url:http\\://www.ncbi.nlm.nih.gov/pubmed/23327728]",
+            "meSHUI": "D006394",
+            "meSHMH": "Hemangiosarcoma",
+            "meSHTermCount": 1,
+            "meSHTerms": [
+              {
+                "id": 1,
+                "name": "Hemangiosarcoma",
+                "resource": {
+                  "id": 1,
+                  "name": "MeSH"
+                }
+              }
+            ],
+            "meSHMN": [
+              "C04.557.450.795.390",
+              "C04.557.645.390"
+            ],
+            "synonymCount": 1,
+            "synonyms": [
+              {
+                "id": 1,
+                "name": "hemangiosarcoma",
+                "codeCount": 0,
+                "codes": []
+              }
+            ],
+            "codeCount": 5,
+            "codes": [
+              {
+                "id": 1,
+                "code": "33176006",
+                "resource": {
+                  "id": 5,
+                  "name": "SNOMED_CT"
+                }
+              },
+              {
+                "id": 2,
+                "code": "39000009",
+                "resource": {
+                  "id": 5,
+                  "name": "SNOMED_CT"
+                }
+              },
+              {
+                "id": 3,
+                "code": "403977003",
+                "resource": {
+                  "id": 5,
+                  "name": "SNOMED_CT"
+                }
+              },
+              {
+                "id": 4,
+                "code": "C0018923",
+                "resource": {
+                  "id": 6,
+                  "name": "UMLS"
+                }
+              },
+              {
+                "id": 5,
+                "code": "C0854893",
+                "resource": {
+                  "id": 6,
+                  "name": "UMLS"
+                }
+              }
+            ],
+            "links": [
+              {
+                "id": 1,
+                "url": "emedicine.medscape.com/article/276512-overview, "
+              },
+              {
+                "id": 2,
+                "url": "en.wikipedia.org/wiki/Hemangiosarcoma, ",
+                "source": {
+                  "id": 0,
+                  "code": "SO01",
+                  "name": "wikipedia"
+                }
+              },
+              {
+                "id": 3,
+                "url": "www.ncbi.nlm.nih.gov/pubmed/23327728]"
+              }
+            ]
+          },
+          "snapshot": "2018-03-08",
+          "termCount": 10,
+          "terms": [
+            {
+              "name": "Adult",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Diagnosis, Differential",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Early Diagnosis",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Fatal Outcome",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Female",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Hemangiosarcoma",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Humans",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Incidental Findings",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Lymphoma",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            },
+            {
+              "name": "Splenic Neoplasms",
+              "resource": {
+                "id": 1,
+                "name": "MeSH"
+              }
+            }
+          ],
+          "hasFreeText": true,
+          "link": {
+            "id": 0,
+            "url": "https://www.ncbi.nlm.nih.gov/pubmed/29384853",
+            "source": {
+              "id": 0,
+              "code": "SO01",
+              "name": "wikipedia"
+            }
+          },
+          "freeTextlink": {
+            "id": 0,
+            "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5805425",
+            "source": {
+              "id": 0,
+              "code": "SO01",
+              "name": "wikipedia"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "sectionMap": {
+    "abstract": "abstract"
+  }
+}

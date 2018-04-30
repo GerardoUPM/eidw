@@ -1,5 +1,6 @@
 package edu.upm.midas.configuration;
 
+import feign.Logger;
 import feign.Request;
 import feign.auth.BasicAuthRequestInterceptor;
 import org.springframework.context.annotation.Bean;
@@ -16,16 +17,16 @@ public class FeignConfiguration {
     return new feign.Contract.Default();
   }*/
 
-
+  @Bean
+  Logger.Level feignLoggerLevel() {
+    return Logger.Level.FULL;
+  }
   @Bean
   public BasicAuthRequestInterceptor basicAuthRequestInterceptor() {
     return new BasicAuthRequestInterceptor("admin", "admin");
   }
 
-  /*@Bean
-  Logger.Level feignLoggerLevel() {
-    return Logger.Level.FULL;
-  }
+  /*
 
   public static final int SECONDS = 259200000;
 

@@ -320,6 +320,8 @@ public class Constants {
 
         add("fngs");
         add("cgab");//para encontrar Coma
+
+        add("cgab");
     }};
 
 

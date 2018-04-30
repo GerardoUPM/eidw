@@ -36,9 +36,9 @@ public class ExtractService {
         List<XmlLink> externalDiseaseLinkList = populateDbNative.getDiseaseLinkListFromDBPedia(version);
 
         if (externalDiseaseLinkList!=null) {
-            //populateDbNative.populateResource(externalDiseaseLinkList);
-            //populateDbNative.populateSemanticTypes();
-            //populateDbNative.populate(externalDiseaseLinkList, version);
+            populateDbNative.populateResource(externalDiseaseLinkList);
+            populateDbNative.populateSemanticTypes();
+            populateDbNative.populate(externalDiseaseLinkList, version);
             res = true;
         }else{
             System.out.println("ERROR disease album");

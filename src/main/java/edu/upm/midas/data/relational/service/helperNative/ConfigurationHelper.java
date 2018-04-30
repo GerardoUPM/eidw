@@ -36,4 +36,11 @@ public class ConfigurationHelper {
         confService.insertNative(configurationId, Constants.SOURCE_WIKIPEDIA_CODE, version, tool, json);
         System.out.println("Insert configuration ready!...");
     }
+
+
+    public void insert(String source, String sourceId, Date version, String tool, String json){
+        String configurationId = uniqueId.generateConfiguration(source, utilDate.dateFormatyyyMMdd(version));
+        confService.insertNative(configurationId, sourceId, version, tool, json);
+        System.out.println("Insert configuration ready!...");
+    }
 }

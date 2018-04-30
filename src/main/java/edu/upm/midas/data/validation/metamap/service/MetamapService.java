@@ -238,8 +238,6 @@ public class MetamapService {
      * @return
      * @throws Exception
      */
-
-    @Transactional
     public void filterByParts(Consult consult) throws Exception {
         Request request = new Request();//VALIDAR CONSULT
         Configuration conf = new Configuration();
@@ -257,27 +255,34 @@ public class MetamapService {
 
         request.setConfiguration( conf );
 
-        System.out.println("Get all texts by version and source...");
+        System.out.println("Get all texts by version and source from DB...");
         List<ResponseText> responseTexts = consultHelper.findTextsByVersionAndSource( consult );
         System.out.println("size: " + responseTexts.size());
         if (responseTexts != null) {
             int countRT = 1;
+            //Se recorren todos los textos recuperados
             for (ResponseText responseText : responseTexts) {
                 if (countRT == 1){
                     sourceId = responseText.getSourceId();
                     version = responseText.getVersion();
                 }
-
+                //SE generan objetos textos para despues ser procesados
                 Text text = new Text();
                 text.setId( responseText.getTextId() );
                 text.setText( responseText.getText() );
+                if (countRT == 1){
+                    text.setId( "MyIDGLG");
+                    text.setText( "Fever" );
+                }
                 texts.add(text);
+
                 //System.out.println(responseText.getTextId());
-                System.out.println("TotalSize: " + responseTexts.size() +" - CALL("+countRT+"): " + responseText.isCall());
+                System.out.println(countRT+". CALL " + responseText.isCall() + " FROM: " + responseTexts.size() );
+                //isCall=true indica cuando se llamará al servicio Web de Metamap
                 if (responseText.isCall()){
                     // Se agregan los textos hasta el momento
                     //System.out.println( gson.toJson( request ) );
-
+                    System.out.println("");
                     //<editor-fold desc="BLOQUE QUE LLAMA Y OBTIENE RESULTADOS DE LA API">
                     request.setTextList( texts );
                     request.setToken(Constants.TOKEN);
@@ -287,6 +292,7 @@ public class MetamapService {
 
                     System.out.println( "Connection_ with METAMAP API..." );
                     System.out.println( "Founding medical concepts in a texts... please wait, this process can take from minutes to hours... " );
+                    //Se llama a la METAMAP REST API
                     Response response = metamapResourceService.filterTexts( request );
                     System.out.println( "Texts Size request..." + request.getTextList().size());
                     System.out.println( "Filter Texts Size response..." + response.getTextList().size() );
@@ -304,7 +310,8 @@ public class MetamapService {
                                 int countSymptoms = 1;
                                 for (edu.upm.midas.data.validation.metamap.model.response.Concept concept : filterText.getConcepts()) {
                                     System.out.println("Concept{ cui: " + concept.getCui() + " name: " + concept.getName() + " semTypes:" + concept.getSemanticTypes().toString() + "Position: " + concept.getMatchedWords() + "}");
-                                    //symptomHelperNative.insertIfExist(concept, filterText.getId());//text.getId()
+                                    symptomHelperNative.insertIfExist(concept, filterText.getId());//text.getId()
+                                    System.out.println("Concept insert ready!");
                                     countSymptoms++;
                                 }
                                 count++;
@@ -334,7 +341,7 @@ public class MetamapService {
 
             System.out.println("Insert configuration...");
             String configurationJson = gson.toJson(request.getConfiguration());
-            configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
+            configurationHelper.insert(consult.getSource(), sourceId, version, constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
             //System.out.println("Insert configuration ready!...");
 
 
@@ -352,7 +359,7 @@ public class MetamapService {
      * @throws Exception
      */
 
-    @Transactional
+
     public void filterAndStorageInJASON(Consult consult) throws Exception {
         Request request = new Request();//VALIDAR CONSULT
         Configuration conf = new Configuration();
@@ -410,7 +417,7 @@ public class MetamapService {
             request.setTextList( texts );
             request.setToken(Constants.TOKEN);
 
-            System.out.println( "Request: " + request);
+            //System.out.println( "Request: " + request);
             System.out.println( "Connection_ with METAMAP API..." );
             System.out.println( "Founding medical concepts in a texts... please wait, this process can take from minutes to hours... " );
             Response response = metamapResourceService.filterTexts( request );
@@ -440,7 +447,7 @@ public class MetamapService {
      * @throws Exception
      */
 
-    @Transactional
+
     public void populateTextsStoredJSON(Consult consult) throws Exception {
         Request request = new Request();//VALIDAR CONSULT
         Configuration conf = new Configuration();
