@@ -60,9 +60,14 @@ public class TextServiceImpl implements TextService {
         return listTEXTEntities;
     }
 
-    @Override
+    @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
     public List<Object[]> findBySourceAndVersionNative(Date version, String source) {
         return daoText.findBySourceAndVersionNative(version, source);
+    }
+
+    @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
+    public List<Object[]> findByLikeVersionNative(Date version, String strVersion, String source) {
+        return daoText.findByLikeVersionNative(version, strVersion, source);
     }
 
     @Transactional(propagation= Propagation.REQUIRED)

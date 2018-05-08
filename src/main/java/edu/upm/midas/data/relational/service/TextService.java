@@ -22,9 +22,11 @@ public interface TextService {
 
     Text findByTextQuery(String text);
 
-    List<Text> findAll();
-
     List<Object[]> findBySourceAndVersionNative(Date version, String source);
+
+    List<Object[]> findByLikeVersionNative(Date version, String strVersion, String source);
+
+    List<Text> findAll();
 
     void save(Text text);
 

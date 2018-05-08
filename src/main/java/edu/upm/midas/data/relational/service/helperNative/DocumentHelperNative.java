@@ -109,6 +109,9 @@ public class DocumentHelperNative {
             } else
                 return "";
         }else{
+            //Buscará si tiene papers relacionados
+            //Insertar papers "document_set"
+            insertPapers(document, documentId, version);
             return existDocument.getDocumentId();
         }
     }
@@ -120,6 +123,7 @@ public class DocumentHelperNative {
             for (PubMedDoc paper: document.getPaperList()) {
                 String paperId = paper.getPmID();
                 Paper existPaper = paperService.findById(paperId);
+                //Si no existe el paper lo inserta
                 if (existPaper==null) {
                     String doi = (common.isEmpty(paper.getDoi()))?"":paper.getDoi();
                     String altId = (common.isEmpty(paper.getPmcID()))?"":paper.getPmcID();
@@ -135,6 +139,9 @@ public class DocumentHelperNative {
                         //Inserta la relación entre el paper y el documento DISNET "document_set"
                         insertDocumentSet(documentId, version, paperId);
                     }
+                }else{
+                    //Si ya existe el paper buscará si existe en document_set
+                    insertDocumentSet(documentId, version, paperId);
                 }
             }
         }

@@ -30,6 +30,8 @@ public interface TextRepository {
 
     List<Object[]> findBySourceAndVersionNative(Date version, String source);
 
+    List<Object[]> findByLikeVersionNative(Date version, String strVersion, String source);
+
     List<Text> findAllQuery();
 
     void persist(Text text);

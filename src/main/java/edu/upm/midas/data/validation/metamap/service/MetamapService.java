@@ -446,8 +446,6 @@ public class MetamapService {
      * @return
      * @throws Exception
      */
-
-
     public void populateTextsStoredJSON(Consult consult) throws Exception {
         Request request = new Request();//VALIDAR CONSULT
         Configuration conf = new Configuration();
@@ -513,7 +511,7 @@ public class MetamapService {
                 System.out.println("Insert symptoms starting...");
                 int count = 1;//VALIDAR
                 for (edu.upm.midas.data.validation.metamap.model.response.Text filterText : textList) {
-                    System.out.println("TEXT_ID: " + filterText.getId() + " | CONCEPTS(" + filterText.getConcepts().size() + "): ");
+                    System.out.println(count + ". to ("+textList.size() + ") TEXT_ID: " + filterText.getId() + " | CONCEPTS(" + filterText.getConcepts().size() + "): ");
                     int countSymptoms = 1;
                     for (edu.upm.midas.data.validation.metamap.model.response.Concept concept : filterText.getConcepts()) {
                         System.out.println("Concept{ cui: " + concept.getCui() + " name: " + concept.getName() + " semTypes:" + concept.getSemanticTypes().toString() + "}");
@@ -534,6 +532,121 @@ public class MetamapService {
             }
         }
 
+    }
+
+
+    /**
+     *
+     * @param consult
+     * @return
+     * @throws Exception
+     */
+    public void restartPopulateTextsStoredJSON(Consult consult) throws Exception {
+        Request request = new Request();//VALIDAR CONSULT
+        Configuration conf = new Configuration();
+        List<Text> texts = new ArrayList<>();
+        String sourceId = "";
+        Date version = null;
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        conf.setOptions("-y -R");
+        List<String> sources = new ArrayList<>();
+        sources.add("SNOMEDCT_US");
+        conf.setSources(sources);
+        conf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
+
+        request.setConfiguration( conf );
+
+        System.out.println("Get all texts by version and source...");
+        List<ResponseText> responseTexts = consultHelper.restartFindTextsByVersionAndSource( consult );
+        System.out.println("size: " + responseTexts.size());
+        if (responseTexts != null) {
+            int countRT = 1;
+            for (ResponseText responseText : responseTexts) {
+                if (countRT == 1){
+                    sourceId = responseText.getSourceId();
+                    version = responseText.getVersion();
+                }
+
+                Text text = new Text();
+                text.setId( responseText.getTextId() );
+                text.setText( responseText.getText() );
+                texts.add(text);
+                //System.out.println(responseText.getTextId());
+                //System.out.println("LLAMAR("+countRT+"): " + responseText.isCall());
+                if (responseText.isCall()){
+                    // Se agregan los textos hasta el momento
+
+                    //request.setTextList( texts );
+                    //System.out.println("textsList size is: " + texts.size() + " AND request.textList is:" + request.getTextList().size());
+
+                    //System.out.println( gson.toJson( request ) );
+
+
+                    // Se eliminan los textos hasta el momento para dar paso a los nuevos y no superar nunca envíos
+                    // de mas de 300 elementos.
+                    //request.getTextList().clear();
+                    //texts.clear();
+                }
+                countRT++;
+            }
+
+            //<editor-fold desc="BLOQUE QUE LLAMA Y OBTIENE RESULTADOS DE LA API">
+            request.setTextList( texts );//resultado de la consulta
+            request.setToken(Constants.TOKEN);
+
+            System.out.println( "Connection_ with METAMAP API..." );
+            System.out.println( "Founding medical concepts in a texts... please wait, this process can take from minutes to hours... " );
+            List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = readMetamapResponseJSON(consult);
+
+            System.out.println( "Texts Size request..." + request.getTextList().size());
+            System.out.println( "Filter Texts Size response..." + textList.size() );
+            int insertados = 1, noinsertados = 1;
+            System.out.println("Insert symptoms starting...");
+            int count = 1;//VALIDAR
+            for (edu.upm.midas.data.validation.metamap.model.response.Text filterText : textList) {
+                //Verifica que se encuentre en la lista de los textos
+                if (contains(texts, filterText.getId())) {insertados++;
+                    System.out.println(count + ". to (" + textList.size() + ") 'Inserta' TEXT_ID: " + filterText.getId() + " | CONCEPTS(" + filterText.getConcepts().size() + "): ");
+                    int countSymptoms = 1;
+                        for (edu.upm.midas.data.validation.metamap.model.response.Concept concept : filterText.getConcepts()) {
+                            System.out.println("Concept{ cui: " + concept.getCui() + " name: " + concept.getName() + " semTypes:" + concept.getSemanticTypes().toString() + "}");
+                            symptomHelperNative.insertIfExist(concept, filterText.getId());//text.getId()
+                            countSymptoms++;
+                        }
+                }else{noinsertados++;
+                    System.out.println(count + ". to (" + textList.size() + ") Ya insertado textId: " + filterText.getId());
+                }
+                count++;
+                //if (count==18000) break;
+            }
+            System.out.println("Insert symptoms ready!...");
+            //</editor-fold>
+
+            System.out.println("Insert configuration...");
+            String configurationJson = gson.toJson(request.getConfiguration());
+            configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
+            System.out.println("Insert configuration ready!...");
+            System.out.println("insertados: " + insertados + " noinsertados: " + noinsertados);
+
+        }
+
+    }
+
+    public boolean contains(final List<Text> texts, String textId){
+        return texts.stream()
+                .filter(o -> o.getId().trim() != null)
+                .filter(o -> o.getId().trim().contentEquals(textId.trim()))
+                .findFirst()
+                .isPresent();
+                //return texts.stream().anyMatch(o -> Objects.equals(o.getId().trim(), textId.trim()));
+        /*boolean res = false;
+        for (Text text: texts) {
+            if (text.getId().trim().equals(textId.trim())){
+                //System.out.println(text.getId() +"=="+textId.trim());
+                res = true; break;}
+        }
+        return res;*/
     }
 
     public List<edu.upm.midas.data.validation.metamap.model.response.Text> readMetamapResponseJSON(Consult consult) throws Exception {

@@ -1,6 +1,7 @@
 package edu.upm.midas.data.validation.metamap.model.response;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by gerardo on 25/07/2017.
@@ -34,6 +35,16 @@ public class Text {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Text)) return false;
+        Text text = (Text) o;
+        return Objects.equals(getId(), text.getId());
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 }

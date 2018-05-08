@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -314,6 +315,22 @@ public class PopulateDbNative {
     public void onlyExtract(List<XmlLink> externalDiseaseLinkList) throws Exception {
         //extractionWikipedia.wikipediaExtract(null);
         extractionWikipedia.extractionReport(externalDiseaseLinkList);
+    }
+
+
+    public void writeJSONFile(String diseaseJsonBody, String version, String name) throws IOException {
+        String fileName = version + name + Constants.DOT_JSON;//adis = disease album
+        String path = Constants.EXTRACTION_WIKIPEDIA_FOLDER + fileName;
+        InputStream in = getClass().getResourceAsStream(path);
+        //BufferedReader bL = new BufferedReader(new InputStreamReader(in));
+        File file = new File(path);
+        BufferedWriter bW;
+
+        if (!file.exists()){
+            bW = new BufferedWriter(new FileWriter(file));
+            bW.write(diseaseJsonBody);
+            bW.close();
+        }
     }
 
 

@@ -71,6 +71,31 @@ import java.util.Objects;
                         "AND s.name = :source " +
                         "AND t.text IS NOT NULL " +
                         "AND LENGTH(t.text) > 0 " //EVITAR VALORES VACIOS
+        ),
+
+
+        // Esta consulta no es buena porque solo consulta like con la version y no con la fuente
+        // pero de momento se queda así para solucionar el problema de retomar la inserción de terminos metamap
+        @NamedNativeQuery(
+                name = "Text.findByLikeVersionNative",
+                query = "SELECT s.source_id, s.name, ht.document_id, ht.date, t.text_id, t.content_type, t.text " +
+                        "FROM has_text ht " +
+                        "INNER JOIN text t ON t.text_id = ht.text_id " +
+                        "INNER JOIN has_source hs ON hs.document_id = ht.document_id AND hs.date = ht.date " +
+                        "INNER JOIN source s ON s.source_id = hs.source_id " +
+                        "WHERE ht.date = :version " +
+                        "AND s.name = :source  " +
+                        "AND t.text IS NOT NULL  " +
+                        "AND LENGTH(t.text) > 0 " +
+                        "AND ht.text_id NOT IN " +
+                        "( " +
+                        "SELECT DISTINCT tt.text_id " +
+                        "FROM text tt " +
+                        "INNER JOIN has_symptom hsym on hsym.text_id = tt.text_id " +
+                        "WHERE tt.text_id LIKE :versionLike " +
+                        "    AND tt.text_id IS NOT NULL " +
+                        "    AND LENGTH(tt.text) > 0 " +
+                        ") " //EVITAR VALORES VACIOS
         )
 
 

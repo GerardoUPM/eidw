@@ -99,6 +99,22 @@ public class TextRepositoryImpl extends AbstractDao<String, Text>
 
     @SuppressWarnings("unchecked")
     @Override
+    public List<Object[]> findByLikeVersionNative(Date version, String strVersion, String source) {
+        List<Object[]> texts = null;
+        List<Object[]> textList = (List<Object[]>) getEntityManager()
+                .createNamedQuery("Text.findByLikeVersionNative")
+                .setParameter("version", version)
+                .setParameter("source", source)
+                .setParameter("versionLike", "%" + strVersion + "%")
+                //.setMaxResults(100)
+                .getResultList();
+        if (CollectionUtils.isNotEmpty(textList))
+            texts = textList;
+        return texts;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
     public List<Text> findAllQuery() {
         return (List<Text>) getEntityManager()
                 .createNamedQuery("Text.findAll")

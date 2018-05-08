@@ -3,6 +3,7 @@ import edu.upm.midas.constants.Constants;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 /**
  * Created by gerardo on 04/07/2017.
@@ -23,6 +24,11 @@ public class Text {
     private String text;
 
     public Text() {
+    }
+
+    public Text(String id, String text) {
+        this.id = id;
+        this.text = text;
     }
 
     public String getId() {
@@ -47,5 +53,18 @@ public class Text {
                 "id='" + id + '\'' +
                 ", text='" + text + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Text)) return false;
+        Text text = (Text) o;
+        return Objects.equals(getId(), text.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

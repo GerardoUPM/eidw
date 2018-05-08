@@ -68,6 +68,39 @@ public class ConsultHelper {
      * @param consult
      * @return
      */
+    public List<ResponseText> restartFindTextsByVersionAndSource(Consult consult){
+        List<ResponseText> responseTextList = new ArrayList<>();
+        //System.out.println(consult);
+        List<Object[]> texts = textService.findByLikeVersionNative(consult.getDate(), consult.getVersion(), consult.getSource());
+        int count = 1, call = 1;
+        for (Object[] text: texts) {
+            // Verificación del texto para evitar envíar textos vacíos a la api rest
+            //if ( ((String) text[6]).isEmpty() ) continue;
+            ResponseText responseText = new ResponseText();
+            responseText.setSourceId((String) text[0]);
+            responseText.setSourceName((String) text[1]);
+            responseText.setDocumentId((String) text[2]);
+            responseText.setVersion((Date) text[3]);
+            responseText.setTextId((String) text[4]);
+            responseText.setContentType((String) text[5]);
+            responseText.setText((String) text[6]);
+
+            responseTextList.add(responseText);
+
+            if (count == call){
+                responseText.setCall(true);
+                call = call + 10;
+            }else if (count == texts.size()) responseText.setCall(true);
+            count++;
+        }
+        return responseTextList;
+    }
+
+
+    /**
+     * @param consult
+     * @return
+     */
     public List<ResponseSymptom> findSymptomsByVersionAndSource(Consult consult){
         List<ResponseSymptom> responseSymptomList = new ArrayList<>();
         List<Object[]> symptoms = symptomService.findBySourceAndVersionNative(consult.getDate(), consult.getSource());

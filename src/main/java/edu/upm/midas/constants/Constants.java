@@ -46,6 +46,11 @@ public class Constants {
 
     public static final String TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJncmFyZG9sYWdhckBob3RtYWlsLmNvbSIsImF1ZCI6IndlYiIsIm5hbWUiOiJHZXJhcmRvIExhZ3VuZXMiLCJ1c2VyIjp0cnVlLCJpYXQiOjE1MDk2MTQyNjh9.uVhDgfLrAgdnj02Hsbgfj9tkVlfni89i0hKVYW31eHApCHpheikK9ae1MhbzRhiyUcFGMKwtiyVgff5NCMY3PA";
     public static final String EXTRACTION_HISTORY_FOLDER = "tmp/mm/";
+    public static final String EXTRACTION_WIKIPEDIA_FOLDER = "tmp/wikipedia/";
+    public static final String WIKIPEDIA_RESOURCE_FILE_NAME = "_wikipedia_resource";
+    public static final String WIKIPEDIA_SEMTYPE_FILE_NAME = "_wikipedia_semtype";
+    public static final String WIKIPEDIA_RETRIEVAL_FILE_NAME = "_wikipedia_retrieval";
+    public static final String WIKIPEDIA_DISEASE_LIST_FILE_NAME = "_wikipedia_disease_list";
 
     public static final String PM_RETRIEVAL_HISTORY_FOLDER = "tmp/pubmed/";
     public static final String PM_RETRIEVAL_FILE_NAME = "_pubmed_retrieval";

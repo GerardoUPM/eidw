@@ -27,7 +27,7 @@ public class ExtractService {
     private PopulatePubMedTextsDbNative populatePubMedTextsDbNative;
 
     @Autowired
-    private UtilDate utilDate;
+    private UtilDate utilDate;//
 
     public boolean wikipediaExtract() throws Exception {
         boolean res = false;
