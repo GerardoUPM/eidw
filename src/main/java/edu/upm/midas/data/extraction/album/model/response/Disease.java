@@ -11,6 +11,7 @@ public class Disease {
     private String sourceId;
     private String sourceName;
     private String url;
+    private String urlId;
 
 
     public String getDiseaseId() {
@@ -67,5 +68,13 @@ public class Disease {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getUrlId() {
+        return urlId;
+    }
+
+    public void setUrlId(String urlId) {
+        this.urlId = urlId;
     }
 }

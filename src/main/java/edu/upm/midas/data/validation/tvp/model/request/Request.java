@@ -26,6 +26,14 @@ public class Request {
     @NotNull(message = Constants.ERR_NO_PARAMETER)
     @NotEmpty(message = Constants.ERR_EMPTY_PARAMETER)
     private List<Concept> concepts;
+    @Valid
+    @NotNull(message = Constants.ERR_NO_PARAMETER)
+    @NotEmpty(message = Constants.ERR_EMPTY_PARAMETER)
+    private String source;
+    @Valid
+    @NotNull(message = Constants.ERR_NO_PARAMETER)
+    @NotEmpty(message = Constants.ERR_EMPTY_PARAMETER)
+    private String snapshot;
 
 
     public String getToken() {
@@ -42,5 +50,31 @@ public class Request {
 
     public void setConcepts(List<Concept> concepts) {
         this.concepts = concepts;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getSnapshot() {
+        return snapshot;
+    }
+
+    public void setSnapshot(String snapshot) {
+        this.snapshot = snapshot;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "token='" + token + '\'' +
+                ", source='" + source + '\'' +
+                ", snapshot='" + snapshot + '\'' +
+                '}';
     }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import edu.upm.midas.constants.Constants;
 import edu.upm.midas.data.extraction.model.Doc;
+import edu.upm.midas.data.extraction.model.PubMedDoc;
 import edu.upm.midas.data.extraction.model.Source;
 import edu.upm.midas.data.extraction.sources.pubmed.model.Request;
 import edu.upm.midas.data.extraction.sources.pubmed.model.Response;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Date;
 
 /**
@@ -97,6 +99,10 @@ public class PopulatePubMedTextsDbNative {
 
         Date version = date.stringToDate(snapshot);
 
+        String fileName = snapshot + "_inserts_document_set.txt";
+        String path = Constants.PM_RETRIEVAL_HISTORY_FOLDER + fileName;
+        FileWriter fileWriter = new FileWriter(path);
+
 
         System.out.println("-------------------- POPULATE DATABASE --------------------");
         System.out.println("Populate start...");
@@ -112,6 +118,8 @@ public class PopulatePubMedTextsDbNative {
             //</editor-fold>
             int docsCount = 1;
             for (Doc document: source.getDocuments()) {//Poner todo esto en un metodo transaccional
+
+                /*
                 //Solo inserta aquellos documentos que al menos tengan códigos o secciones
                 String documentId = documentHelperNative.insertPubMedArticles(sourceId, document, version);
                 System.out.println(docsCount + " Insert document: " + document.getDisease().getName() + "_" + documentId);
@@ -149,10 +157,19 @@ public class PopulatePubMedTextsDbNative {
                     }// Secciones
                 }
                 //</editor-fold>
+*/
+
+                String documentId = uniqueId.generateDocument( sourceId, document.getId() );
+                if (document.getPaperList()!=null){
+                    for (PubMedDoc paper: document.getPaperList()) {
+                        fileWriter.write("INSERT IGNORE INTO document_set (document_id, date, paper_id) VALUES ('"+documentId+"', '"+snapshot+"', '"+paper.getPmID()+"');\n");
+                    }
+                }
 
                 //insertAllDataOfDocument(document, sourceId, version, source, docsCount);
                 docsCount++;
             }// Documentos
+            fileWriter.close();
             System.out.println("Inserted Documents: " + docsCount);
         }// Fuente "Source"
         System.out.println("Populate end...");
@@ -167,7 +184,7 @@ public class PopulatePubMedTextsDbNative {
         String documentId = documentHelperNative.insertPubMedArticles(sourceId, document, version);
         System.out.println(docsCount + " Insert document: " + document.getDisease().getName() + "_" + documentId);
 
-        //<editor-fold desc="PERSISTIR ENFERMEDAD DEL DOCUMENTO">
+        /*//<editor-fold desc="PERSISTIR ENFERMEDAD DEL DOCUMENTO">
         String diseaseId = diseaseHelperNative.insertIfExistPubMedArticles(document, documentId, version, source.getName());
         //</editor-fold>
 
@@ -199,7 +216,7 @@ public class PopulatePubMedTextsDbNative {
 
             }// Secciones
         }
-        //</editor-fold>
+        //</editor-fold>*/
     }
 
 

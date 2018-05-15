@@ -54,19 +54,41 @@ public class ValidationController {
 
     @RequestMapping(path = { "/metamap/json" }, //Term Validation Procedure
             method = RequestMethod.GET,
-            params = {"snapshot"})
-    public String metamapFilterWithJSON(@RequestParam(value = "snapshot") @Valid @NotBlank @NotNull @NotEmpty String snapshot) throws Exception {
+            params = {"source", "snapshot"})
+    public String metamapFilterWithJSON(@RequestParam(value = "source") @Valid @NotBlank @NotNull @NotEmpty String source,
+                                        @RequestParam(value = "snapshot") @Valid @NotBlank @NotNull @NotEmpty String snapshot) throws Exception {
 
         //Consult consult = new Consult("wikipedia", snapshot);//"2018-04-15"
         //Consult consult = new Consult("pubmed", "2018-04-03");
-        Consult consult = new Consult("pubmed", snapshot);//"2018-04-15"
+        Consult consult = new Consult(source, snapshot);//"2018-04-15"
 
         String inicio = utilDate.getTime();
         //Cuando se realice el filtro
-        //metamapService.filterAndStorageInJASON(consult);
+        metamapService.filterAndStorageInJASON(consult);
         //Cuando se consuma el JSON y se almacene la información
         //metamapService.populateTextsStoredJSON( consult );
-        metamapService.restartPopulateTextsStoredJSON( consult );
+        //metamapService.restartPopulateTextsStoredJSON( consult );
+        System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
+
+        return "It has been successfully filtered with Metamap";
+    }
+
+
+    /**
+     * @param source
+     * @param snapshot
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(path = { "/metamap/json/fast" }, //Term Validation Procedure
+            method = RequestMethod.GET,
+            params = {"source", "snapshot"})
+    public String metamapFilterWithJSON_fast(@RequestParam(value = "source") @Valid @NotBlank @NotNull @NotEmpty String source,
+                                             @RequestParam(value = "snapshot") @Valid @NotBlank @NotNull @NotEmpty String snapshot) throws Exception {
+
+        Consult consult = new Consult(source, snapshot);//"2018-04-15"
+        String inicio = utilDate.getTime();
+        metamapService.createMySQLInserts( consult );
         System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
 
         return "It has been successfully filtered with Metamap";
@@ -87,11 +109,12 @@ public class ValidationController {
 
 
     @RequestMapping(path = { "/tvp" }, //Term Validation Procedure
-            method = RequestMethod.GET)
-    public String tvpValidation() throws Exception {
+            method = RequestMethod.GET,
+            params = {"source", "snapshot"})
+    public String tvpValidation(@RequestParam(value = "source") @Valid @NotBlank @NotNull @NotEmpty String source,
+                                @RequestParam(value = "snapshot") @Valid @NotBlank @NotNull @NotEmpty String snapshot) throws Exception {
 
-        Consult consult = new Consult("wikipedia",
-                "2018-04-15");
+        Consult consult = new Consult(source, snapshot);
 
         String inicio = utilDate.getTime();
         tvpService.validation( consult );

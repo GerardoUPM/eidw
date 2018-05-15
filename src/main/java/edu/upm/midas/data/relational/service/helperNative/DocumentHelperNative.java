@@ -117,6 +117,15 @@ public class DocumentHelperNative {
     }
 
 
+    @Transactional
+    public String insertPubMedArticles_2(String sourceId, Doc document, Date version) throws JsonProcessingException {
+        String documentId = uniqueId.generateDocument( sourceId, document.getId() );
+
+        insertPapers(document, documentId, version);
+        return documentId;
+    }
+
+
     private void insertPapers(Doc document, String documentId, Date version) throws JsonProcessingException {
         //Recorrer lista de papers, si existen
         if (document.getPaperList()!=null){

@@ -15,6 +15,9 @@ import edu.upm.midas.data.validation.metamap.model.receiver.Text;
 import edu.upm.midas.data.validation.metamap.model.response.Concept;
 import edu.upm.midas.data.validation.metamap.model.response.ProcessedText;
 import edu.upm.midas.data.validation.metamap.model.response.Response;
+import edu.upm.midas.data.validation.metamap.model.special.HasSymptom;
+import edu.upm.midas.data.validation.metamap.model.special.SemanticType;
+import edu.upm.midas.data.validation.metamap.model.special.Symptom;
 import edu.upm.midas.data.validation.model.Consult;
 import edu.upm.midas.data.validation.model.query.ResponseText;
 import edu.upm.midas.utilsservice.ReplaceUTF8;
@@ -26,9 +29,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by gerardo on 20/07/2017.
@@ -648,6 +649,188 @@ public class MetamapService {
         }
         return res;*/
     }
+
+
+    public void createMySQLInserts(Consult consult) throws Exception {
+
+        List<SemanticType> semanticTypes = new ArrayList<>();
+        List<Symptom> symptoms = new ArrayList<>();
+        List<HasSymptom> hasSymptoms = new ArrayList<>();
+
+        String fileName = consult.getVersion() + "_inserts_has_symptom.txt";
+        String fileNameSemType = consult.getVersion() + "_inserts_semantic_types.txt";
+        String fileNameSymptoms = consult.getVersion() + "_inserts_symptoms.txt";
+        String path = Constants.EXTRACTION_HISTORY_FOLDER + fileName;
+        String pathSemTypes = Constants.EXTRACTION_HISTORY_FOLDER + fileNameSemType;
+        String pathSymptoms = Constants.EXTRACTION_HISTORY_FOLDER + fileNameSymptoms;
+        FileWriter fileWriter = new FileWriter(path);
+        FileWriter fileWriterSemTypes = new FileWriter(pathSemTypes);
+        FileWriter fileWriterSymptoms = new FileWriter(pathSymptoms);
+
+
+        List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = readMetamapResponseJSON(consult);
+        System.out.println("Read JSON ready!");
+        String has_symptoms_inserts = "";
+
+        try {
+            int textCount = 1, conceptCount = 1;
+            for (edu.upm.midas.data.validation.metamap.model.response.Text metamapText : textList) {
+                System.out.println(textCount + ". to " + textList.size() + " TextId: " + metamapText.getId());
+                //Validar que haya conceptos
+                if (metamapText.getConcepts() != null) {
+                    //Al menos un concepto
+                    if (metamapText.getConcepts().size() > 0) {
+                        //List<Concept> conceptsAux = metamapText.getConcepts();
+                        List<Concept> noRepeatedConcepts = removeRepetedConcepts(metamapText.getConcepts());
+                        conceptCount = createHasSymptom(metamapText.getConcepts(), noRepeatedConcepts, hasSymptoms, metamapText.getId(), conceptCount, fileWriter);
+                        for (Concept concept : metamapText.getConcepts()) {
+                            //Se crea un sintoma
+                            Symptom symptom = new Symptom(concept.getCui(), concept.getName(), concept.getSemanticTypes());
+                            //Se agrega a la lista
+                            symptoms.add(symptom);
+
+                            //Se recorren los semantic types del concepto
+                            for (String semanticType : concept.getSemanticTypes()) {
+                                SemanticType semType = new SemanticType(semanticType);
+                                //Se crea la lista de semantic types
+                                semanticTypes.add(semType);
+                            }
+                            //Se elimina el elemento de la lista principal para no contarlo y no agregarlo al hacer merge
+                            //metamapText.getConcepts().remove(concept);
+                        }
+                        //if (textCount == 50) break;
+                        textCount++;
+                    }
+                }
+            }
+            fileWriter.close();
+        }catch (Exception e){
+            System.out.println("Mensaje de la excepción 2: " + e.getMessage());
+        }
+
+        //Eliminar repetidos
+        //Tipos semanticos <<formar los insert para insertar semantics types "semantic_type">>
+        System.out.println("SemanticTypes repetidos size: " + semanticTypes.size());
+        semanticTypes = removeRepetedSemanticTypes(semanticTypes);
+        System.out.println("SemanticTypes sin repetir size: " + semanticTypes.size());
+        //formar inserts
+        try {
+            for (SemanticType semanticType : semanticTypes) {
+                //INSERT IGNORE INTO symptom (cui, name) VALUES ('C0231418', "At risk for violence");INSERT IGNORE INTO has_semantic_type (cui, semantic_type) VALUES ('C0231418', 'fndg');
+                fileWriterSemTypes.write("INSERT IGNORE INTO semantic_type (semantic_type, description) VALUES ('"+semanticType.getType()+"', '');\n");
+            }
+            fileWriterSemTypes.close();
+        }catch (Exception e){
+            System.out.println("Mensaje de la excepción 4: " + e.getMessage());
+        }
+
+        //Sintomas <<formar los insert para insertar sintomas "symptom" y sus tipos semanticos "has_semantic_type">>
+        System.out.println("symptoms repetidos size: " + symptoms.size());
+        symptoms = removeRepetedSymptoms(symptoms);
+        System.out.println("symptoms sin repetir size: " + symptoms.size());
+        //formar inserts para los sintomas y sus tipos semanticos
+        try {
+            for (Symptom symptom : symptoms) {
+                fileWriterSymptoms.write("INSERT IGNORE INTO symptom (cui, name) VALUES ('"+symptom.getCui()+"', \""+symptom.getName()+"\");\n");
+                for (String semType: symptom.getSemanticTypes()) {
+                    fileWriterSymptoms.write("INSERT IGNORE INTO has_semantic_type (cui, semantic_type) VALUES ('"+symptom.getCui()+"', '"+semType+"');\n");
+                }
+            }
+            fileWriterSymptoms.close();
+        }catch (Exception e){
+            System.out.println("Mensaje de la excepción 5: " + e.getMessage());
+        }
+
+        //HasSymptoms resultado del proceso de metamap en la tabla "has_symptom"
+        System.out.println("has_symptoms size: " + hasSymptoms.size());
+
+
+    }
+
+
+    public List<Concept> removeRepetedConcepts(List<Concept> elements){
+        //Se crea esta lista para no afectar a la original
+        List<Concept> elements_2 = new ArrayList<>();
+        elements_2.addAll(elements);
+        List<Concept> resList = elements_2;
+        Set<Concept> linkedHashSet = new LinkedHashSet<>();
+        linkedHashSet.addAll(elements_2);
+        elements_2.clear();
+        elements_2.addAll(linkedHashSet);
+
+        return resList;
+    }
+
+    public List<Symptom> removeRepetedSymptoms(List<Symptom> elements){
+        List<Symptom> resList = elements;
+        Set<Symptom> linkedHashSet = new LinkedHashSet<>();
+        linkedHashSet.addAll(elements);
+        elements.clear();
+        elements.addAll(linkedHashSet);
+
+        return resList;
+    }
+
+    public List<SemanticType> removeRepetedSemanticTypes(List<SemanticType> elements){
+        List<SemanticType> resList = elements;
+        Set<SemanticType> linkedHashSet = new LinkedHashSet<>();
+        linkedHashSet.addAll(elements);
+        elements.clear();
+        elements.addAll(linkedHashSet);
+
+        return resList;
+    }
+
+    //Para hacer inserta más rápidos noRepeatedConcepts
+    public int createHasSymptom(List<Concept> concepts, List<Concept> noRepeatedConcepts, List<HasSymptom> hasSymptoms, String textId, int conceptCount, FileWriter fileWriter){
+        //System.out.println("concepts: " + concepts.size() + " noRepetead: " + noRepeatedConcepts.size());
+        try {
+            for (Concept uniqueConcept : noRepeatedConcepts) {
+                HasSymptom hasSymptom = new HasSymptom(textId, uniqueConcept.getCui(), (byte) 0);
+                //System.out.println("ConceptUnique: " + uniqueConcept.getCui());
+                final int[] count = {1};
+                concepts.stream().filter(o -> o.getCui().equals(uniqueConcept.getCui())).forEach(
+                        o -> {
+                            String matchedWords_ = "";
+                            String positionalInfo_ = "";
+                            if (count[0] == 1) {
+                                matchedWords_ = o.getMatchedWords().toString();
+                                positionalInfo_ = o.getPositionalInfo();
+                            } else {
+                                matchedWords_ = hasSymptom.getMatchedWords() + "&" + o.getMatchedWords().toString();
+                                positionalInfo_ = hasSymptom.getPositionalInfo() + "&" + o.getPositionalInfo();
+                            }
+                            hasSymptom.setMatchedWords(matchedWords_);
+                            hasSymptom.setPositionalInfo(positionalInfo_);
+
+                            //System.out.println("    " + count + ". concept: " + o.getCui() + " = match: " + o.getMatchedWords().toString());
+
+                            count[0]++;
+                        }
+                );
+                //
+                hasSymptoms.add(hasSymptom);
+                fileWriter.write("INSERT IGNORE INTO has_symptom (text_id, cui, validated, matched_words, positional_info) VALUES ('"+hasSymptom.getTextId()+"', '"+hasSymptom.getCui()+"', 0, \""+hasSymptom.getMatchedWords()+"\", \""+hasSymptom.getPositionalInfo()+"\");\n");
+                System.out.println(conceptCount + ". " +hasSymptom);
+                conceptCount++;
+            }
+        }catch (Exception e){
+            System.out.println("Mensaje de la excepción 2: " + e.getMessage());
+        }
+
+        return conceptCount;
+
+    }
+
+
+    public boolean containsProcess(final List<Text> texts, String textId){
+        return texts.stream()
+                .filter(o -> o.getId().trim() != null)
+                .filter(o -> o.getId().trim().contentEquals(textId.trim()))
+                .findFirst()
+                .isPresent();
+    }
+
 
     public List<edu.upm.midas.data.validation.metamap.model.response.Text> readMetamapResponseJSON(Consult consult) throws Exception {
         List<edu.upm.midas.data.validation.metamap.model.response.Text> texts = new ArrayList<>();
