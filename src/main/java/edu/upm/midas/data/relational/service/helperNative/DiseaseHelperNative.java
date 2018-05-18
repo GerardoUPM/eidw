@@ -216,23 +216,27 @@ public class DiseaseHelperNative {
         if (diseaseEntityByMeshCode!=null){// diseaseEntityByName
             if (diseaseEntityByMeshCodeAndDiseaseName!=null && diseaseEntityByMeshCode.size() > 1){
                 dis = diseaseEntityByMeshCodeAndDiseaseName;
-                System.out.println("Match with Code and Disease name");
+                System.out.println("Match with Code and Disease name: (WikipediaDis:" + dis + " | PubMedDis: "+disease+")");
             } else if (diseaseEntityByMeshCodeAndDiseaseName==null && diseaseEntityByMeshCode.size() > 1){
                 dis = diseaseEntityByMeshCode.get(0);
-                System.out.println("Match with MeSH Code List");
+                System.out.println("Match with MeSH Code List: (WikipediaDis:" + dis + " | PubMedDis: "+disease+")");
             } else if (diseaseEntityByMeshCode.size() == 1){
                 dis = diseaseEntityByMeshCode.get(0);
-                System.out.println("Match with unique MeSH Code");
+                System.out.println("Match with unique MeSH Code: (WikipediaDis:" + dis + " | PubMedDis: "+disease+")");
             } else {
                 if (diseaseEntityByCode!=null) {
                     dis = diseaseEntityByCode;
-                    System.out.println("Match with Code 1");
+                    System.out.println("Match with Code (1): (WikipediaDis:" + dis + " | PubMedDis: "+disease+")");
+                }else{
+                    System.out.println("No Match (1): (PubMedDis: "+disease+")");
                 }
             }
         }else {
             if (diseaseEntityByCode != null) {
                 dis = diseaseEntityByCode;
-                System.out.println("Match with Code 2");
+                System.out.println("Match with Code (2): (WikipediaDis:" + dis + " | PubMedDis: "+disease+")");
+            } else {
+                System.out.println("No Match (2): (PubMedDis: "+disease+")");
             }
         }
 

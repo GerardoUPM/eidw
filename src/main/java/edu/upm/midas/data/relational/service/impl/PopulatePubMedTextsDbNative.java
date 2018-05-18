@@ -11,6 +11,7 @@ import edu.upm.midas.data.extraction.sources.pubmed.model.Request;
 import edu.upm.midas.data.extraction.sources.pubmed.model.Response;
 import edu.upm.midas.data.extraction.sources.pubmed.pubMedTextExtractionApiResponse.PubMedTextExtractionResourceService;
 import edu.upm.midas.data.extraction.sources.wikipedia.service.ExtractionWikipedia;
+import edu.upm.midas.data.relational.entities.edsssdb.Disease;
 import edu.upm.midas.data.relational.service.helperNative.*;
 import edu.upm.midas.enums.StatusHttpEnum;
 import edu.upm.midas.utilsservice.Common;
@@ -99,9 +100,9 @@ public class PopulatePubMedTextsDbNative {
 
         Date version = date.stringToDate(snapshot);
 
-        String fileName = snapshot + "_inserts_document_set.txt";
+        /*String fileName = snapshot + "_inserts_document_set.txt";
         String path = Constants.PM_RETRIEVAL_HISTORY_FOLDER + fileName;
-        FileWriter fileWriter = new FileWriter(path);
+        FileWriter fileWriter = new FileWriter(path);*/
 
 
         System.out.println("-------------------- POPULATE DATABASE --------------------");
@@ -159,17 +160,24 @@ public class PopulatePubMedTextsDbNative {
                 //</editor-fold>
 */
 
+/*
                 String documentId = uniqueId.generateDocument( sourceId, document.getId() );
                 if (document.getPaperList()!=null){
                     for (PubMedDoc paper: document.getPaperList()) {
                         fileWriter.write("INSERT IGNORE INTO document_set (document_id, date, paper_id) VALUES ('"+documentId+"', '"+snapshot+"', '"+paper.getPmID()+"');\n");
                     }
                 }
+*/
+
+                String documentId = uniqueId.generateDocument( sourceId, document.getId() );
+                Disease diseaseEntity = diseaseHelperNative.findDiseaseBySeveralWays(document.getDisease());
+                //System.out.println();
+
 
                 //insertAllDataOfDocument(document, sourceId, version, source, docsCount);
                 docsCount++;
             }// Documentos
-            fileWriter.close();
+            //fileWriter.close();
             System.out.println("Inserted Documents: " + docsCount);
         }// Fuente "Source"
         System.out.println("Populate end...");

@@ -181,16 +181,16 @@ public class Disease {
                 ", definition='" + definition + '\'' +
                 ", cui='" + cui + '\'' +
                 ", meSHUI='" + meSHUI + '\'' +
-                ", meSHMH='" + meSHMH + '\'' +
+                /*", meSHMH='" + meSHMH + '\'' +
                 ", meSHTermCount=" + meSHTermCount +
                 ", meSHTerms=" + meSHTerms +
                 ", meSHMN=" + meSHMN +
                 ", synonymCount=" + synonymCount +
                 ", synonyms=" + synonyms +
-                ", codeCount=" + codeCount +
+                ", codeCount=" + codeCount +*/
                 ", codes=" + codes +
-                ", isA='" + isA + '\'' +
-                ", links=" + links +
+                /*", isA='" + isA + '\'' +
+                ", links=" + links +*/
                 '}';
     }
 

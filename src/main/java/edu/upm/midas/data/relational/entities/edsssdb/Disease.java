@@ -256,4 +256,14 @@ public class Disease {
     public void setDiseaseSynonymsByDiseaseId(List<DiseaseSynonym> diseaseSynonymsByDiseaseId) {
         this.diseaseSynonymsByDiseaseId = diseaseSynonymsByDiseaseId;
     }
+
+
+    @Override
+    public String toString() {
+        return "Disease{" +
+                "diseaseId='" + diseaseId + '\'' +
+                ", name='" + name + '\'' +
+                ", cui='" + cui + '\'' +
+                '}';
+    }
 }
