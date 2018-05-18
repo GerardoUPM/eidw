@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -67,9 +66,9 @@ public class TvpService {
      */
     public void validation(Consult consult) throws Exception {
 
-        String fileName = consult.getVersion() + "_updates_has_symptom.txt";
+        /*String fileName = consult.getVersion() + "_updates_has_symptom.txt";
         String path = Constants.TVP_RETRIEVAL_HISTORY_FOLDER + fileName;
-        FileWriter fileWriter = new FileWriter(path);
+        FileWriter fileWriter = new FileWriter(path);*/
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         TvpConfiguration tvpConfiguration = new TvpConfiguration();
@@ -96,9 +95,9 @@ public class TvpService {
         System.out.println( "Validating symptoms... please wait, this process can take from minutes to hours... " );
 
         //VERDADERO Y NO FUNCIONA AHORA, NO SE PORQUE
-        //Response response = tvpResource.getValidateSymptoms( request );
+        Response response = tvpResource.getValidateSymptoms( request );
         //CONSUMIR UN JSON
-        Response response = readTVPValidationJSON(consult.getVersion());
+        //Response response = readTVPValidationJSON(consult.getVersion());
         System.out.println("Authorization: "+ response.isAuthorized());
 
 
@@ -110,23 +109,23 @@ public class TvpService {
                 //MatchNLP matchNLP = exist(symptom.getCui(), response.getValidatedConcepts());//antes matchNLPList
                 if (matchNLP.hasMatches()) {
                     System.out.println(validatedSymptoms +" to "+response.getValidatedConcepts().size()+" Symptom validated! | " + matchNLP.getConcept().getCui() + "==" + matchNLP.getConcept().toString());
-                    //hasSymptomService.updateValidatedNative(consult.getVersion(), sourceId, symptom.getCui(), true);
-                    fileWriter.write("UPDATE has_symptom h " +
+                    hasSymptomService.updateValidatedNative(consult.getVersion(), sourceId, matchNLP.getConcept().getCui(), true);
+                    /*fileWriter.write("UPDATE has_symptom h " +
                             "SET h.validated = 1 " +
                             "WHERE h.text_id LIKE '%"+consult.getVersion()+"%' " +
                             "AND h.text_id LIKE '%"+sourceId+"%' " +
-                            "AND h.cui = '"+matchNLP.getConcept().getCui()+"';\n");
+                            "AND h.cui = '"+matchNLP.getConcept().getCui()+"';\n");*/
                     validatedSymptoms++;
-                    //System.out.println("Update symptom in DB ready!");
+                    System.out.println("Update symptom in DB ready!");
                 } else {
-                    //System.out.println("Symptom not found:" + symptom.getCui());
+                    System.out.println("Symptom not found:" + matchNLP.getConcept().getCui());
                 }
             }
-            fileWriter.close();
+            /*fileWriter.close();*/
             System.out.println("Start insert configuration...");
             tvpConfiguration.setValidatedNonRepetedTerms(validatedSymptoms);
             String configurationJson = gson.toJson(tvpConfiguration);
-            //configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, consult.getDate(), constants.SERVICE_TVP_CODE + " - " + constants.SERVICE_TVP_NAME, configurationJson);
+            configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, consult.getDate(), constants.SERVICE_TVP_CODE + " - " + constants.SERVICE_TVP_NAME, configurationJson);
             System.out.println("End insert configuration ready!...");
         }else{
             System.out.println("Authorization message: " + response.getAuthorizationMessage() + " | token: " + response.getToken());

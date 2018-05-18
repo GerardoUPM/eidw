@@ -305,7 +305,7 @@ public class PopulateDbNative {
                 //Insertar la configuración por la que se esta creando la lista
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 String configurationJson = gson.toJson(conf);
-                //confHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_DIALIST_CODE + " - " + constants.SERVICE_DIALIST_NAME, configurationJson);
+                confHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_DIALIST_CODE + " - " + constants.SERVICE_DIALIST_NAME, configurationJson);
             }
         }
         return xmlLinkList;

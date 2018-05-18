@@ -460,6 +460,7 @@ public class MetamapService {
         sources.add("SNOMEDCT_US");
         conf.setSources(sources);
         conf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
+        conf.setConcept_location(true);
 
         request.setConfiguration( conf );
 
@@ -555,6 +556,7 @@ public class MetamapService {
         sources.add("SNOMEDCT_US");
         conf.setSources(sources);
         conf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
+        conf.setConcept_location(true);
 
         request.setConfiguration( conf );
 
@@ -667,6 +669,15 @@ public class MetamapService {
         FileWriter fileWriterSemTypes = new FileWriter(pathSemTypes);
         FileWriter fileWriterSymptoms = new FileWriter(pathSymptoms);
 
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        //Metamap configuración
+        Configuration metamapConf = new Configuration();
+        metamapConf.setOptions("-y -R");
+        List<String> sources = new ArrayList<>();
+        sources.add("SNOMEDCT_US");
+        metamapConf.setSources(sources);
+        metamapConf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
+        metamapConf.setConcept_location(true);
 
         List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = readMetamapResponseJSON(consult);
         System.out.println("Read JSON ready!");
@@ -744,6 +755,12 @@ public class MetamapService {
         //HasSymptoms resultado del proceso de metamap en la tabla "has_symptom"
         System.out.println("has_symptoms size: " + hasSymptoms.size());
 
+
+        //insertar configuración
+        System.out.println("Insert configuration...");
+        String configurationJson = gson.toJson(metamapConf);
+        configurationHelper.insert(consult.getSource(), consult.getDate(), constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
+        System.out.println("Insert configuration ready!...");
 
     }
 

@@ -184,9 +184,11 @@ public class PopulatePubMedTextsDbNative {
         String documentId = documentHelperNative.insertPubMedArticles(sourceId, document, version);
         System.out.println(docsCount + " Insert document: " + document.getDisease().getName() + "_" + documentId);
 
-        /*//<editor-fold desc="PERSISTIR ENFERMEDAD DEL DOCUMENTO">
+        //<editor-fold desc="PERSISTIR ENFERMEDAD DEL DOCUMENTO">
         String diseaseId = diseaseHelperNative.insertIfExistPubMedArticles(document, documentId, version, source.getName());
         //</editor-fold>
+
+        //AGREGAR METODO PARA INSERTAR
 
         //<editor-fold desc="PERSISTIR CÓDIGOS DEL DOCUMENTO">
         if (document.getCodeList()!=null)
@@ -216,7 +218,7 @@ public class PopulatePubMedTextsDbNative {
 
             }// Secciones
         }
-        //</editor-fold>*/
+        //</editor-fold>
     }
 
 
