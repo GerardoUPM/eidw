@@ -327,6 +327,7 @@ public class Constants {
         add("cgab");//para encontrar Coma
 
         add("cgab");
+        add("clna");
     }};
 
 

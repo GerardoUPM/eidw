@@ -78,10 +78,7 @@ public class Resource {
     @Override
     public String toString() {
         return "Resource{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", nameDisease='" + nameDisease + '\'' +
-                ", linkList=" + linkList +
+                "name='" + name + '\'' +
                 '}';
     }
 }

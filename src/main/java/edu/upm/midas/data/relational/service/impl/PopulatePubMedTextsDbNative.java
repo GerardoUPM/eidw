@@ -1,6 +1,5 @@
 package edu.upm.midas.data.relational.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import edu.upm.midas.constants.Constants;
@@ -11,7 +10,6 @@ import edu.upm.midas.data.extraction.sources.pubmed.model.Request;
 import edu.upm.midas.data.extraction.sources.pubmed.model.Response;
 import edu.upm.midas.data.extraction.sources.pubmed.pubMedTextExtractionApiResponse.PubMedTextExtractionResourceService;
 import edu.upm.midas.data.extraction.sources.wikipedia.service.ExtractionWikipedia;
-import edu.upm.midas.data.relational.entities.edsssdb.Disease;
 import edu.upm.midas.data.relational.service.helperNative.*;
 import edu.upm.midas.enums.StatusHttpEnum;
 import edu.upm.midas.utilsservice.Common;
@@ -26,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -100,9 +99,9 @@ public class PopulatePubMedTextsDbNative {
 
         Date version = date.stringToDate(snapshot);
 
-        /*String fileName = snapshot + "_inserts_document_set.txt";
+        String fileName = snapshot + "_documents_and_papers.txt";
         String path = Constants.PM_RETRIEVAL_HISTORY_FOLDER + fileName;
-        FileWriter fileWriter = new FileWriter(path);*/
+        FileWriter fileWriter = new FileWriter(path);
 
 
         System.out.println("-------------------- POPULATE DATABASE --------------------");
@@ -119,7 +118,6 @@ public class PopulatePubMedTextsDbNative {
             //</editor-fold>
             int docsCount = 1;
             for (Doc document: source.getDocuments()) {//Poner todo esto en un metodo transaccional
-
                 /*
                 //Solo inserta aquellos documentos que al menos tengan códigos o secciones
                 String documentId = documentHelperNative.insertPubMedArticles(sourceId, document, version);
@@ -170,14 +168,21 @@ public class PopulatePubMedTextsDbNative {
 */
 
                 String documentId = uniqueId.generateDocument( sourceId, document.getId() );
-                Disease diseaseEntity = diseaseHelperNative.findDiseaseBySeveralWays(document.getDisease());
-                //System.out.println();
+                //Disease diseaseEntity = diseaseHelperNative.findDiseaseBySeveralWays(document.getDisease()/*, fileWriter*/);
+
+                fileWriter.write(documentId + "\n");
+                if (document.getPaperList()!=null) {
+                    for (PubMedDoc paper: document.getPaperList()){
+                        String paperId = paper.getPmID();
+                        fileWriter.write("  "+paperId + "\n");
+                    }
+                }
 
 
                 //insertAllDataOfDocument(document, sourceId, version, source, docsCount);
                 docsCount++;
             }// Documentos
-            //fileWriter.close();
+            fileWriter.close();
             System.out.println("Inserted Documents: " + docsCount);
         }// Fuente "Source"
         System.out.println("Populate end...");
@@ -187,7 +192,7 @@ public class PopulatePubMedTextsDbNative {
 
 
     @Transactional
-    public void insertAllDataOfDocument(Doc document, String sourceId, Date version, Source source, int docsCount) throws JsonProcessingException {
+    public void insertAllDataOfDocument(Doc document, String sourceId, Date version, Source source, int docsCount) throws IOException {
         //Solo inserta aquellos documentos que al menos tengan códigos o secciones
         String documentId = documentHelperNative.insertPubMedArticles(sourceId, document, version);
         System.out.println(docsCount + " Insert document: " + document.getDisease().getName() + "_" + documentId);

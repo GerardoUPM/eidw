@@ -54,9 +54,11 @@ public class ValidationController {
 
     @RequestMapping(path = { "/metamap/json" }, //Term Validation Procedure
             method = RequestMethod.GET,
-            params = {"source", "snapshot"})
+            params = {"source", "snapshot", "action"})
     public String metamapFilterWithJSON(@RequestParam(value = "source") @Valid @NotBlank @NotNull @NotEmpty String source,
-                                        @RequestParam(value = "snapshot") @Valid @NotBlank @NotNull @NotEmpty String snapshot) throws Exception {
+                                        @RequestParam(value = "snapshot") @Valid @NotBlank @NotNull @NotEmpty String snapshot,
+                                        @RequestParam(value = "action") @Valid @NotBlank @NotNull @NotEmpty String action
+                                            ) throws Exception {
 
         //Consult consult = new Consult("wikipedia", snapshot);//"2018-04-15"
         //Consult consult = new Consult("pubmed", "2018-04-03");
@@ -64,10 +66,23 @@ public class ValidationController {
 
         String inicio = utilDate.getTime();
         //Cuando se realice el filtro
-        metamapService.filterAndStorageInJASON(consult);
-        //Cuando se consuma el JSON y se almacene la información
-        //metamapService.populateTextsStoredJSON( consult );
-        //metamapService.restartPopulateTextsStoredJSON( consult );
+        switch (action) {
+            case "filter_storage_json":
+                //Llama a Metamap y su resultado lo almacena en un JSON tanto en Metamap como en este servicio
+                metamapService.filterAndStorageInJASON(consult);
+                break;
+            case "populate_json":
+                //Cuando se consuma el JSON y se almacene la información
+                metamapService.populateTextsStoredJSON( consult );
+                break;
+            case "restart_populate_json":
+                //Cuando se queda a medias la inserción de los resultados de Metamap
+                metamapService.restartPopulateTextsStoredJSON( consult );
+                break;
+            default:
+                System.out.println("Invalid action");
+                break;
+        }
         System.out.println("Inicio:" + inicio + " | Termino: " +utilDate.getTime());
 
         return "It has been successfully filtered with Metamap";

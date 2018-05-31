@@ -178,7 +178,7 @@ public class Disease {
         return "Disease{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", definition='" + definition + '\'' +
+//                ", definition='" + definition + '\'' +
                 ", cui='" + cui + '\'' +
                 ", meSHUI='" + meSHUI + '\'' +
                 /*", meSHMH='" + meSHMH + '\'' +

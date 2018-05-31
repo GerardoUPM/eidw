@@ -431,8 +431,12 @@ public class MetamapService {
                 System.out.println("save metamap reponse...");
                 ProcessedText processedText = new ProcessedText();
                 processedText.setTexts(response.getTextList());
-                writeJSONFile(gson.toJson(processedText), utilDate.dateFormatyyyMMdd(version) /*utilDate.getNowFormatyyyyMMdd()*/);
+                //writeJSONFile(gson.toJson(processedText), utilDate.dateFormatyyyMMdd(version) /*utilDate.getNowFormatyyyyMMdd()*/);
                 System.out.println("save metamap ready...");
+
+                System.out.println("Insert configuration...");
+                String configurationJson = gson.toJson(request.getConfiguration());
+                configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
             }else{
                 System.out.println("Authorization message: " + response.getAuthorizationMessage() + " | token: " + response.getToken());
             }

@@ -76,4 +76,12 @@ public class Code {
     public int hashCode() {
         return Objects.hash(getCode(), getResource());
     }
+
+    @Override
+    public String toString() {
+        return "Code{" +
+                "code='" + code + '\'' +
+                ", resource=" + resource +
+                '}';
+    }
 }

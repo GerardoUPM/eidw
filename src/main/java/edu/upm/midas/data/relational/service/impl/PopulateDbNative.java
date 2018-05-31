@@ -117,7 +117,7 @@ public class PopulateDbNative {
     public void populateSemanticTypes() throws Exception {
         System.out.println("INSERT SEMANTIC TYPES...");
         for (String semanticType:
-                Constants.SEMANTIC_TYPES) {
+                Constants.SEMANTIC_TYPES_LIST) {
             semanticTypeHelperNative.insertIfExist( semanticType, "" );
         }
         System.out.println("INSERT SEMANTIC TYPES READY!");
