@@ -63,7 +63,8 @@ public class Constants {
     public static final String IMAGE_PATTERN =
             "([^\\s]+(\\.(?i)(jpg|png|gif|bmp))$)";
 
-    public static final String URLS[] ={"en.wikipedia.org/wiki/Sulzberger\u2013Garbe_syndrome",
+    public static final String URLS[] =
+            {"en.wikipedia.org/wiki/Sulzberger\u2013Garbe_syndrome",
             "en.wikipedia.org/wiki/Johnson\u2013McMillin_syndrome",
             "en.wikipedia.org/wiki/Rosselli\u2013Gulienetti_syndrome",
             "en.wikipedia.org/wiki/Rosenthal\u2013Kloepfer_syndrome",
