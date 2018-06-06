@@ -103,7 +103,7 @@ public class TvpService {
 
         if (response.isAuthorized()) {
             int validatedSymptoms = 0;
-        /* Actualizar entidad HasSymptom con CUI y textId */
+            /* Actualizar entidad HasSymptom con CUI y textId */
             System.out.println("Authorization: "+ response.getValidatedConcepts().size() + "|" + responseSymptoms.size());
             for (MatchNLP matchNLP : response.getValidatedConcepts()) {//ResponseSymptom
                 //MatchNLP matchNLP = exist(symptom.getCui(), response.getValidatedConcepts());//antes matchNLPList
@@ -125,7 +125,7 @@ public class TvpService {
             System.out.println("Start insert configuration...");
             tvpConfiguration.setValidatedNonRepetedTerms(validatedSymptoms);
             String configurationJson = gson.toJson(tvpConfiguration);
-            configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, consult.getDate(), constants.SERVICE_TVP_CODE + " - " + constants.SERVICE_TVP_NAME, configurationJson);
+            configurationHelper.insert(consult.getSource(), consult.getDate(), constants.SERVICE_TVP_CODE + " - " + constants.SERVICE_TVP_NAME, configurationJson);
             System.out.println("End insert configuration ready!...");
         }else{
             System.out.println("Authorization message: " + response.getAuthorizationMessage() + " | token: " + response.getToken());

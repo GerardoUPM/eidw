@@ -361,7 +361,7 @@ public class MetamapService {
      */
 
 
-    public void filterAndStorageInJASON(Consult consult) throws Exception {
+    public void filterAndStorageInJSON(Consult consult) throws Exception {
         Request request = new Request();//VALIDAR CONSULT
         Configuration conf = new Configuration();
         List<Text> texts = new ArrayList<>();
@@ -431,12 +431,13 @@ public class MetamapService {
                 System.out.println("save metamap reponse...");
                 ProcessedText processedText = new ProcessedText();
                 processedText.setTexts(response.getTextList());
-                //writeJSONFile(gson.toJson(processedText), utilDate.dateFormatyyyMMdd(version) /*utilDate.getNowFormatyyyyMMdd()*/);
+//                writeJSONFile(gson.toJson(processedText), utilDate.dateFormatyyyMMdd(version));
+                writeJSONFile(gson.toJson(response), utilDate.dateFormatyyyMMdd(version) /*utilDate.getNowFormatyyyyMMdd()*/);//response => cambio para almacenar la configuración con la cual se ejecuto metamap
                 System.out.println("save metamap ready...");
 
                 System.out.println("Insert configuration...");
                 String configurationJson = gson.toJson(request.getConfiguration());
-                configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
+                configurationHelper.insert(consult.getSource(), sourceId, version, constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
             }else{
                 System.out.println("Authorization message: " + response.getAuthorizationMessage() + " | token: " + response.getToken());
             }
@@ -508,7 +509,7 @@ public class MetamapService {
 
             System.out.println( "Connection_ with METAMAP API..." );
             System.out.println( "Founding medical concepts in a texts... please wait, this process can take from minutes to hours... " );
-            List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = readMetamapResponseJSON(consult);
+            List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = readMetamapResponseJSON(consult, false);
 
             System.out.println( "Texts Size request..." + request.getTextList().size());
             System.out.println( "Filter Texts Size response..." + textList.size() );
@@ -604,7 +605,7 @@ public class MetamapService {
 
             System.out.println( "Connection_ with METAMAP API..." );
             System.out.println( "Founding medical concepts in a texts... please wait, this process can take from minutes to hours... " );
-            List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = readMetamapResponseJSON(consult);
+            List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = readMetamapResponseJSON(consult, false);
 
             System.out.println( "Texts Size request..." + request.getTextList().size());
             System.out.println( "Filter Texts Size response..." + textList.size() );
@@ -683,7 +684,7 @@ public class MetamapService {
         metamapConf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
         metamapConf.setConcept_location(true);
 
-        List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = readMetamapResponseJSON(consult);
+        List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = readMetamapResponseJSON(consult, false);
         System.out.println("Read JSON ready!");
         String has_symptoms_inserts = "";
 
@@ -853,7 +854,7 @@ public class MetamapService {
     }
 
 
-    public List<edu.upm.midas.data.validation.metamap.model.response.Text> readMetamapResponseJSON(Consult consult) throws Exception {
+    public List<edu.upm.midas.data.validation.metamap.model.response.Text> readMetamapResponseJSON(Consult consult, boolean onlyTexts) throws Exception {
         List<edu.upm.midas.data.validation.metamap.model.response.Text> texts = new ArrayList<>();
         System.out.println("Read JSON!...");
         Gson gson = new Gson();
@@ -862,8 +863,13 @@ public class MetamapService {
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
-            ProcessedText resp = gson.fromJson(br, ProcessedText.class);
-            texts = resp.getTexts();
+            if (onlyTexts) {
+                ProcessedText resp = gson.fromJson(br, ProcessedText.class);
+                texts = resp.getTexts();
+            }else{
+                Response response = gson.fromJson(br, Response.class);
+                texts = response.getTextList();
+            }
         }catch (Exception e){
             System.out.println("Error to read or convert JSON!...");
         }

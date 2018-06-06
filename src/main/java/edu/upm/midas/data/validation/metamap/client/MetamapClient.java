@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 //url = "138.4.130.6:11063/api/metamap", ${my.service.client.metamap.url}
 // url =  "http://localhost:8080/api/metamap",
 @FeignClient(name = "metamap-client",
-        url = "138.4.130.6:11063/api/metamap",
+        url = "${my.service.client.metamap.url}",
         fallback = MetamapClientFallback.class,
         configuration = FeignConfiguration.class)
 public interface MetamapClient {

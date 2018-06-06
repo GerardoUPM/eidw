@@ -69,14 +69,17 @@ public class ValidationController {
         switch (action) {
             case "filter_storage_json":
                 //Llama a Metamap y su resultado lo almacena en un JSON tanto en Metamap como en este servicio
-                metamapService.filterAndStorageInJASON(consult);
+                System.out.println("filterAndStorageInJSON: " + consult.toString());
+                metamapService.filterAndStorageInJSON(consult);
                 break;
             case "populate_json":
                 //Cuando se consuma el JSON y se almacene la información
+                System.out.println("populateTextsStoredJSON: " + consult.toString());
                 metamapService.populateTextsStoredJSON( consult );
                 break;
             case "restart_populate_json":
                 //Cuando se queda a medias la inserción de los resultados de Metamap
+                System.out.println("restartPopulateTextsStoredJSON: " + consult.toString());
                 metamapService.restartPopulateTextsStoredJSON( consult );
                 break;
             default:
