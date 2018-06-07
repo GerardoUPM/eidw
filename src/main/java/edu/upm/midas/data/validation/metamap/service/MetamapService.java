@@ -684,7 +684,7 @@ public class MetamapService {
         metamapConf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
         metamapConf.setConcept_location(true);
 
-        List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = readMetamapResponseJSON(consult, false);
+        List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = readMetamapResponseJSON(consult, true);
         System.out.println("Read JSON ready!");
         String has_symptoms_inserts = "";
 
