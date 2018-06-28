@@ -47,7 +47,12 @@ import java.util.Objects;
         @NamedNativeQuery(
                 name = "Disease.findByNameNative",
                 query = "SELECT d.disease_id, d.name, d.cui "
-                        + "FROM disease d WHERE d.name COLLATE utf8_bin = :name"
+                        + "FROM disease d WHERE UPPER(d.name) COLLATE utf8_bin = UPPER(:name)"
+        ),
+        @NamedNativeQuery(
+                name = "Disease.findByNameNativeUPPER",
+                query = "SELECT d.disease_id, d.name, d.cui "
+                        + "FROM disease d WHERE UPPER(d.name) COLLATE utf8_bin = UPPER(:name)"
         ),
         @NamedNativeQuery(
                 name = "Disease.findByNameNativeUnrestricted",
@@ -153,7 +158,7 @@ import java.util.Objects;
         ),
         @NamedNativeQuery(
                 name = "Disease.findBySourceAndVersionAndCodeAndDiseaseName",
-                query = " SELECT DISTINCT d.disease_id, d.name, hc.code , r.name 'resource', doc.date, doc.document_id, getDocumentUrl(sce.name, doc.date, d.disease_id) 'url' " +
+                query = " SELECT DISTINCT d.disease_id, d.name, hc.code , r.name 'resource'-- , doc.date, doc.document_id, getDocumentUrl(sce.name, doc.date, d.disease_id) 'url' \n" +
                         "FROM disease d " +
                         "INNER JOIN has_disease hd ON hd.disease_id = d.disease_id " +
                         "INNER JOIN document doc ON doc.document_id = hd.document_id AND doc.date = hd.date " +

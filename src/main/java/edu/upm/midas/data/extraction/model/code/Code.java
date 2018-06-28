@@ -21,7 +21,13 @@ public class Code {
     private Link link;
     private Resource resource;
 
+    public Code() {
+    }
 
+    public Code(String code, Resource resource) {
+        this.code = code;
+        this.resource = resource;
+    }
 
     public int getId() {
         return id;

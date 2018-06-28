@@ -98,10 +98,12 @@ public class DiseaseHelperNative {
     public String insertIfExistPubMedArticles(Doc document, String documentId, Date version, String sourceName) throws IOException {
         String diseaseName = document.getDisease().getName();
 
-        Disease diseaseEntity = findDiseaseBySeveralWays(document.getDisease()/*, null*/);
+//        Disease diseaseEntity = findDiseaseBySeveralWays(documentId, document.getDisease()/*, null*/);
+        Disease diseaseEntity = diseaseService.findByName(diseaseName);
         //System.out.println(diseaseName+ "DIS: "+ diseaseEntity);
         //Si no encuentro la enfermedad, se inserta junto con sus sinonimos
         if ( diseaseEntity == null ){
+            System.out.println(documentId + " | " + version  + " Nombre nuevo | PubMedDis: "+document.getDisease()+")");
             //Crea el id de enfermedad
             String diseaseId = getDiseaseId();
             //inserta la enfermedad
@@ -112,7 +114,8 @@ public class DiseaseHelperNative {
             insertSynonyms(document.getDisease(), diseaseId, sourceName);
             return diseaseId;
         }else{
-            System.out.println("Match with DISNET Disease: "+ diseaseEntity.getDiseaseId() +" | "+ diseaseEntity.getName());
+            System.out.println(documentId + " | " + version  + " Nombre encontrado (WikipediaDis:" + diseaseEntity + " | PubMedDis: "+document.getDisease()+")");
+//            System.out.println("Match with DISNET Disease: "+ diseaseEntity.getDiseaseId() +" | "+ diseaseEntity.getName());
             //System.out.println("HasDisease: "+ documentId + " | " + version + " | " + diseaseEntity.getDiseaseId() );
             //inserta la relacion entre disease y document
             HasDisease existHasDisease = hasDiseaseService.findById(new HasDiseasePK(documentId, utilDate.convertSQLDateToUtilDate(version), diseaseEntity.getDiseaseId()));
@@ -143,7 +146,7 @@ public class DiseaseHelperNative {
                         //busca si existe ya la relación disease synonym
                         DiseaseSynonym diseaseSynonym = diseaseSynonymService.findById(new DiseaseSynonymPK(diseaseId, synonymId));
                         //si no existe la inserta
-                        if (diseaseSynonym!=null)
+                        if (diseaseSynonym==null)
                             diseaseSynonymService.insertNative(diseaseId, synonymId);
 
                         //inserta los codigos del sinonimo, si existen
@@ -158,7 +161,7 @@ public class DiseaseHelperNative {
                     //busca si existe ya la relación disease synonym
                     DiseaseSynonym diseaseSynonym = diseaseSynonymService.findById(new DiseaseSynonymPK(diseaseId, existSynonym.getSynonymId()));
                     //si no existe la inserta
-                    if (diseaseSynonym!=null)
+                    if (diseaseSynonym==null)
                         diseaseSynonymService.insertNative(diseaseId, existSynonym.getSynonymId());
                 }
                 //Exista o no sinonimo el nombre de la enfermedad se registrará como sinonimo aunque sea igual al nombre
@@ -173,7 +176,7 @@ public class DiseaseHelperNative {
                             //busca si existe ya la relación disease synonym
                             DiseaseSynonym diseaseSynonym = diseaseSynonymService.findById(new DiseaseSynonymPK(diseaseId, synonymId));
                             //si no existe la inserta
-                            if (diseaseSynonym!=null)
+                            if (diseaseSynonym==null)
                                 diseaseSynonymService.insertNative(diseaseId, synonymId);
 
                             //inserta los codigos del sinonimo, si existen
@@ -198,60 +201,74 @@ public class DiseaseHelperNative {
     }
 
 
-    public Disease findDiseaseBySeveralWays(edu.upm.midas.data.extraction.model.Disease disease/*, FileWriter fileWriter*/) throws IOException {
-        Date version = documentHelperNative.getLastVersion();
-        Disease dis = null;
-        //List<Disease> diseaseEntityByCode = null;
-        Disease diseaseEntityByCode = null;
-        int codeCount = 0;
-
-        //Buscar enfermedad por nombre
-        Disease diseaseEntityByName = diseaseService.findByNameNativeUnrestricted( disease.getName().trim() );
-        List<Disease> diseaseEntityByMeshCode = diseaseService.findBySourceAndVersionAndCode( Constants.SOURCE_WIKIPEDIA, version, disease.getMeSHUI(), Constants.MESH_RESOURCE_NAME );
-        Disease diseaseEntityByMeshCodeAndDiseaseName = diseaseService.findBySourceAndVersionAndCodeAndDiseaseName( Constants.SOURCE_WIKIPEDIA, version, disease.getMeSHUI(), Constants.MESH_RESOURCE_NAME, disease.getName().trim() );
-        if (disease.getCodes()!=null) {
-            //diseaseEntityByCode = new ArrayList<>();
-            codeCount=0;
-            for (Code code: disease.getCodes()) {
-                diseaseEntityByCode = diseaseService.findOneBySourceAndVersionAndCode(Constants.SOURCE_WIKIPEDIA, version, code.getCode(), code.getResource().getName());
-                //Disease diseaseByCode = diseaseService.findOneBySourceAndVersionAndCode(Constants.SOURCE_WIKIPEDIA, version, code.getCode(), code.getResource().getName());
-                /*if (diseaseEntityByCode!=null){
-                    diseaseEntityByCode.add(diseaseByCode);
-                    codeCount++;
-                }*/
-
-                break;
-            }
+    public Disease findDiseaseBySeveralWays(String documentId, edu.upm.midas.data.extraction.model.Disease disease/*, FileWriter fileWriter*/) throws IOException {
+        Disease diseaseEntity = diseaseService.findByName(disease.getName());
+        if (diseaseEntity!=null){
+            System.out.println(documentId + "Nombre encontrado (WikipediaDis:" + diseaseEntity + " | PubMedDis: "+disease+")");
+        }else{
+            System.out.println(documentId + "Nombre nuevo | PubMedDis: "+disease+")");
         }
-
-        if (diseaseEntityByMeshCode!=null){// diseaseEntityByName
-            if (diseaseEntityByMeshCodeAndDiseaseName!=null && diseaseEntityByMeshCode.size() > 1){
-                dis = diseaseEntityByMeshCodeAndDiseaseName;
-                System.out.println("Match with (ByMeshCodeAndDiseaseName): (WikipediaDis:" + dis + " | PubMedDis: "+disease+")\n");
-            } else if (diseaseEntityByMeshCodeAndDiseaseName==null && diseaseEntityByMeshCode.size() > 1){
-                dis = diseaseEntityByMeshCode.get(0);
-                System.out.println("Match with MeSH Code List (ByMeshCode>1): (WikipediaDis:" + dis + " | PubMedDis: "+disease+") | more match: " + diseaseEntityByMeshCode.toString() + "\n");
-            } else if (diseaseEntityByMeshCode.size() == 1){
-                dis = diseaseEntityByMeshCode.get(0);
-                System.out.println("Match with unique MeSH Code (ByMeshCode==1): (WikipediaDis:" + dis + " | PubMedDis: "+disease+")\n");
-            } else {
-                if (diseaseEntityByCode!=null) {
-                    dis = diseaseEntityByCode;
-                    System.out.println("Match (ByCode): (WikipediaDis:" + dis + " | PubMedDis: "+disease+")\n");
-                }else{
-                    System.out.println("No Match (1): (PubMedDis: "+disease+")\n");
-                }
-            }
-        }else {
-            if (diseaseEntityByCode != null) {
-                dis = diseaseEntityByCode;
-                System.out.println("Match with Code (2): (WikipediaDis:" + dis + " | PubMedDis: "+disease+")\n");
-            } else {
-                System.out.println("No Match (2): (PubMedDis: "+disease+")\n");
-            }
-        }
-
-        return dis;
+        return diseaseEntity;
+//        Date version = documentHelperNative.getLastVersion();
+//        Disease dis = null;
+//        //List<Disease> diseaseEntityByCode = null;
+//        Disease diseaseEntityByCode = null;
+//        Disease diseaseEntityByCodeAndDiseaseName = null;
+//        int codeCount = 0;
+//
+//        //Buscar enfermedad por nombre
+//        Disease diseaseEntityByName = diseaseService.findByNameNativeUnrestricted( disease.getName().trim() );
+//        List<Disease> diseaseEntityByMeshCode = diseaseService.findBySourceAndVersionAndCode( Constants.SOURCE_WIKIPEDIA, version, disease.getMeSHUI(), Constants.MESH_RESOURCE_NAME );
+//        Disease diseaseEntityByMeshCodeAndDiseaseName = diseaseService.findBySourceAndVersionAndCodeAndDiseaseName( Constants.SOURCE_WIKIPEDIA, version, disease.getMeSHUI(), Constants.MESH_RESOURCE_NAME, disease.getName().trim() );
+//        if (disease.getCodes()!=null) {
+//            //diseaseEntityByCode = new ArrayList<>();
+//            codeCount=0;
+//            for (Code code: disease.getCodes()) {
+//                diseaseEntityByCode = diseaseService.findOneBySourceAndVersionAndCode(Constants.SOURCE_WIKIPEDIA, version, code.getCode(), code.getResource().getName());
+//                diseaseEntityByCodeAndDiseaseName = diseaseService.findBySourceAndVersionAndCodeAndDiseaseName( Constants.SOURCE_WIKIPEDIA, version, code.getCode(), code.getResource().getName(), disease.getName().trim() );
+//                //Disease diseaseByCode = diseaseService.findOneBySourceAndVersionAndCode(Constants.SOURCE_WIKIPEDIA, version, code.getCode(), code.getResource().getName());
+//                /*if (diseaseEntityByCode!=null){
+//                    diseaseEntityByCode.add(diseaseByCode);
+//                    codeCount++;
+//                }*/
+//
+//                break;
+//            }
+//        }
+//
+//        if (diseaseEntityByMeshCode!=null){// diseaseEntityByName
+//            if (diseaseEntityByMeshCodeAndDiseaseName!=null && diseaseEntityByMeshCode.size() > 1){
+//                dis = diseaseEntityByMeshCodeAndDiseaseName;
+//                System.out.println(documentId + " Match with (ByMeshCodeAndDiseaseName): (WikipediaDis:" + dis + " | PubMedDis: "+disease+")");
+//            } else if (diseaseEntityByMeshCodeAndDiseaseName==null && diseaseEntityByMeshCode.size() > 1){
+//                dis = diseaseEntityByMeshCode.get(0);
+//                System.out.println(documentId + " Match with MeSH Code List (ByMeshCode>1): (WikipediaDis:" + dis + " | PubMedDis: "+disease+") | more match: " + diseaseEntityByMeshCode.toString() + "");
+//            } else if (diseaseEntityByMeshCode.size() == 1){
+//                dis = diseaseEntityByMeshCode.get(0);
+//                System.out.println(documentId + " Match with unique MeSH Code (ByMeshCode==1): (WikipediaDis:" + dis + " | PubMedDis: "+disease+")");
+//            } else {
+//                if (diseaseEntityByCode!=null) {
+//                    dis = diseaseEntityByCode;
+//                    System.out.println(documentId + " Match (ByCode): (WikipediaDis:" + dis + " | PubMedDis: "+disease+")");
+//                }else{
+//                    System.out.println(documentId + " No Match (1): (PubMedDis: "+disease+")");
+//                }
+//            }
+//        }else {
+//            if (diseaseEntityByCodeAndDiseaseName!=null){
+//                dis = diseaseEntityByCodeAndDiseaseName;
+//                System.out.println(documentId + " Match with Code (3): (WikipediaDis:" + dis + " | PubMedDis: " + disease + ")");
+//            }else {
+//                if (diseaseEntityByCode != null) {
+//                    dis = diseaseEntityByCode;
+//                    System.out.println(documentId + " Match with Code (2): (WikipediaDis:" + dis + " | PubMedDis: " + disease + ")");
+//                } else {
+//                    System.out.println(documentId + " No Match (2): (PubMedDis: " + disease + ")");
+//                }
+//            }
+//        }
+//
+//        return dis;
     }
 
 

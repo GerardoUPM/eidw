@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import edu.upm.midas.constants.Constants;
 import edu.upm.midas.data.extraction.model.Doc;
-import edu.upm.midas.data.extraction.model.PubMedDoc;
 import edu.upm.midas.data.extraction.model.Source;
+import edu.upm.midas.data.extraction.model.code.Code;
+import edu.upm.midas.data.extraction.model.code.Resource;
 import edu.upm.midas.data.extraction.sources.pubmed.model.Request;
 import edu.upm.midas.data.extraction.sources.pubmed.model.Response;
 import edu.upm.midas.data.extraction.sources.pubmed.pubMedTextExtractionApiResponse.PubMedTextExtractionResourceService;
@@ -23,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 
@@ -99,9 +99,9 @@ public class PopulatePubMedTextsDbNative {
 
         Date version = date.stringToDate(snapshot);
 
-        String fileName = snapshot + "_documents_and_papers.txt";
-        String path = Constants.PM_RETRIEVAL_HISTORY_FOLDER + fileName;
-        FileWriter fileWriter = new FileWriter(path);
+//        String fileName = snapshot + "_documents_and_papers.txt";
+//        String path = Constants.PM_RETRIEVAL_HISTORY_FOLDER + fileName;
+//        FileWriter fileWriter = new FileWriter(path);
 
 
         System.out.println("-------------------- POPULATE DATABASE --------------------");
@@ -129,7 +129,7 @@ public class PopulatePubMedTextsDbNative {
 
                 //<editor-fold desc="PERSISTIR CÓDIGOS DEL DOCUMENTO">
                 if (document.getCodeList()!=null)
-                    codeHelperNative.insertIfExist(document.getCodeList(), documentId, version);
+                    codeHelperNative.insertIfExistByCodeList(document.getCodeList(), documentId, version);
                 //</editor-fold>
 
                 //<editor-fold desc="RECORRIDO DE SECCIONES PARA ACCEDER A LOS TEXTOS">
@@ -168,21 +168,33 @@ public class PopulatePubMedTextsDbNative {
 */
 
                 String documentId = uniqueId.generateDocument( sourceId, document.getId() );
-                //Disease diseaseEntity = diseaseHelperNative.findDiseaseBySeveralWays(document.getDisease()/*, fileWriter*/);
+//                Disease diseaseEntity = diseaseHelperNative.findDiseaseBySeveralWays(documentId, document.getDisease()/*, fileWriter*/);
 
-                fileWriter.write(documentId + "\n");
-                if (document.getPaperList()!=null) {
-                    for (PubMedDoc paper: document.getPaperList()){
-                        String paperId = paper.getPmID();
-                        fileWriter.write("  "+paperId + "\n");
+                if (documentHelperNative.findDocument(documentId, version)) {
+                    //<editor-fold desc="PERSISTIR ENFERMEDAD DEL DOCUMENTO">
+                    String diseaseId = diseaseHelperNative.insertIfExistPubMedArticles(document, documentId, version, source.getName());
+                    //</editor-fold>
+
+
+//                se ejecuto perfecto
+                    if (!common.isEmpty(document.getDisease().getMeSHUI())) {
+                        codeHelperNative.insertIfExistByCode(new Code(document.getDisease().getMeSHUI(), new Resource(0, "MeSH")), documentId, version);
                     }
                 }
+
+//                fileWriter.write(documentId + "\n");
+//                if (document.getPaperList()!=null) {
+//                    for (PubMedDoc paper: document.getPaperList()){
+//                        String paperId = paper.getPmID();
+//                        fileWriter.write("  "+paperId + "\n");
+//                    }
+//                }
 
 
                 //insertAllDataOfDocument(document, sourceId, version, source, docsCount);
                 docsCount++;
             }// Documentos
-            fileWriter.close();
+//            fileWriter.close();
             System.out.println("Inserted Documents: " + docsCount);
         }// Fuente "Source"
         System.out.println("Populate end...");
@@ -205,7 +217,7 @@ public class PopulatePubMedTextsDbNative {
 
         //<editor-fold desc="PERSISTIR CÓDIGOS DEL DOCUMENTO">
         if (document.getCodeList()!=null)
-            codeHelperNative.insertIfExist(document.getCodeList(), documentId, version);
+            codeHelperNative.insertIfExistByCodeList(document.getCodeList(), documentId, version);
         //</editor-fold>
 
         //<editor-fold desc="RECORRIDO DE SECCIONES PARA ACCEDER A LOS TEXTOS">

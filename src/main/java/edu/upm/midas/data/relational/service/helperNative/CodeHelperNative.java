@@ -59,7 +59,7 @@ public class CodeHelperNative {
      * @param version
      * @throws JsonProcessingException
      */
-    public void insertIfExist(List<Code> codeList, String documentId, Date version) throws JsonProcessingException {
+    public void insertIfExistByCodeList(List<Code> codeList, String documentId, Date version) throws JsonProcessingException {
         Object[] codeEntity;
 
         for (Code code: codeList) {
@@ -81,6 +81,34 @@ public class CodeHelperNative {
             }else{
                 //System.out.println("Document_id: " + documentId + " Version: " + version + " Code: " + codeEntity[0] + " ResourceName: " + codeEntity[1]);
                 codeService.insertNativeHasCode( documentId, version, (String) codeEntity[0], (int) codeEntity[1] );
+            }
+        }
+    }
+
+
+    public void insertIfExistByCode(Code insertCode, String documentId, Date version) throws JsonProcessingException {
+        Object[] codeEntity;
+
+        if (insertCode != null) {
+            codeEntity = getCodeByCodeResource( insertCode );
+
+            if ( codeEntity == null ){//validar el resourceId por si no existe
+                int resourceId = resourceService.findIdByNameQuery( insertCode.getResource().getName() );
+                if (resourceId == 0){
+                    //Insertar resource
+                    resourceService.insertNative(insertCode.getResource().getName());
+                    resourceId = resourceService.findIdByNameQuery( insertCode.getResource().getName() );
+                }
+                codeService.insertNative( insertCode.getCode(), resourceId );
+                codeService.insertNativeHasCode( documentId, version, insertCode.getCode(), resourceId );
+                System.out.println("New Code inserted...");
+                if (insertCode.getLink()!=null) {
+                    String urlId = urlHelperNative.getUrl(insertCode.getLink(), getId(insertCode.getCode(), resourceId));
+                    codeService.insertNativeUrl(insertCode.getCode(), resourceId, urlId);
+                }
+            }else{
+                codeService.insertNativeHasCode( documentId, version, (String) codeEntity[0], (int) codeEntity[1] );
+                System.out.println("Exist Code inserted relation with document...");
             }
         }
     }

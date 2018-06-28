@@ -118,6 +118,18 @@ public class DocumentHelperNative {
 
 
     @Transactional
+    public String insertCodeMeSHPubMedArticles(String sourceId, Doc document, Date version) throws JsonProcessingException {
+        String documentId = uniqueId.generateDocument( sourceId, document.getId() );
+        Document existDocument = documentService.findById(new DocumentPK(documentId, utilDate.convertSQLDateToUtilDate(version) ));
+        if (existDocument==null) {
+        }else{
+
+        }
+        return documentId;
+    }
+
+
+    @Transactional
     public String insertPubMedArticles_2(String sourceId, Doc document, Date version) throws JsonProcessingException {
         String documentId = uniqueId.generateDocument( sourceId, document.getId() );
 
@@ -250,6 +262,12 @@ public class DocumentHelperNative {
 
     public Date getLastVersion(){
         return documentService.findLastVersionNative();
+    }
+
+    public boolean findDocument(String documentId, Date version){
+        Document document = documentService.findById(new DocumentPK(documentId, utilDate.convertSQLDateToUtilDate(version)));
+        if (document!=null) return true;
+        else return false;
     }
 
 }

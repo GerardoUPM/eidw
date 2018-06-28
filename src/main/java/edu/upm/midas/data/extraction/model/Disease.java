@@ -188,7 +188,7 @@ public class Disease {
                 ", synonymCount=" + synonymCount +
                 ", synonyms=" + synonyms +
                 ", codeCount=" + codeCount +*/
-                ", codes=" + codes +
+//                ", codes=" + codes +
                 /*", isA='" + isA + '\'' +
                 ", links=" + links +*/
                 '}';
