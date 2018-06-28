@@ -47,11 +47,15 @@ public class ExtractionScheduling {
             Día de la semana. En nuestro ejemplo tiene el valor 5, es decir, deseamos se ejecute el quinto día (Viernes). Acepta valores del 1-7 o abreviaturas SUN-SAT y caracteres especiales como , - * ? /
             El día del mes y el día de la semana son excluyentes, es decir que podemos definir solo uno de los dos, no ámbos. En nuestro ejemplo queremos que se ejecute siempre un día de la semana por lo tanto en la posición de día del mes asignaremos un “?” para indicar que no está definido.
 
-            El caracter especial “/” se usa para especificar incrementos. Por ejemplo en el campo de minutos, un valor como 0/1 indica que la tarea se ejecutará cada minuto, en el campo de segundos un valor como 0/15 indica una ejecución cada 15 segundos.
+            El caracter especial “/” se usa para especificar incrementos.
+     Por ejemplo en el campo de minutos, un valor como 0/1 indica que la tarea se ejecutará cada minuto,
+     en el campo de segundos un valor como 0/15 indica una ejecución cada 15 segundos.
                 Se ejecuta cada minuto de todos los dias sábados a media noche.
                 @Scheduled(cron = "0 0/1 0 ? * 6 ")
 
-            El caracter especial “,” se usa para especificar un conjunto de valores. Por ejemplo en el campo de día de la semana, un valor como “6,7” indica que la tarea se ejecutará todos los sábados y domingos.
+            El caracter especial “,” se usa para especificar un conjunto de valores.
+                Por ejemplo en el campo de día de la semana, un valor como “6,7”
+                indica que la tarea se ejecutará todos los sábados y domingos.
                 Se ejecuta cada 15 segundos los días sábados y domingos a media noche.
                 @Scheduled(cron = "0/15 * 0 ? * 6,7 ")
      */

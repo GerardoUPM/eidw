@@ -135,7 +135,7 @@ public class ExtractionController {
         //extractService.onlyExtract();
 //        Gson gson = new Gson();
 //        String fileName = "2018-02-01_metamap_filter.json";//adis = disease album
-//        String path = Constants.EXTRACTION_HISTORY_FOLDER + fileName;
+//        String path = Constants.METAMAP_FOLDER + fileName;
 //
 //        BufferedReader br = new BufferedReader( new FileReader(path));
 //
@@ -144,6 +144,13 @@ public class ExtractionController {
 //        for (Text text: resp.getTexts()) {
 //            System.out.println("TextId: " + text.getId() + " | Concepts: " + text.getConcepts().toString());
 //        }
+    }
+
+
+    @RequestMapping(path = { "/wikipedia/test" }, //wikipedia extraction
+            method = RequestMethod.GET)
+    public void testWikipediaExtract() throws Exception {
+        extractService.testWikipediaExtract();
     }
 
 

@@ -128,7 +128,7 @@ public class PopulateDbNative {
     public void populateSections() throws Exception {
         System.out.println("INSERT SECTIONS...");
 //        List<edu.upm.Source> sourceList = extractionWikipedia.wikipediaExtract();
-//        sectionHelperNative.insertIfExist( source.getSectionMap() );
+//        sectionHelperNative.insertIfExistByCodeList( source.getSectionMap() );
         System.out.println("INSERT SECTIONS READY!");
     }
 
@@ -153,7 +153,7 @@ public class PopulateDbNative {
         link.setId(1);
         link.setUrl("www.test.com");
         source.setUrl(link);
-        System.out.println("SourceId: " + sourceHelperNative.insertIfExist( source ) );
+        System.out.println("SourceId: " + sourceHelperNative.insertIfExistByCodeList( source ) );
 */
 
         List<Source> sourceList = extractionWikipedia.extract(externalDiseaseLinkList);
@@ -187,7 +187,7 @@ public class PopulateDbNative {
                     //</editor-fold>
 
                     //<editor-fold desc="PERSISTIR CÓDIGOS DEL DOCUMENTO">
-                    codeHelperNative.insertIfExist(document.getCodeList(), documentId, version);
+                    codeHelperNative.insertIfExistByCodeList(document.getCodeList(), documentId, version);
                     //</editor-fold>
 
                     //<editor-fold desc="RECORRIDO DE SECCIONES PARA ACCEDER A LOS TEXTOS">
@@ -305,7 +305,7 @@ public class PopulateDbNative {
                 //Insertar la configuración por la que se esta creando la lista
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 String configurationJson = gson.toJson(conf);
-                confHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_DIALIST_CODE + " - " + constants.SERVICE_DIALIST_NAME, configurationJson);
+                //confHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_DIALIST_CODE + " - " + constants.SERVICE_DIALIST_NAME, configurationJson);
             }
         }
         return xmlLinkList;
@@ -315,6 +315,11 @@ public class PopulateDbNative {
     public void onlyExtract(List<XmlLink> externalDiseaseLinkList) throws Exception {
         //extractionWikipedia.wikipediaExtract(null);
         extractionWikipedia.extractionReport(externalDiseaseLinkList);
+    }
+
+
+    public void testExtract() throws Exception {
+        extractionWikipedia.extractionReport(null);
     }
 
 
