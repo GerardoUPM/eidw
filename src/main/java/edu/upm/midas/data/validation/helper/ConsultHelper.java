@@ -71,7 +71,7 @@ public class ConsultHelper {
     public List<ResponseText> restartFindTextsByVersionAndSource(Consult consult){
         List<ResponseText> responseTextList = new ArrayList<>();
         //System.out.println(consult);
-        List<Object[]> texts = textService.findByLikeVersionNative(consult.getDate(), consult.getVersion(), consult.getSource());
+        List<Object[]> texts = textService.findByLikeVersionNative(consult.getDate(), consult.getSnapshot(), consult.getSource());
         int count = 1, call = 1;
         for (Object[] text: texts) {
             // Verificación del texto para evitar envíar textos vacíos a la api rest

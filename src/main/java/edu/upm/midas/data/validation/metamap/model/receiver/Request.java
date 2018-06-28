@@ -30,6 +30,7 @@ public class Request {
     @Size(min = 1, message = Constants.ERR_EMPTY_PARAMETER)
     private List<Text> textList;
     private String snapshot;
+    private String source;
 
 
     public String getToken() {
@@ -64,6 +65,14 @@ public class Request {
         this.snapshot = snapshot;
     }
 
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
     @Override
     public String toString() {
         return "Request{" +
@@ -71,6 +80,7 @@ public class Request {
                 ", configuration=" + configuration +
                 ", textList=" + textList +
                 ", snapshot='" + snapshot + '\'' +
+                ", source='" + source + '\'' +
                 '}';
     }
 }

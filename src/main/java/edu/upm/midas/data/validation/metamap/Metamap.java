@@ -72,9 +72,9 @@ public class Metamap implements NLPInterface {
      * @return Return true or false.
      */
     private boolean isAValidSemanticType(List<String> semanticTypes) {
-        for (int i = 0; i < Constants.SEMANTIC_TYPES.length; i++) {
+        for (int i = 0; i < Constants.SEMANTIC_TYPES_LIST.size(); i++) {
 
-            String validSemanticType = Constants.SEMANTIC_TYPES[i];
+            String validSemanticType = Constants.SEMANTIC_TYPES_LIST.get(i);
 
             if (semanticTypes.contains(validSemanticType)) {
                 return true;

@@ -131,7 +131,7 @@ public class MetamapService {
 
             if (response.isAuthorized()) {
                 System.out.println("save metamap reponse...");
-                writeJSONFile(gson.toJson(response.getTextList()), utilDate.dateFormatyyyMMdd(version) /*utilDate.getNowFormatyyyyMMdd()*/);
+                writeJSONFile(gson.toJson(response), consult /*utilDate.dateFormatyyyMMdd(version) utilDate.getNowFormatyyyyMMdd(), consult.getSource()*/);
                 System.out.println("Insert symptoms starting...");
                 System.out.println(request.getTextList().size());
                 int count = 1;//VALIDAR
@@ -378,7 +378,7 @@ public class MetamapService {
         conf.setConcept_location(true);
 
         request.setConfiguration( conf );
-        request.setSnapshot(consult.getVersion());
+        request.setSnapshot(consult.getSnapshot());
 
         System.out.println("Get all texts by version and source...");
         List<ResponseText> responseTexts = consultHelper.findTextsByVersionAndSource( consult );
@@ -432,7 +432,7 @@ public class MetamapService {
                 ProcessedText processedText = new ProcessedText();
                 processedText.setTexts(response.getTextList());
 //                writeJSONFile(gson.toJson(processedText), utilDate.dateFormatyyyMMdd(version));
-                writeJSONFile(gson.toJson(response), utilDate.dateFormatyyyMMdd(version) /*utilDate.getNowFormatyyyyMMdd()*/);//response => cambio para almacenar la configuración con la cual se ejecuto metamap
+//                writeJSONFile(gson.toJson(response), consult /*utilDate.dateFormatyyyMMdd(version) utilDate.getNowFormatyyyyMMdd()*/);//response => cambio para almacenar la configuración con la cual se ejecuto metamap
                 System.out.println("save metamap ready...");
 
                 System.out.println("Insert configuration...");
@@ -509,35 +509,39 @@ public class MetamapService {
 
             System.out.println( "Connection_ with METAMAP API..." );
             System.out.println( "Founding medical concepts in a texts... please wait, this process can take from minutes to hours... " );
-            List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = readMetamapResponseJSON(consult, false);
+            Response response = readMetamapResponseJSON(consult, false);
 
-            System.out.println( "Texts Size request..." + request.getTextList().size());
-            System.out.println( "Filter Texts Size response..." + textList.size() );
+            if (response!=null) {
+                List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = response.getTextList();
+                if (textList.size() == request.getTextList().size()) {
+                    System.out.println("Texts Size request..." + request.getTextList().size());
+                    System.out.println("Filter Texts Size response..." + textList.size());
 
-            if (textList.size() == request.getTextList().size()) {
-                System.out.println("Insert symptoms starting...");
-                int count = 1;//VALIDAR
-                for (edu.upm.midas.data.validation.metamap.model.response.Text filterText : textList) {
-                    System.out.println(count + ". to ("+textList.size() + ") TEXT_ID: " + filterText.getId() + " | CONCEPTS(" + filterText.getConcepts().size() + "): ");
-                    int countSymptoms = 1;
-                    for (edu.upm.midas.data.validation.metamap.model.response.Concept concept : filterText.getConcepts()) {
-                        System.out.println("Concept{ cui: " + concept.getCui() + " name: " + concept.getName() + " semTypes:" + concept.getSemanticTypes().toString() + "}");
-                        symptomHelperNative.insertIfExist(concept, filterText.getId());//text.getId()
-                        countSymptoms++;
+                    System.out.println("Insert symptoms starting...");
+                    int count = 1;//VALIDAR
+                    for (edu.upm.midas.data.validation.metamap.model.response.Text filterText : textList) {
+                        System.out.println(count + ". to (" + textList.size() + ") TEXT_ID: " + filterText.getId() + " | CONCEPTS(" + filterText.getConcepts().size() + "): ");
+                        int countSymptoms = 1;
+                        for (edu.upm.midas.data.validation.metamap.model.response.Concept concept : filterText.getConcepts()) {
+                            System.out.println("Concept{ cui: " + concept.getCui() + " name: " + concept.getName() + " semTypes:" + concept.getSemanticTypes().toString() + "}");
+                            symptomHelperNative.insertIfExist(concept, filterText.getId());//text.getId()
+                            countSymptoms++;
+                        }
+                        count++;
                     }
-                    count++;
-                }
-                System.out.println("Insert symptoms ready!...");
-                //</editor-fold>
+                    System.out.println("Insert symptoms ready!...");
+                    //</editor-fold>
 
-                System.out.println("Insert configuration...");
-                String configurationJson = gson.toJson(request.getConfiguration());
-                configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
-                System.out.println("Insert configuration ready!...");
-            }else{
-                System.out.println("Texts Size Different: request: " + request.getTextList().size() + " | json: " + textList.size());
+                    System.out.println("Insert configuration...");
+                    String configurationJson = gson.toJson(request.getConfiguration());
+                    configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
+                    System.out.println("Insert configuration ready!...");
+                } else {
+                    System.out.println("Texts Size Different: request: " + request.getTextList().size() + " | json: " + textList.size());
+                }
             }
         }
+
 
     }
 
@@ -605,38 +609,44 @@ public class MetamapService {
 
             System.out.println( "Connection_ with METAMAP API..." );
             System.out.println( "Founding medical concepts in a texts... please wait, this process can take from minutes to hours... " );
-            List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = readMetamapResponseJSON(consult, false);
+            Response response = readMetamapResponseJSON(consult, false);
 
-            System.out.println( "Texts Size request..." + request.getTextList().size());
-            System.out.println( "Filter Texts Size response..." + textList.size() );
-            int insertados = 1, noinsertados = 1;
-            System.out.println("Insert symptoms starting...");
-            int count = 1;//VALIDAR
-            for (edu.upm.midas.data.validation.metamap.model.response.Text filterText : textList) {
-                //Verifica que se encuentre en la lista de los textos
-                if (contains(texts, filterText.getId())) {insertados++;
-                    System.out.println(count + ". to (" + textList.size() + ") 'Inserta' TEXT_ID: " + filterText.getId() + " | CONCEPTS(" + filterText.getConcepts().size() + "): ");
-                    int countSymptoms = 1;
-                        for (edu.upm.midas.data.validation.metamap.model.response.Concept concept : filterText.getConcepts()) {
-                            System.out.println("Concept{ cui: " + concept.getCui() + " name: " + concept.getName() + " semTypes:" + concept.getSemanticTypes().toString() + "}");
-                            symptomHelperNative.insertIfExist(concept, filterText.getId());//text.getId()
-                            countSymptoms++;
+            if (response!=null) {
+                List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = response.getTextList();
+                if (textList.size() == request.getTextList().size()) {
+                    System.out.println("Texts Size request..." + request.getTextList().size());
+                    System.out.println("Filter Texts Size response..." + textList.size());
+                    int insertados = 1, noinsertados = 1;
+                    System.out.println("Insert symptoms starting...");
+                    int count = 1;//VALIDAR
+                    for (edu.upm.midas.data.validation.metamap.model.response.Text filterText : textList) {
+                        //Verifica que se encuentre en la lista de los textos
+                        if (contains(texts, filterText.getId())) {
+                            insertados++;
+                            System.out.println(count + ". to (" + textList.size() + ") 'Inserta' TEXT_ID: " + filterText.getId() + " | CONCEPTS(" + filterText.getConcepts().size() + "): ");
+                            int countSymptoms = 1;
+                            for (edu.upm.midas.data.validation.metamap.model.response.Concept concept : filterText.getConcepts()) {
+                                System.out.println("Concept{ cui: " + concept.getCui() + " name: " + concept.getName() + " semTypes:" + concept.getSemanticTypes().toString() + "}");
+                                symptomHelperNative.insertIfExist(concept, filterText.getId());//text.getId()
+                                countSymptoms++;
+                            }
+                        } else {
+                            noinsertados++;
+                            System.out.println(count + ". to (" + textList.size() + ") Ya insertado textId: " + filterText.getId());
                         }
-                }else{noinsertados++;
-                    System.out.println(count + ". to (" + textList.size() + ") Ya insertado textId: " + filterText.getId());
+                        count++;
+                        //if (count==18000) break;
+                    }
+                    System.out.println("Insert symptoms ready!...");
+                    //</editor-fold>
+
+                    System.out.println("Insert configuration...");
+                    String configurationJson = gson.toJson(request.getConfiguration());
+                    configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
+                    System.out.println("Insert configuration ready!...");
+                    System.out.println("insertados: " + insertados + " noinsertados: " + noinsertados);
                 }
-                count++;
-                //if (count==18000) break;
             }
-            System.out.println("Insert symptoms ready!...");
-            //</editor-fold>
-
-            System.out.println("Insert configuration...");
-            String configurationJson = gson.toJson(request.getConfiguration());
-            configurationHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
-            System.out.println("Insert configuration ready!...");
-            System.out.println("insertados: " + insertados + " noinsertados: " + noinsertados);
-
         }
 
     }
@@ -659,17 +669,16 @@ public class MetamapService {
 
 
     public void createMySQLInserts(Consult consult) throws Exception {
-
         List<SemanticType> semanticTypes = new ArrayList<>();
         List<Symptom> symptoms = new ArrayList<>();
         List<HasSymptom> hasSymptoms = new ArrayList<>();
 
-        String fileName = consult.getVersion() + "_inserts_has_symptom.txt";
-        String fileNameSemType = consult.getVersion() + "_inserts_semantic_types.txt";
-        String fileNameSymptoms = consult.getVersion() + "_inserts_symptoms.txt";
-        String path = Constants.EXTRACTION_HISTORY_FOLDER + fileName;
-        String pathSemTypes = Constants.EXTRACTION_HISTORY_FOLDER + fileNameSemType;
-        String pathSymptoms = Constants.EXTRACTION_HISTORY_FOLDER + fileNameSymptoms;
+        String fileName = consult.getSnapshot() + "_inserts_has_symptom.txt";
+        String fileNameSemType = consult.getSnapshot() + "_inserts_semantic_types.txt";
+        String fileNameSymptoms = consult.getSnapshot() + "_inserts_symptoms.txt";
+        String path = Constants.METAMAP_FOLDER + fileName;
+        String pathSemTypes = Constants.METAMAP_FOLDER + fileNameSemType;
+        String pathSymptoms = Constants.METAMAP_FOLDER + fileNameSymptoms;
         FileWriter fileWriter = new FileWriter(path);
         FileWriter fileWriterSemTypes = new FileWriter(pathSemTypes);
         FileWriter fileWriterSymptoms = new FileWriter(pathSymptoms);
@@ -684,44 +693,49 @@ public class MetamapService {
         metamapConf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
         metamapConf.setConcept_location(true);
 
-        List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = readMetamapResponseJSON(consult, true);
+        Response response = readMetamapResponseJSON(consult, true);
         System.out.println("Read JSON ready!");
         String has_symptoms_inserts = "";
 
-        try {
-            int textCount = 1, conceptCount = 1;
-            for (edu.upm.midas.data.validation.metamap.model.response.Text metamapText : textList) {
-                System.out.println(textCount + ". to " + textList.size() + " TextId: " + metamapText.getId());
-                //Validar que haya conceptos
-                if (metamapText.getConcepts() != null) {
-                    //Al menos un concepto
-                    if (metamapText.getConcepts().size() > 0) {
-                        //List<Concept> conceptsAux = metamapText.getConcepts();
-                        List<Concept> noRepeatedConcepts = removeRepetedConcepts(metamapText.getConcepts());
-                        conceptCount = createHasSymptom(metamapText.getConcepts(), noRepeatedConcepts, hasSymptoms, metamapText.getId(), conceptCount, fileWriter);
-                        for (Concept concept : metamapText.getConcepts()) {
-                            //Se crea un sintoma
-                            Symptom symptom = new Symptom(concept.getCui(), concept.getName(), concept.getSemanticTypes());
-                            //Se agrega a la lista
-                            symptoms.add(symptom);
+        if (response!=null) {
+            List<edu.upm.midas.data.validation.metamap.model.response.Text> textList = response.getTextList();
+            if (textList.size()>0) {
+                try {
+                    int textCount = 1, conceptCount = 1;
+                    for (edu.upm.midas.data.validation.metamap.model.response.Text metamapText : textList) {
+                        System.out.println(textCount + ". to " + textList.size() + " TextId: " + metamapText.getId());
+                        //Validar que haya conceptos
+                        if (metamapText.getConcepts() != null) {
+                            //Al menos un concepto
+                            if (metamapText.getConcepts().size() > 0) {
+                                //List<Concept> conceptsAux = metamapText.getConcepts();
+                                List<Concept> noRepeatedConcepts = removeRepetedConcepts(metamapText.getConcepts());
+                                conceptCount = createHasSymptom(metamapText.getConcepts(), noRepeatedConcepts, hasSymptoms, metamapText.getId(), conceptCount, fileWriter);
+                                for (Concept concept : metamapText.getConcepts()) {
+                                    //Se crea un sintoma
+                                    Symptom symptom = new Symptom(concept.getCui(), concept.getName(), concept.getSemanticTypes());
+                                    //Se agrega a la lista
+                                    symptoms.add(symptom);
 
-                            //Se recorren los semantic types del concepto
-                            for (String semanticType : concept.getSemanticTypes()) {
-                                SemanticType semType = new SemanticType(semanticType);
-                                //Se crea la lista de semantic types
-                                semanticTypes.add(semType);
+                                    //Se recorren los semantic types del concepto
+                                    for (String semanticType : concept.getSemanticTypes()) {
+                                        SemanticType semType = new SemanticType(semanticType);
+                                        //Se crea la lista de semantic types
+                                        semanticTypes.add(semType);
+                                    }
+                                    //Se elimina el elemento de la lista principal para no contarlo y no agregarlo al hacer merge
+                                    //metamapText.getConcepts().remove(concept);
+                                }
+                                //if (textCount == 50) break;
+                                textCount++;
                             }
-                            //Se elimina el elemento de la lista principal para no contarlo y no agregarlo al hacer merge
-                            //metamapText.getConcepts().remove(concept);
                         }
-                        //if (textCount == 50) break;
-                        textCount++;
                     }
+                    fileWriter.close();
+                } catch (Exception e) {
+                    System.out.println("Mensaje de la excepción 2: " + e.getMessage());
                 }
             }
-            fileWriter.close();
-        }catch (Exception e){
-            System.out.println("Mensaje de la excepción 2: " + e.getMessage());
         }
 
         //Eliminar repetidos
@@ -762,10 +776,10 @@ public class MetamapService {
 
 
         //insertar configuración
-        System.out.println("Insert configuration...");
-        String configurationJson = gson.toJson(metamapConf);
-        configurationHelper.insert(consult.getSource(), consult.getDate(), constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
-        System.out.println("Insert configuration ready!...");
+//        System.out.println("Insert configuration...");
+//        String configurationJson = gson.toJson(metamapConf);
+//        configurationHelper.insert(consult.getSource(), consult.getDate(), constants.SERVICE_METAMAP_CODE + " - " + constants.SERVICE_METAMAP_NAME, configurationJson);
+//        System.out.println("Insert configuration ready!...");
 
     }
 
@@ -854,12 +868,13 @@ public class MetamapService {
     }
 
 
-    public List<edu.upm.midas.data.validation.metamap.model.response.Text> readMetamapResponseJSON(Consult consult, boolean onlyTexts) throws Exception {
+    public Response readMetamapResponseJSON(Consult consult, boolean onlyTexts) throws Exception {
         List<edu.upm.midas.data.validation.metamap.model.response.Text> texts = new ArrayList<>();
+        Response response = null;
         System.out.println("Read JSON!...");
         Gson gson = new Gson();
-        String fileName = consult.getVersion() + "_metamap_filter.json";//adis = disease album
-        String path = Constants.EXTRACTION_HISTORY_FOLDER + fileName;
+        String fileName = consult.getSnapshot() + "_" + consult.getSource() + Constants.METAMAP_FILE_NAME + Constants.DOT_JSON;//adis = disease album
+        String path = Constants.METAMAP_FOLDER + fileName;
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
@@ -867,7 +882,7 @@ public class MetamapService {
                 ProcessedText resp = gson.fromJson(br, ProcessedText.class);
                 texts = resp.getTexts();
             }else{
-                Response response = gson.fromJson(br, Response.class);
+                response = gson.fromJson(br, Response.class);
                 texts = response.getTextList();
             }
         }catch (Exception e){
@@ -878,13 +893,13 @@ public class MetamapService {
             System.out.println("TextId: " + text.getId() + " | Concepts: " + text.getConcepts().toString());
         }*/
 
-        return texts;
+        return response;
     }
 
 
-    public void writeJSONFile(String diseaseJsonBody, String version) throws IOException {
-        String fileName = version + "_metamap_filter.json";//adis = disease album
-        String path = Constants.EXTRACTION_HISTORY_FOLDER + fileName;
+    public void writeJSONFile(String diseaseJsonBody, Consult consult) throws IOException {
+        String fileName = consult.getSnapshot() + "_" + consult.getSource() + Constants.METAMAP_FILE_NAME + Constants.DOT_JSON;
+        String path = Constants.METAMAP_FOLDER + fileName;
         InputStream in = getClass().getResourceAsStream(path);
         //BufferedReader bL = new BufferedReader(new InputStreamReader(in));
         File file = new File(path);
@@ -896,9 +911,6 @@ public class MetamapService {
             bW.close();
         }
     }
-
-
-
 
 
     /**
