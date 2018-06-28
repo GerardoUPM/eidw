@@ -18,16 +18,16 @@ public class Consult {
 
     // source: 1) nombre del source (ej. "wikipedia"); 2) "all" (todos los source)
     private String source;
-    // version: 1) fecha específica (ej. "2017-06-15"); 2) "last" (última versión)
-    private String version;
+    // snapshot: 1) fecha específica (ej. "2017-06-15"); 2) "last" (última versión)
+    private String snapshot;
     private Date date;
 
-    public Consult(String source, String version) throws ParseException {
+    public Consult(String source, String snapshot) throws ParseException {
         this.source = source;
-        this.version = version;
-        if ( !this.version.equals( Constants.CONSULT_VERSION_LAST ) ){
+        this.snapshot = snapshot;
+        if ( !this.snapshot.equals( Constants.CONSULT_LAST_SNAPSHOT) ){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            this.date = sdf.parse( version );
+            this.date = sdf.parse(snapshot);
         }else {
             this.date = null;
         }
@@ -41,12 +41,12 @@ public class Consult {
         this.source = source;
     }
 
-    public String getVersion() {
-        return version;
+    public String getSnapshot() {
+        return snapshot;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setSnapshot(String snapshot) {
+        this.snapshot = snapshot;
     }
 
     public Date getDate() {
@@ -61,7 +61,7 @@ public class Consult {
     public String toString() {
         return "Consult{" +
                 "source='" + source + '\'' +
-                ", version='" + version + '\'' +
+                ", snapshot='" + snapshot + '\'' +
                 ", date=" + date +
                 '}';
     }

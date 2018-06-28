@@ -45,272 +45,22 @@ public class Constants {
     public static final String VERSION_PROJECT = "1.0";
 
     public static final String TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJncmFyZG9sYWdhckBob3RtYWlsLmNvbSIsImF1ZCI6IndlYiIsIm5hbWUiOiJHZXJhcmRvIExhZ3VuZXMiLCJ1c2VyIjp0cnVlLCJpYXQiOjE1MDk2MTQyNjh9.uVhDgfLrAgdnj02Hsbgfj9tkVlfni89i0hKVYW31eHApCHpheikK9ae1MhbzRhiyUcFGMKwtiyVgff5NCMY3PA";
-    public static final String EXTRACTION_HISTORY_FOLDER = "tmp/mm/";
     public static final String EXTRACTION_WIKIPEDIA_FOLDER = "tmp/wikipedia/";
+    public static final String PM_RETRIEVAL_HISTORY_FOLDER = "tmp/pubmed/";
+    public static final String PM_RETRIEVAL_FILE_NAME = "_pubmed_retrieval";
     public static final String WIKIPEDIA_RESOURCE_FILE_NAME = "_wikipedia_resource";
     public static final String WIKIPEDIA_SEMTYPE_FILE_NAME = "_wikipedia_semtype";
     public static final String WIKIPEDIA_RETRIEVAL_FILE_NAME = "_wikipedia_retrieval";
     public static final String WIKIPEDIA_DISEASE_LIST_FILE_NAME = "_wikipedia_disease_list";
 
-    public static final String PM_RETRIEVAL_HISTORY_FOLDER = "tmp/pubmed/";
-    public static final String PM_RETRIEVAL_FILE_NAME = "_pubmed_retrieval";
-    public static final String TVP_RETRIEVAL_HISTORY_FOLDER = "tmp/tvp/";
-    public static final String TVP_RETRIEVAL_FILE_NAME = "_tvp_validation";
-    public static final String PM_RETRIEVAL_DOCUMENT_FILE_NAME = "_document_pubmed_retrieval";
-    public static final String PM_RETRIEVAL_DISEASE_LIST_FILE_NAME = "_disease_list_pubmed_retrieval";
     public static final String DOT_JSON = ".json";
+    public static final String DOT_XML = ".xml";
 
     public static final String IMAGE_PATTERN =
             "([^\\s]+(\\.(?i)(jpg|png|gif|bmp))$)";
 
-    public static final String URLS[] =
-            {"en.wikipedia.org/wiki/Sulzberger\u2013Garbe_syndrome",
-            "en.wikipedia.org/wiki/Johnson\u2013McMillin_syndrome",
-            "en.wikipedia.org/wiki/Rosselli\u2013Gulienetti_syndrome",
-            "en.wikipedia.org/wiki/Rosenthal\u2013Kloepfer_syndrome",
-            "en.wikipedia.org/wiki/Flynn\u2013Aird_syndrome",
-            "en.wikipedia.org/wiki/Bj\u00F6rnstad_syndrome",
-            "en.wikipedia.org/wiki/Marshall\u2013White_syndrome",
-            "en.wikipedia.org/wiki/Guillain\u2013Barr\u00E9_syndrome",
-            "en.wikipedia.org/wiki/Waterhouse\u2013Friderichsen_syndrome",
-            "en.wikipedia.org/wiki/Congenital_adrenal_hyperplasia_due_to_11\u03B2-hydroxylase_deficiency",
-            "en.wikipedia.org/wiki/Antley\u2013Bixler_syndrome",
-            "en.wikipedia.org/wiki/Dejerine\u2013Roussy_syndrome",
-            "en.wikipedia.org/wiki/Inborn_errors_of_purine\u2013pyrimidine_metabolism",
-            "en.wikipedia.org/wiki/Kashin\u2013Beck_disease",
-            "en.wikipedia.org/wiki/Marden\u2013Walker_syndrome",
-            "en.wikipedia.org/wiki/Fourth_cholera_pandemic_(1863\u201375)",
-            "en.wikipedia.org/wiki/Third_cholera_pandemic_(1852\u201360)",
-            "en.wikipedia.org/wiki/Qu\u1EA3ng_Ng\u00E3i_skin_disease_outbreak",
-            "en.wikipedia.org/wiki/Legg\u2013Calv\u00E9\u2013Perthes_disease",
-            "en.wikipedia.org/wiki/Conradi\u2013H\u00FCnermann_syndrome",
-            "en.wikipedia.org/wiki/Wolcott\u2013Rallison_syndrome",
-            "en.wikipedia.org/wiki/Alstr\u00F6m_syndrome",
-            "en.wikipedia.org/wiki/Dandy\u2013Walker_syndrome",
-            "en.wikipedia.org/wiki/M\u00FCllerian_agenesis",
-            "en.wikipedia.org/wiki/Short_rib_\u2013_polydactyly_syndrome",
-            "en.wikipedia.org/wiki/B\u00E1lint's_syndrome",
-            "en.wikipedia.org/wiki/Parry\u2013Romberg_syndrome",
-            "en.wikipedia.org/wiki/Brown\u2013Vialetto\u2013Van_Laere_syndrome",
-            "en.wikipedia.org/wiki/Urban\u2013Rogers\u2013Meyer_syndrome",
-            "en.wikipedia.org/wiki/Fitz-Hugh\u2013Curtis_syndrome",
-            "en.wikipedia.org/wiki/Miller\u2013Dieker_syndrome",
-            "en.wikipedia.org/wiki/Pallister\u2013Killian_syndrome",
-            "en.wikipedia.org/wiki/Lipsch\u00FCtz_ulcer",
-            "en.wikipedia.org/wiki/Bing\u2013Neel_syndrome",
-            "en.wikipedia.org/wiki/Sj\u00F6gren's_syndrome",
-            "en.wikipedia.org/wiki/Henoch\u2013Sch\u00F6nlein_purpura",
-            "en.wikipedia.org/wiki/Eosinophilia\u2013myalgia_syndrome",
-            "en.wikipedia.org/wiki/Gianotti\u2013Crosti_syndrome",
-            "en.wikipedia.org/wiki/Arnold\u2013Chiari_malformation",
-            "en.wikipedia.org/wiki/Diamond\u2013Blackfan_anemia",
-            "en.wikipedia.org/wiki/Potocki\u2013Lupski_syndrome",
-            "en.wikipedia.org/wiki/Obsessive\u2013compulsive_personality_disorder",
-            "en.wikipedia.org/wiki/Tolosa\u2013Hunt_syndrome",
-            "en.wikipedia.org/wiki/Wernicke\u2013Korsakoff_syndrome",
-            "en.wikipedia.org/wiki/Plummer\u2013Vinson_syndrome",
-            "en.wikipedia.org/wiki/Niemann\u2013Pick_disease,_type_C",
-            "en.wikipedia.org/wiki/Millard\u2013Gubler_syndrome",
-            "en.wikipedia.org/wiki/Letterer\u2013Siwe_disease",
-            "en.wikipedia.org/wiki/Kleine\u2013Levin_syndrome",
-            "en.wikipedia.org/wiki/Freeman\u2013Sheldon_syndrome",
-            "en.wikipedia.org/wiki/Weill\u2013Marchesani_syndrome",
-            "en.wikipedia.org/wiki/Pitt\u2013Hopkins_syndrome",
-            "en.wikipedia.org/wiki/Potocki\u2013Shaffer_syndrome",
-            "en.wikipedia.org/wiki/Kufor\u2013Rakeb_syndrome",
-            "en.wikipedia.org/wiki/Tonic\u2013clonic_seizure",
-            "en.wikipedia.org/wiki/Beckwith\u2013Wiedemann_syndrome",
-            "en.wikipedia.org/wiki/Aarskog\u2013Scott_syndrome",
-            "en.wikipedia.org/wiki/Bernard\u2013Soulier_syndrome",
-            "en.wikipedia.org/wiki/Brown-S\u00E9quard_syndrome",
-            "en.wikipedia.org/wiki/Birt\u2013Hogg\u2013Dub\u00E9_syndrome",
-            "en.wikipedia.org/wiki/Bardet\u2013Biedl_syndrome",
-            "en.wikipedia.org/wiki/Hand\u2013Sch\u00FCller\u2013Christian_disease",
-            "en.wikipedia.org/wiki/Bannayan\u2013Riley\u2013Ruvalcaba_syndrome",
-            "en.wikipedia.org/wiki/Zunich\u2013Kaye_syndrome",
-            "en.wikipedia.org/wiki/C\u0153ur_en_sabot",
-            "en.wikipedia.org/wiki/Zimmermann\u2013Laband_syndrome",
-            "en.wikipedia.org/wiki/Allan\u2013Herndon\u2013Dudley_syndrome",
-            "en.wikipedia.org/wiki/Arthrogryposis\u2013renal_dysfunction\u2013cholestasis_syndrome",
-            "en.wikipedia.org/wiki/Bart\u2013Pumphrey_syndrome",
-            "en.wikipedia.org/wiki/Johnson\u2013Munson_syndrome",
-            "en.wikipedia.org/wiki/Lymphedema\u2013distichiasis_syndrome",
-            "en.wikipedia.org/wiki/Charcot\u2013Marie\u2013Tooth_disease",
-            "en.wikipedia.org/wiki/Ch\u00E9diak\u2013Higashi_syndrome",
-            "en.wikipedia.org/wiki/Creutzfeldt\u2013Jakob_disease",
-            "en.wikipedia.org/wiki/Crigler\u2013Najjar_syndrome",
-            "en.wikipedia.org/wiki/Dubin\u2013Johnson_syndrome",
-            "en.wikipedia.org/wiki/Ellis\u2013van_Creveld_syndrome",
-            "en.wikipedia.org/wiki/Ehlers\u2013Danlos_syndrome",
-            "en.wikipedia.org/wiki/Emery\u2013Dreifuss_muscular_dystrophy",
-            "en.wikipedia.org/wiki/Caf\u00E9_au_lait_spot",
-            "en.wikipedia.org/wiki/Dejerine\u2013Sottas_disease",
-            "en.wikipedia.org/wiki/Buschke\u2013Ollendorff_syndrome",
-            "en.wikipedia.org/wiki/Cartilage\u2013hair_hypoplasia",
-            "en.wikipedia.org/wiki/DeSanctis\u2013Cacchione_syndrome",
-            "en.wikipedia.org/wiki/Ectrodactyly\u2013ectodermal_dysplasia\u2013cleft_syndrome",
-            "en.wikipedia.org/wiki/Lesch\u2013Nyhan_syndrome",
-            "en.wikipedia.org/wiki/Hermansky\u2013Pudlak_syndrome",
-            "en.wikipedia.org/wiki/Holt\u2013Oram_syndrome",
-            "en.wikipedia.org/wiki/Hailey\u2013Hailey_disease",
-            "en.wikipedia.org/wiki/Machado\u2013Joseph_disease",
-            "en.wikipedia.org/wiki/Lhermitte\u2013Duclos_disease",
-            "en.wikipedia.org/wiki/Keratitis\u2013ichthyosis\u2013deafness_syndrome",
-            "en.wikipedia.org/wiki/Haim\u2013Munk_syndrome",
-            "en.wikipedia.org/wiki/Hay\u2013Wells_syndrome",
-            "en.wikipedia.org/wiki/Limb\u2013mammary_syndrome",
-            "en.wikipedia.org/wiki/Loeys\u2013Dietz_syndrome",
-            "en.wikipedia.org/wiki/McCune\u2013Albright_syndrome",
-            "en.wikipedia.org/wiki/M\u00E9ni\u00E8re's_disease",
-            "en.wikipedia.org/wiki/Niemann\u2013Pick_disease",
-            "en.wikipedia.org/wiki/Obsessive\u2013compulsive_disorder",
-            "en.wikipedia.org/wiki/Peutz\u2013Jeghers_syndrome",
-            "en.wikipedia.org/wiki/Prader\u2013Willi_syndrome",
-            "en.wikipedia.org/wiki/Maroteaux\u2013Lamy_syndrome",
-            "en.wikipedia.org/wiki/Pelizaeus\u2013Merzbacher_disease",
-            "en.wikipedia.org/wiki/Muir\u2013Torre_syndrome",
-            "en.wikipedia.org/wiki/Nail\u2013patella_syndrome",
-            "en.wikipedia.org/wiki/Muckle\u2013Wells_syndrome",
-            "en.wikipedia.org/wiki/Papillon\u2013Lef\u00E8vre_syndrome",
-            "en.wikipedia.org/wiki/Mohr\u2013Tranebj\u00E6rg_syndrome",
-            "en.wikipedia.org/wiki/Neonatal_ichthyosis\u2013sclerosing_cholangitis_syndrome",
-            "en.wikipedia.org/wiki/Rubinstein\u2013Taybi_syndrome",
-            "en.wikipedia.org/wiki/Tay\u2013Sachs_disease",
-            "en.wikipedia.org/wiki/Wolff\u2013Parkinson\u2013White_syndrome",
-            "en.wikipedia.org/wiki/Rothmund\u2013Thomson_syndrome",
-            "en.wikipedia.org/wiki/Sj\u00F6gren\u2013Larsson_syndrome",
-            "en.wikipedia.org/wiki/Urbach\u2013Wiethe_disease",
-            "en.wikipedia.org/wiki/Wiskott\u2013Aldrich_syndrome",
-            "en.wikipedia.org/wiki/Von_Hippel\u2013Lindau_disease",
-            "en.wikipedia.org/wiki/Simpson\u2013Golabi\u2013Behmel_syndrome",
-            "en.wikipedia.org/wiki/Smith\u2013Magenis_syndrome",
-            "en.wikipedia.org/wiki/Rabson\u2013Mendenhall_syndrome",
-            "en.wikipedia.org/wiki/Townes\u2013Brocks_syndrome",
-            "en.wikipedia.org/wiki/Rapp\u2013Hodgkin_syndrome",
-            "en.wikipedia.org/wiki/Smith\u2013Fineman\u2013Myers_syndrome",
-            "en.wikipedia.org/wiki/Tricho\u2013rhino\u2013phalangeal_syndrome",
-            "en.wikipedia.org/wiki/Ulnar\u2013mammary_syndrome",
-            "en.wikipedia.org/wiki/Walker\u2013Warburg_syndrome",
-            "en.wikipedia.org/wiki/P\u00E9brine",
-            "en.wikipedia.org/wiki/Upshaw\u2013Schulman_syndrome",
-            "en.wikipedia.org/wiki/Kearns\u2013Sayre_syndrome",
-            "en.wikipedia.org/wiki/K\u00F6hler_disease",
-            "en.wikipedia.org/wiki/Yim\u2013Ebbin_syndrome",
-            "en.wikipedia.org/wiki/Persistent_M\u00FCllerian_duct_syndrome",
-            "en.wikipedia.org/wiki/Howel\u2013Evans_syndrome",
-            "en.wikipedia.org/wiki/Cranio\u2013lenticulo\u2013sutural_dysplasia",
-            "en.wikipedia.org/wiki/Lujan\u2013Fryns_syndrome",
-            "en.wikipedia.org/wiki/Bazex\u2013Dupr\u00E9\u2013Christol_syndrome",
-            "en.wikipedia.org/wiki/Coffin\u2013Siris_syndrome",
-            "en.wikipedia.org/wiki/Albinism\u2013deafness_syndrome",
-            "en.wikipedia.org/wiki/Microphthalmia\u2013dermal_aplasia\u2013sclerocornea_syndrome",
-            "en.wikipedia.org/wiki/Acro\u2013dermato\u2013ungual\u2013lacrimal\u2013tooth_syndrome",
-            "en.wikipedia.org/wiki/Craniosynostosis\u2013anal_anomalies\u2013porokeratosis_syndrome",
-            "en.wikipedia.org/wiki/Gougerot\u2013Blum_syndrome",
-            "en.wikipedia.org/wiki/Raymond_C\u00E9stan_syndrome",
-            "en.wikipedia.org/wiki/Waldenstr\u00F6m_hyperglobulinemic_purpura",
-            "en.wikipedia.org/wiki/Cruveilhier\u2013Baumgarten_disease",
-            "en.wikipedia.org/wiki/Budd\u2013Chiari_syndrome",
-            "en.wikipedia.org/wiki/L\u00F6ffler's_syndrome",
-            "en.wikipedia.org/wiki/Osgood\u2013Schlatter_disease",
-            "en.wikipedia.org/wiki/Fox\u2013Fordyce_disease",
-            "en.wikipedia.org/wiki/Lennox\u2013Gastaut_syndrome",
-            "en.wikipedia.org/wiki/Camurati\u2013Engelmann_disease",
-            "en.wikipedia.org/wiki/Langer\u2013Giedion_syndrome",
-            "en.wikipedia.org/wiki/Kayser\u2013Fleischer_ring",
-            "en.wikipedia.org/wiki/Sturge\u2013Weber_syndrome",
-            "en.wikipedia.org/wiki/Zollinger\u2013Ellison_syndrome",
-            "en.wikipedia.org/wiki/Irregular_sleep\u2013wake_rhythm",
-            "en.wikipedia.org/wiki/Crimean\u2013Congo_hemorrhagic_fever",
-            "en.wikipedia.org/wiki/Smith\u2013Lemli\u2013Opitz_syndrome",
-            "en.wikipedia.org/wiki/Fazio\u2013Londe_disease",
-            "en.wikipedia.org/wiki/Kl\u00FCver\u2013Bucy_syndrome",
-            "en.wikipedia.org/wiki/Saethre\u2013Chotzen_syndrome",
-            "en.wikipedia.org/wiki/Sch\u00F6pf\u2013Schulz\u2013Passarge_syndrome",
-            "en.wikipedia.org/wiki/Weissenbacher\u2013Zweym\u00FCller_syndrome",
-            "en.wikipedia.org/wiki/Fitzsimmons\u2013Guilbert_syndrome",
-            "en.wikipedia.org/wiki/Adams\u2013Oliver_syndrome",
-            "en.wikipedia.org/wiki/Stevens\u2013Johnson_syndrome",
-            "en.wikipedia.org/wiki/Lambert\u2013Eaton_myasthenic_syndrome",
-            "en.wikipedia.org/wiki/Kapur\u2013Toriello_syndrome",
-            "en.wikipedia.org/wiki/Goldberg\u2013Shprintzen_syndrome",
-            "en.wikipedia.org/wiki/Keppen\u2013Lubinsky_syndrome",
-            "en.wikipedia.org/wiki/Foix\u2013Alajouanine_syndrome",
-            "en.wikipedia.org/wiki/Jaffe\u2013Campanacci_syndrome",
-            "en.wikipedia.org/wiki/Killian\u2013Jamieson_diverticulum",
-            "en.wikipedia.org/wiki/Klippel\u2013Tr\u00E9naunay_syndrome",
-            "en.wikipedia.org/wiki/Abderhalden\u2013Kaufmann\u2013Lignac_syndrome",
-            "en.wikipedia.org/wiki/Wende\u2013Bauckus_syndrome",
-            "en.wikipedia.org/wiki/Doege\u2013Potter_syndrome",
-            "en.wikipedia.org/wiki/Mallory\u2013Weiss_syndrome",
-            "en.wikipedia.org/wiki/S\u00E9zary_disease",
-            "en.wikipedia.org/wiki/Salter\u2013Harris_fracture",
-            "en.wikipedia.org/wiki/Swyer\u2013James_syndrome",
-            "en.wikipedia.org/wiki/Sex_cord\u2013gonadal_stromal_tumour",
-            "en.wikipedia.org/wiki/Sakati\u2013Nyhan\u2013Tisdale_syndrome",
-            "en.wikipedia.org/wiki/Abdallat\u2013Davis\u2013Farrage_syndrome",
-            "en.wikipedia.org/wiki/Mixed_M\u00FCllerian_tumor",
-            "en.wikipedia.org/wiki/Shwachman\u2013Diamond_syndrome",
-            "en.wikipedia.org/wiki/Pallister\u2013Hall_syndrome",
-            "en.wikipedia.org/wiki/Acid\u2013base_imbalance",
-            "en.wikipedia.org/wiki/Wilson\u2013Mikity_syndrome",
-            "en.wikipedia.org/wiki/May\u2013Thurner_syndrome",
-            "en.wikipedia.org/wiki/Favre\u2013Racouchot_syndrome",
-            "en.wikipedia.org/wiki/Oliver\u2013McFarlane_syndrome",
-            "en.wikipedia.org/wiki/Wallis\u2013Zieff\u2013Goldblatt_syndrome",
-            "en.wikipedia.org/wiki/Schinzel\u2013Giedion_syndrome",
-            "en.wikipedia.org/wiki/Donnai\u2013Barrow_syndrome",
-            "en.wikipedia.org/wiki/Odonto\u2013tricho\u2013ungual\u2013digital\u2013palmar_syndrome",
-            "en.wikipedia.org/wiki/Senior\u2013L\u00F8ken_syndrome",
-            "en.wikipedia.org/wiki/Silver\u2013Russell_syndrome",
-            "en.wikipedia.org/wiki/Churg\u2013Strauss_syndrome",
-            "en.wikipedia.org/wiki/Johanson\u2013Blizzard_syndrome",
-            "en.wikipedia.org/wiki/Rokitansky\u2013Aschoff_sinuses",
-            "en.wikipedia.org/wiki/Young\u2013Simpson_syndrome",
-            "en.wikipedia.org/wiki/Yush\u014D_disease",
-            "en.wikipedia.org/wiki/Bogart\u2013Bacall_syndrome",
-            "en.wikipedia.org/wiki/Niemann\u2013Pick_disease,_SMPD1-associated",
-            "en.wikipedia.org/wiki/Wolf\u2013Hirschhorn_syndrome",
-            "en.wikipedia.org/wiki/Gerstmann\u2013Str\u00E4ussler\u2013Scheinker_syndrome",
-            "en.wikipedia.org/wiki/Laurence\u2013Moon_syndrome",
-            "en.wikipedia.org/wiki/M\u00E9n\u00E9trier's_disease",
-            "en.wikipedia.org/wiki/Epstein\u2013Barr_virus_infection",
-            "en.wikipedia.org/wiki/Marinesco\u2013Sj\u00F6gren_syndrome",
-            "en.wikipedia.org/wiki/Hajdu\u2013Cheney_syndrome",
-            "en.wikipedia.org/wiki/Barraquer\u2013Simons_syndrome",
-            "en.wikipedia.org/wiki/Yunis\u2013Varon_syndrome",
-            "en.wikipedia.org/wiki/Jarisch\u2013Herxheimer_reaction",
-            "en.wikipedia.org/wiki/Jackson\u2013Weiss_syndrome",
-            "en.wikipedia.org/wiki/Sack\u2013Barabas_syndrome",
-            "en.wikipedia.org/wiki/L\u00F6fgren_syndrome",
-            "en.wikipedia.org/wiki/Bhaskar\u2013Jagannathan_syndrome",
-            "en.wikipedia.org/wiki/Erdheim\u2013Chester_disease",
-            "en.wikipedia.org/wiki/Roussy\u2013L\u00E9vy_syndrome",
-            "en.wikipedia.org/wiki/Kohlsch\u00FCtter-T\u00F6nz_syndrome",
-            "en.wikipedia.org/wiki/Aicardi\u2013Gouti\u00E8res_syndrome",
-            "en.wikipedia.org/wiki/Hagemoser\u2013Weinstein\u2013Bresnick_syndrome",
-            "en.wikipedia.org/wiki/Wiedemann\u2013Rautenstrauch_syndrome",
-            "en.wikipedia.org/wiki/Leukotriene_receptor_antagonist-associated_Churg\u2013Strauss_syndrome",
-            "en.wikipedia.org/wiki/Babinski\u2013Nageotte_syndrome",
-            "en.wikipedia.org/wiki/Rosai\u2013Dorfman_disease",
-            "en.wikipedia.org/wiki/Lightwood\u2013Albright_syndrome",
-            "en.wikipedia.org/wiki/Melnick\u2013Needles_syndrome",
-            "en.wikipedia.org/wiki/Marshall\u2013Smith_syndrome",
-            "en.wikipedia.org/wiki/Lenz\u2013Majewski_syndrome",
-            "en.wikipedia.org/wiki/Deficiency_of_the_interleukin-1\u2013receptor_antagonist",
-            "en.wikipedia.org/wiki/Reis\u2013Bucklers_corneal_dystrophy",
-            "en.wikipedia.org/wiki/McKusick\u2013Kaufman_syndrome",
-            "en.wikipedia.org/wiki/Scalp\u2013ear\u2013nipple_syndrome",
-            "en.wikipedia.org/wiki/Wilson\u2013Turner_syndrome",
-            "en.wikipedia.org/wiki/Hypotrichosis\u2013lymphedema\u2013telangiectasia_syndrome",
-            "en.wikipedia.org/wiki/Floating\u2013Harbor_syndrome",
-            "en.wikipedia.org/wiki/Foster\u2013Kennedy_syndrome",
-            "en.wikipedia.org/wiki/Villaret\u2019s_syndrome",
-            "en.wikipedia.org/wiki/Non-mycosis_fungoides_CD30\u2212_cutaneous_large_T-cell_lymphoma",
-            "en.wikipedia.org/wiki/Riga\u2013Fede_disease"};
-
     /** Validaciones */
-    public static final String SEMANTIC_TYPES[] = { "sosy", "diap", "dsyn", "fndg", "lbpr", "lbtr" };
+//    public static final String SEMANTIC_TYPES[] = { "sosy", "diap", "dsyn", "fndg", "lbpr", "lbtr" };
     public static final List<String> SEMANTIC_TYPES_LIST = new ArrayList<String>(){{
         add("sosy");
         add("diap");
@@ -324,11 +74,15 @@ public class Constants {
         add("mobd");
         add("patf");
 
-        add("fngs");
+//        add("fngs"); encuentra familias de hongos, eliminar
         add("cgab");//para encontrar Coma
 
         add("cgab");
         add("clna");
+
+        add("qlco");
+        add("hcpp");
+
     }};
 
 
@@ -366,9 +120,12 @@ public class Constants {
     public static final String HTML_TR = "tr";
     public static final String HTML_TH = "th";
     public static final String HTML_TD = "td";
-    public static final String HTML_LI = "li";
     public static final String HTML_UL = "ul";
     public static final String HTML_OL = "ol";
+    public static final String HTML_DL = "dl";
+    public static final String HTML_LI = "li";
+    public static final String HTML_DT = "dt";
+    public static final String HTML_DD = "dd";
     public static final String HTML_IMG = "img";
     public static final String HTML_ALT = "alt";
     public static final String HTML_A = "a";
@@ -381,6 +138,18 @@ public class Constants {
     public static final String TEXT = "text";
     public static final String HTML_TABLE = "table";
 
+    public static final List<String> HTML_LIST_TAG_PARENTS_LIST_TAG = new ArrayList<String>(){{
+        add("ul");
+        add("ol");
+        add("dl");
+    }};
+
+    public static final List<String> HTML_LIST_TAG_CHILD_LIST_TAG = new ArrayList<String>(){{
+        add("li");
+        add("dt");
+        add("dd");
+    }};
+
     /** CONSULTAS BIBLIOTECA JSOUP */
     public static final String QUERY_A_HREF = "a[href]";
     public static final String QUERY_A_CLASS = "a[class=";
@@ -392,10 +161,9 @@ public class Constants {
     public static final String QUERY_TD_STYLE_TEXT_ALIGN_CENTER = "td[style=text-align:center]";
 
 
-    /** Ruta del archivo XML source */
-    public static final String XML_SOURCE_FILE = "src/main/resources/parameters/sources.xml";
-    public static final String TXT_FILE = "src/main/resources/parameters/texts.txt";
-    public static final String TXT_CONCEPT_FILE = "src/main/resources/parameters/concept.txt";
+    /** Ruta del archivo XML de configuracion */
+    public static final String XML_CONFIG_FOLDER = "parameters/";
+    public static final String XML_CONFIG_FILE = "sources";
 
 
     /** Constantes para leer XML */
@@ -430,9 +198,15 @@ public class Constants {
     /**
      * Constantes para la validación de conceptos (metamap y proceso de validación de terminos)
      */
+    public static final String METAMAP_FOLDER = "tmp/mm/";
+    public static final String METAMAP_FILE_NAME = "_metamap_filter";
+    public static final String TVP_RETRIEVAL_HISTORY_FOLDER = "tmp/tvp/";
+    public static final String TVP_RETRIEVAL_FILE_NAME = "_tvp_validation";
+    public static final String PM_RETRIEVAL_DOCUMENT_FILE_NAME = "_document_pubmed_retrieval";
+    public static final String PM_RETRIEVAL_DISEASE_LIST_FILE_NAME = "_disease_list_pubmed_retrieval";
 
     public static final String CONSULT_SOURCE_ALL = "all";
-    public static final String CONSULT_VERSION_LAST = "last";
+    public static final String CONSULT_LAST_SNAPSHOT = "last";
 
     /**
      * Fecha por default
