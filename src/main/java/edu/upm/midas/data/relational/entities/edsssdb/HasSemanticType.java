@@ -1,6 +1,12 @@
 package edu.upm.midas.data.relational.entities.edsssdb;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
+
+
 
 /**
  * Created by gerardo on 20/07/2017.
@@ -13,6 +19,29 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "has_semantic_type", schema = "edsssdb", catalog = "")
+@XmlRootElement
+@NamedQueries({
+        @NamedQuery(name = "HasSemanticType.findAll", query = "SELECT h FROM HasSemanticType h")
+        , @NamedQuery(name = "HasSemanticType.findById", query = "SELECT h FROM HasSemanticType h WHERE h.cui = :cui AND h.semanticType = :semanticType")
+        , @NamedQuery(name = "HasSemanticType.findByCui", query = "SELECT h FROM HasSemanticType h WHERE h.cui = :cui")
+        , @NamedQuery(name = "HasSemanticType.findBySemanticType", query = "SELECT h FROM HasSemanticType h WHERE h.semanticType = :semanticType")
+
+})
+
+@SqlResultSetMappings({
+        @SqlResultSetMapping(
+                name = "HasSemanticTypeMapping",
+                entities = @EntityResult(
+                        entityClass = HasSemanticType.class,
+                        fields = {
+                                @FieldResult(name = "cui", column = "cui"),
+                                @FieldResult(name = "semantic_type", column = "semanticType")
+                        }
+                )
+        )
+})
+
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="HasSemanticTypePK")
 @IdClass(HasSemanticTypePK.class)
 public class HasSemanticType {
     private String cui;

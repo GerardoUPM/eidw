@@ -118,7 +118,7 @@ public class DiseaseHelperNative {
 //            System.out.println("Match with DISNET Disease: "+ diseaseEntity.getDiseaseId() +" | "+ diseaseEntity.getName());
             //System.out.println("HasDisease: "+ documentId + " | " + version + " | " + diseaseEntity.getDiseaseId() );
             //inserta la relacion entre disease y document
-            HasDisease existHasDisease = hasDiseaseService.findById(new HasDiseasePK(documentId, utilDate.convertSQLDateToUtilDate(version), diseaseEntity.getDiseaseId()));
+            HasDisease existHasDisease = hasDiseaseService.findById(new HasDiseasePK(documentId, utilDate.convertUtilDateToSQLDate(version), diseaseEntity.getDiseaseId()));
             if (existHasDisease==null) {
                 diseaseService.insertNativeHasDisease(documentId, version, diseaseEntity.getDiseaseId());
             }

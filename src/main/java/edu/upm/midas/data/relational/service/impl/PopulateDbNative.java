@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.upm.midas.constants.Constants;
 import edu.upm.midas.data.extraction.album.diseaseAlbumApiResponse.DiseaseAlbumResourceService;
+import edu.upm.midas.data.extraction.album.model.request.RequestAlbum;
 import edu.upm.midas.data.extraction.album.model.request.RequestFather;
 import edu.upm.midas.data.extraction.album.model.request.RequestGDLL;
 import edu.upm.midas.data.extraction.album.model.response.Album;
@@ -247,13 +248,16 @@ public class PopulateDbNative {
     }
 
 
-    public Album getAlbum(){
-        RequestFather request = new RequestFather();
+    public Album getSpacifictAlbum(String snapshot){
+        RequestAlbum request = new RequestAlbum();
         Album album = null;
+        request.setSource(Constants.SOURCE_WIKIPEDIA);
+        request.setSnapshot(snapshot);
         request.setToken(Constants.TOKEN);
         System.out.println("Start Connection_ with GET DISEASE ALBUM API REST...");
         System.out.println("Get Album Information... please wait, this process can take from minutes... ");
-        ResponseLA response = diseaseAlbumResource.getDiseaseAlbum(request);System.out.println(response.getAlbum().getAlbumId());
+        ResponseLA response = diseaseAlbumResource.getSpecificAlbum(request);
+        System.out.println(response.getAlbum());
         System.out.println("Authorization: "+ response.isAuthorized());
         System.out.println("End Connection_ with GET DISEASE ALBUM API REST...");
         if (response.isAuthorized())
@@ -262,10 +266,33 @@ public class PopulateDbNative {
     }
 
 
-    public List<XmlLink> getDiseaseLinkListFromDBPedia(Date version){
-        List<XmlLink> xmlLinkList = null;
+    public Album getLastAlbum(){
+        RequestFather request = new RequestFather();
+        Album album = null;
+        request.setToken(Constants.TOKEN);
+        System.out.println("Start Connection_ with GET DISEASE ALBUM API REST...");
+        System.out.println("Get Album Information... please wait, this process can take from minutes... ");
+        ResponseLA response = diseaseAlbumResource.getDiseaseAlbum(request);
+        System.out.println(response.getAlbum());
+        System.out.println("Authorization: "+ response.isAuthorized());
+        System.out.println("End Connection_ with GET DISEASE ALBUM API REST...");
+        if (response.isAuthorized())
+            album = response.getAlbum();
+        return album;
+    }
 
-        Album album = getAlbum();
+
+    public List<XmlLink> getDiseaseLinkListFromDBPedia(Date version) throws InterruptedException {
+        List<XmlLink> xmlLinkList = null;
+        Album album = null;
+        while(true){
+            album = getLastAlbum();
+//            album = getSpacifictAlbum(date.dateFormatyyyMMdd(version));
+            if (date.dateFormatyyyMMdd(album.getDate()).equals(date.dateFormatyyyMMdd(version))) break;
+            System.out.println("Wait (1 hour = 3600000 mls) another disease list request");
+            Thread.sleep(3600000);
+        }
+
         if (album != null) {
             xmlLinkList = new ArrayList<>();
             System.out.println("Start Connection_ with GET DISEASE ALBUM API REST...");
@@ -273,7 +300,7 @@ public class PopulateDbNative {
             RequestGDLL request = new RequestGDLL();
             request.setSource(Constants.SOURCE_WIKIPEDIA);
             request.setAlbum(album.getAlbumId());
-            request.setVersion(new SimpleDateFormat("yyyy-MM-dd").format(album.getDate()));
+            request.setSnapshot(new SimpleDateFormat("yyyy-MM-dd").format(album.getDate()));
             request.setToken(Constants.TOKEN);
             System.out.println("request: " + request);
             ResponseGDLL response = diseaseAlbumResource.getDiseaseLinkList(request);
@@ -305,7 +332,7 @@ public class PopulateDbNative {
                 //Insertar la configuración por la que se esta creando la lista
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 String configurationJson = gson.toJson(conf);
-                //confHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_DIALIST_CODE + " - " + constants.SERVICE_DIALIST_NAME, configurationJson);
+                confHelper.insert(Constants.SOURCE_WIKIPEDIA, version, constants.SERVICE_DIALIST_CODE + " - " + constants.SERVICE_DIALIST_NAME, configurationJson);
             }
         }
         return xmlLinkList;

@@ -2,7 +2,7 @@ package edu.upm.midas.data.validation.metamap.metamapApiResponse.impl;
 //import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import edu.upm.midas.data.validation.metamap.client.MetamapClient;
 import edu.upm.midas.data.validation.metamap.metamapApiResponse.MetamapResourceService;
-import edu.upm.midas.data.validation.metamap.model.receiver.Request;
+import edu.upm.midas.data.validation.metamap.model.request.Request;
 import edu.upm.midas.data.validation.metamap.model.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

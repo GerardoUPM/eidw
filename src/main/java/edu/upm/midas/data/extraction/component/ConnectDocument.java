@@ -1,4 +1,4 @@
-package edu.upm.midas.data.extraction.service;
+package edu.upm.midas.data.extraction.component;
 
 import edu.upm.midas.constants.Constants;
 import edu.upm.midas.data.extraction.model.Connection_;

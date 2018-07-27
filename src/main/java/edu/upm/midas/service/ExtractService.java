@@ -36,6 +36,7 @@ public class ExtractService {
         List<XmlLink> externalDiseaseLinkList = populateDbNative.getDiseaseLinkListFromDBPedia(version);
 
         if (externalDiseaseLinkList!=null) {
+//            System.out.println("No insert");
             populateDbNative.populateResource(externalDiseaseLinkList);
             populateDbNative.populateSemanticTypes();
             populateDbNative.populate(externalDiseaseLinkList, version);

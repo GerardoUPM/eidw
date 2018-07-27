@@ -1,4 +1,4 @@
-package edu.upm.midas.data.extraction.xml.service;
+package edu.upm.midas.data.extraction.component;
 
 import edu.upm.midas.constants.Constants;
 import edu.upm.midas.data.extraction.xml.model.XmlHighlight;

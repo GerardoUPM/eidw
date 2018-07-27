@@ -110,19 +110,19 @@ public class TvpService {
                 //MatchNLP matchNLP = exist(symptom.getCui(), response.getValidatedConcepts());//antes matchNLPList
                 if (matchNLP.hasMatches()) {
                     System.out.println(validatedSymptoms +" to "+response.getValidatedConcepts().size()+" Symptom validated! | " + matchNLP.getConcept().getCui() + "==" + matchNLP.getConcept().toString());
-//                    hasSymptomService.updateValidatedNative(consult.getSnapshot(), sourceId, matchNLP.getConcept().getCui(), true);
-                    fileWriter.write("UPDATE has_symptom h " +
-                            "SET h.validated = 1 " +
-                            "WHERE h.text_id LIKE '%"+consult.getSnapshot()+"%' " +
-                            "AND h.text_id LIKE '%"+sourceId+"%' " +
-                            "AND h.cui = '"+matchNLP.getConcept().getCui()+"';\n");
+                    hasSymptomService.updateValidatedNative(consult.getSnapshot(), sourceId, matchNLP.getConcept().getCui(), true);
+//                    fileWriter.write("UPDATE has_symptom h " +
+//                            "SET h.validated = 1 " +
+//                            "WHERE h.text_id LIKE '%"+consult.getSnapshot()+"%' " +
+//                            "AND h.text_id LIKE '%"+sourceId+"%' " +
+//                            "AND h.cui = '"+matchNLP.getConcept().getCui()+"';\n");
                     validatedSymptoms++;
                     System.out.println("Update symptom in DB ready!");
                 } else {
                     System.out.println("Symptom not found:" + matchNLP.getConcept().getCui());
                 }
             }
-            fileWriter.close();
+//            fileWriter.close();
             System.out.println("Start insert configuration...");
             tvpConfiguration.setValidatedNonRepetedTerms(validatedSymptoms);
             String configurationJson = gson.toJson(tvpConfiguration);

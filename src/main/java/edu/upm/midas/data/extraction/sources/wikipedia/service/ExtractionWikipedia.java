@@ -5,8 +5,8 @@ import edu.upm.midas.data.extraction.model.*;
 import edu.upm.midas.data.extraction.model.code.Code;
 import edu.upm.midas.data.extraction.model.code.Resource;
 import edu.upm.midas.data.extraction.model.text.*;
-import edu.upm.midas.data.extraction.service.ConnectDocument;
-import edu.upm.midas.data.extraction.service.LoadSource;
+import edu.upm.midas.data.extraction.component.ConnectDocument;
+import edu.upm.midas.data.extraction.component.LoadSource;
 import edu.upm.midas.data.extraction.xml.model.XmlHighlight;
 import edu.upm.midas.data.extraction.xml.model.XmlLink;
 import edu.upm.midas.data.extraction.xml.model.XmlSection;
@@ -276,7 +276,7 @@ public class ExtractionWikipedia {
                                         //</editor-fold>
                                         //Extrae el texto si es una etiqueta <ul> o <ol>
                                         //Actualización para extraer <dl>
-                                    } else if (verifyElementIsAKindOfList(nextElementBro.tagName())) {//&& !nextElementBro.text().isEmpty()
+                                    } else if (isElementIsATypeOfList(nextElementBro.tagName())) {//&& !nextElementBro.text().isEmpty()
                                         //<editor-fold desc="EXTRAE TEXTO DE UN PARRAFO Y LO ALMACENA EN UN OBJETO LIST_">
                                         // Guarda la información extraida de una lista wikipedia en un objeto
                                         list_ = setList_Data(nextElementBro, countText, title);
@@ -369,7 +369,7 @@ public class ExtractionWikipedia {
      * @param tagName
      * @return
      */
-    public boolean verifyElementIsAKindOfList(String tagName){
+    public boolean isElementIsATypeOfList(String tagName){
         boolean res = false;
         for (String listElement: Constants.HTML_LIST_TAG_PARENTS_LIST_TAG){
             res = tagName.equals(listElement);
@@ -379,6 +379,15 @@ public class ExtractionWikipedia {
     }
 
 
+    /**
+     * @param element
+     * @param isText
+     * @param list_
+     * @param countText
+     * @param title
+     * @param textList
+     * @return
+     */
     public boolean verifyList(Element element, boolean isText, List_ list_, int countText, String title, List<Text> textList){
         boolean res = false;
         Elements luChildrens = element.children();//System.out.println(element.toString() +" - " + nextElementBro.toString());
@@ -396,6 +405,15 @@ public class ExtractionWikipedia {
     }
 
 
+    /**
+     * @param element
+     * @param isText
+     * @param list_
+     * @param countText
+     * @param title
+     * @param textList
+     * @return
+     */
     public boolean verifyExistList(Element element, boolean isText, List_ list_, int countText, String title, List<Text> textList){
         boolean res = false;
         if (element.tagName() == Constants.HTML_UL || element.tagName() == Constants.HTML_OL) {//&& !nextElementBro.text().isEmpty()
@@ -515,14 +533,14 @@ public class ExtractionWikipedia {
                             boolean hasValidSection = false;
 
                             // Se obtienen los elemtos <tr> (filas) de la tabla con class=infobox
-                            Elements rowElements = infobox.select(Constants.HTML_TR);
+                            Elements rowElements = infobox.select(Constants.HTML_TABLE_TR);
 
                             //<editor-fold desc="RECORRIDO DE LAS FILAS DE LA TABLA INFOBOX">
                             for (Element row: rowElements) {
 
                             /* Se almecenan por cada fila <tr> el valor llave <th> y su valor <td> */
-                                Elements thElements = row.select(Constants.HTML_TH);
-                                Elements tdElements = row.select(Constants.HTML_TD);
+                                Elements thElements = row.select(Constants.HTML_TABLE_TH);
+                                Elements tdElements = row.select(Constants.HTML_TABLE_TD);
                                 Elements liElements_ = row.select(Constants.HTML_LI);
                                 Elements divElements = row.select(Constants.HTML_DIV);
 
@@ -771,14 +789,14 @@ public class ExtractionWikipedia {
             boolean hasValidSection = false;
 
             // Se obtienen los elemtos <tr> (filas) de la tabla con class=infobox
-            Elements rowElements = infobox.select(Constants.HTML_TR);
+            Elements rowElements = infobox.select(Constants.HTML_TABLE_TR);
 
             //<editor-fold desc="RECORRIDO DE LAS FILAS DE LA TABLA INFOBOX">
             for (Element row: rowElements) {
 
                         /* Se almecenan por cada fila <tr> el valor llave <th> y su valor <td> */
-                Elements thElements = row.select(Constants.HTML_TH);
-                Elements tdElements = row.select(Constants.HTML_TD);
+                Elements thElements = row.select(Constants.HTML_TABLE_TH);
+                Elements tdElements = row.select(Constants.HTML_TABLE_TD);
                 Elements liElements_ = row.select(Constants.HTML_LI);
                 Elements divElements = row.select(Constants.HTML_DIV);
 
@@ -1122,14 +1140,15 @@ public class ExtractionWikipedia {
         return list_;
     }
 
+
     public Table extractWikitableTexts(Elements trElements, int countText, String title){
         Table table = null;
         String head = "";
         String body = "";
 
         for (Element tr : trElements) {
-            Elements tds = tr.getElementsByTag("td");
-            Elements ths = tr.getElementsByTag("th");
+            Elements tds = tr.getElementsByTag(Constants.HTML_TABLE_TD);
+            Elements ths = tr.getElementsByTag(Constants.HTML_TABLE_TH);
             for (Element th_: ths) {
                 head += th_.text() + " ";
                 //System.out.println("th: " + th_.text());

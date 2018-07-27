@@ -7,8 +7,8 @@ import edu.upm.midas.data.extraction.model.code.Resource;
 import edu.upm.midas.data.extraction.model.text.List_;
 import edu.upm.midas.data.extraction.model.text.Paragraph;
 import edu.upm.midas.data.extraction.model.text.Text;
-import edu.upm.midas.data.extraction.service.ConnectDocument;
-import edu.upm.midas.data.extraction.service.LoadSource;
+import edu.upm.midas.data.extraction.component.ConnectDocument;
+import edu.upm.midas.data.extraction.component.LoadSource;
 import edu.upm.midas.data.extraction.xml.model.XmlHighlight;
 import edu.upm.midas.data.extraction.xml.model.XmlLink;
 import edu.upm.midas.data.extraction.xml.model.XmlSection;
@@ -424,14 +424,14 @@ public class ExtractionWikipediaThreads {
                             boolean hasValidSection = false;
 
                             // Se obtienen los elemtos <tr> (filas) de la tabla con class=infobox
-                            Elements rowElements = infobox.select(Constants.HTML_TR);
+                            Elements rowElements = infobox.select(Constants.HTML_TABLE_TR);
 
                             //<editor-fold desc="RECORRIDO DE LAS FILAS DE LA TABLA INFOBOX">
                             for (Element row: rowElements) {
 
                         /* Se almecenan por cada fila <tr> el valor llave <th> y su valor <td> */
-                                Elements thElements = row.select(Constants.HTML_TH);
-                                Elements tdElements = row.select(Constants.HTML_TD);
+                                Elements thElements = row.select(Constants.HTML_TABLE_TH);
+                                Elements tdElements = row.select(Constants.HTML_TABLE_TD);
                                 Elements liElements_ = row.select(Constants.HTML_LI);
                                 Elements divElements = row.select(Constants.HTML_DIV);
 
@@ -670,14 +670,14 @@ public class ExtractionWikipediaThreads {
             boolean hasValidSection = false;
 
             // Se obtienen los elemtos <tr> (filas) de la tabla con class=infobox
-            Elements rowElements = infobox.select(Constants.HTML_TR);
+            Elements rowElements = infobox.select(Constants.HTML_TABLE_TR);
 
             //<editor-fold desc="RECORRIDO DE LAS FILAS DE LA TABLA INFOBOX">
             for (Element row: rowElements) {
 
                         /* Se almecenan por cada fila <tr> el valor llave <th> y su valor <td> */
-                Elements thElements = row.select(Constants.HTML_TH);
-                Elements tdElements = row.select(Constants.HTML_TD);
+                Elements thElements = row.select(Constants.HTML_TABLE_TH);
+                Elements tdElements = row.select(Constants.HTML_TABLE_TD);
                 Elements liElements_ = row.select(Constants.HTML_LI);
                 Elements divElements = row.select(Constants.HTML_DIV);
 

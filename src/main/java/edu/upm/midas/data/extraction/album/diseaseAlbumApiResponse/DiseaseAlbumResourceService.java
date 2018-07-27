@@ -1,4 +1,5 @@
 package edu.upm.midas.data.extraction.album.diseaseAlbumApiResponse;
+import edu.upm.midas.data.extraction.album.model.request.RequestAlbum;
 import edu.upm.midas.data.extraction.album.model.request.RequestFather;
 import edu.upm.midas.data.extraction.album.model.request.RequestGDLL;
 import edu.upm.midas.data.extraction.album.model.response.ResponseGDLL;
@@ -18,5 +19,7 @@ public interface DiseaseAlbumResourceService {
     ResponseLA getDiseaseAlbum(RequestFather request);
 
     ResponseGDLL getDiseaseLinkList(RequestGDLL request);
+
+    ResponseLA getSpecificAlbum(RequestAlbum request);
 
 }

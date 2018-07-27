@@ -1,7 +1,7 @@
 package edu.upm.midas.data.validation.metamap.model.response;
 
 
-import edu.upm.midas.data.validation.metamap.model.receiver.Configuration;
+import edu.upm.midas.data.validation.metamap.model.request.Configuration;
 
 import java.util.List;
 

@@ -1,5 +1,5 @@
 package edu.upm.midas.data.validation.metamap.metamapApiResponse;
-import edu.upm.midas.data.validation.metamap.model.receiver.Request;
+import edu.upm.midas.data.validation.metamap.model.request.Request;
 import edu.upm.midas.data.validation.metamap.model.response.Response;
 
 /**

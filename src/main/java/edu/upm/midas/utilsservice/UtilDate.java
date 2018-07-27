@@ -24,7 +24,7 @@ public class UtilDate {
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public Date getSqlDate(){
-        //return new Date(118, 4, 15);
+//        return new Date(118, 6, 15);
         return new Date(new java.util.Date().getTime());
     }
 
@@ -49,9 +49,14 @@ public class UtilDate {
         return new SimpleDateFormat("yyyy-MM-dd").parse(date);
     }
 
-    public java.sql.Date convertSQLDateToUtilDate(java.util.Date date){
+    public java.sql.Date convertUtilDateToSQLDate(java.util.Date date){
         java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());
         return sqlStartDate;
+    }
+
+    public java.util.Date convertSQLDateToUtilDate(java.sql.Date date){
+        java.util.Date utilDate = new java.util.Date(String.valueOf(date));
+        return utilDate;
     }
 
 }

@@ -77,11 +77,21 @@ public class Constants {
 //        add("fngs"); encuentra familias de hongos, eliminar
         add("cgab");//para encontrar Coma
 
-        add("cgab");
-        add("clna");
+        //add("clna");
 
-        add("qlco");
-        add("hcpp");
+        //add("qlco"); elminar porque es muy ambiguo
+
+        //add("hcpp");
+
+        //test
+        //add("qnco"); no se agrega por ambiguo
+        //add("neop");
+        //add("npop"); no se agrega por ambiguo
+        //add("inpo");
+
+        //add("comd");
+        //add("emod"); nose agrega
+
 
     }};
 
@@ -117,9 +127,6 @@ public class Constants {
     public static final String HTML_H3 = "h3";
     public static final String HTML_H4 = "h4";
     public static final String HTML_DIV = "div";
-    public static final String HTML_TR = "tr";
-    public static final String HTML_TH = "th";
-    public static final String HTML_TD = "td";
     public static final String HTML_UL = "ul";
     public static final String HTML_OL = "ol";
     public static final String HTML_DL = "dl";
@@ -137,6 +144,9 @@ public class Constants {
     public static final String LIST = "list";
     public static final String TEXT = "text";
     public static final String HTML_TABLE = "table";
+    public static final String HTML_TABLE_TR = "tr";
+    public static final String HTML_TABLE_TH = "th";
+    public static final String HTML_TABLE_TD = "td";
 
     public static final List<String> HTML_LIST_TAG_PARENTS_LIST_TAG = new ArrayList<String>(){{
         add("ul");

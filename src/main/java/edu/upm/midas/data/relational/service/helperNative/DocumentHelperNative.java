@@ -85,8 +85,8 @@ public class DocumentHelperNative {
     @Transactional
     public String insertPubMedArticles(String sourceId, Doc document, Date version) throws JsonProcessingException {
         String documentId = uniqueId.generateDocument( sourceId, document.getId() );
-        //Document existDocument = documentService.findById(new DocumentPK(documentId, utilDate.convertSQLDateToUtilDate(version)));
-        Document existDocument = documentService.findById(new DocumentPK(documentId, utilDate.convertSQLDateToUtilDate(version) ));
+        //Document existDocument = documentService.findById(new DocumentPK(documentId, utilDate.convertUtilDateToSQLDate(version)));
+        Document existDocument = documentService.findById(new DocumentPK(documentId, utilDate.convertUtilDateToSQLDate(version) ));
         if (existDocument==null) {
             if (documentService.insertNative(documentId, version) > 0) {
                 //Se genera un identificador del documento para todas las entidades relacionadas con los documentos
@@ -120,7 +120,7 @@ public class DocumentHelperNative {
     @Transactional
     public String insertCodeMeSHPubMedArticles(String sourceId, Doc document, Date version) throws JsonProcessingException {
         String documentId = uniqueId.generateDocument( sourceId, document.getId() );
-        Document existDocument = documentService.findById(new DocumentPK(documentId, utilDate.convertSQLDateToUtilDate(version) ));
+        Document existDocument = documentService.findById(new DocumentPK(documentId, utilDate.convertUtilDateToSQLDate(version) ));
         if (existDocument==null) {
         }else{
 
@@ -176,7 +176,7 @@ public class DocumentHelperNative {
      */
     private void insertDocumentSet(String documentId, Date version, String paperId){
         //Busca si ya se encuentra la relación insertada
-        DocumentSet existDocumentSet = documentSetService.findById(new DocumentSetPK(documentId, utilDate.convertSQLDateToUtilDate(version), paperId));
+        DocumentSet existDocumentSet = documentSetService.findById(new DocumentSetPK(documentId, utilDate.convertUtilDateToSQLDate(version), paperId));
         if (existDocumentSet==null){
             documentSetService.insertNative(documentId, version, paperId);
         }
@@ -265,7 +265,7 @@ public class DocumentHelperNative {
     }
 
     public boolean findDocument(String documentId, Date version){
-        Document document = documentService.findById(new DocumentPK(documentId, utilDate.convertSQLDateToUtilDate(version)));
+        Document document = documentService.findById(new DocumentPK(documentId, utilDate.convertUtilDateToSQLDate(version)));
         if (document!=null) return true;
         else return false;
     }

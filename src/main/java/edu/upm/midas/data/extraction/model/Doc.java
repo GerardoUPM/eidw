@@ -19,6 +19,7 @@ public class Doc {
     private int id;
     private Date date;
     private Link url;
+    private List<Link> urlList;
     private boolean hasConnected;
     private boolean diseaseArticle;
 
@@ -54,6 +55,14 @@ public class Doc {
 
     public void setUrl(Link url) {
         this.url = url;
+    }
+
+    public List<Link> getUrlList() {
+        return urlList;
+    }
+
+    public void setUrlList(List<Link> urlList) {
+        this.urlList = urlList;
     }
 
     public Disease getDisease() {

@@ -9,9 +9,9 @@ import edu.upm.midas.data.relational.service.helperNative.SymptomHelperNative;
 import edu.upm.midas.data.validation.helper.ConsultHelper;
 import edu.upm.midas.data.validation.metamap.Metamap;
 import edu.upm.midas.data.validation.metamap.metamapApiResponse.impl.MetamapResourceServiceImpl;
-import edu.upm.midas.data.validation.metamap.model.receiver.Configuration;
-import edu.upm.midas.data.validation.metamap.model.receiver.Request;
-import edu.upm.midas.data.validation.metamap.model.receiver.Text;
+import edu.upm.midas.data.validation.metamap.model.request.Configuration;
+import edu.upm.midas.data.validation.metamap.model.request.Request;
+import edu.upm.midas.data.validation.metamap.model.request.Text;
 import edu.upm.midas.data.validation.metamap.model.response.Concept;
 import edu.upm.midas.data.validation.metamap.model.response.ProcessedText;
 import edu.upm.midas.data.validation.metamap.model.response.Response;
@@ -379,6 +379,7 @@ public class MetamapService {
 
         request.setConfiguration( conf );
         request.setSnapshot(consult.getSnapshot());
+        request.setSource(consult.getSource());
 
         System.out.println("Get all texts by version and source...");
         List<ResponseText> responseTexts = consultHelper.findTextsByVersionAndSource( consult );
@@ -466,6 +467,8 @@ public class MetamapService {
         conf.setSources(sources);
         conf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
         conf.setConcept_location(true);
+        request.setSnapshot(consult.getSnapshot());
+        request.setSource(consult.getSource());
 
         request.setConfiguration( conf );
 
@@ -566,6 +569,8 @@ public class MetamapService {
         conf.setSources(sources);
         conf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
         conf.setConcept_location(true);
+        request.setSnapshot(consult.getSnapshot());
+        request.setSource(consult.getSource());
 
         request.setConfiguration( conf );
 
@@ -668,20 +673,26 @@ public class MetamapService {
     }
 
 
+    @Transactional
     public void createMySQLInserts(Consult consult) throws Exception {
+        final int batchSize = 500;
+
         List<SemanticType> semanticTypes = new ArrayList<>();
         List<Symptom> symptoms = new ArrayList<>();
         List<HasSymptom> hasSymptoms = new ArrayList<>();
 
-        String fileName = consult.getSnapshot() + "_inserts_has_symptom.txt";
-        String fileNameSemType = consult.getSnapshot() + "_inserts_semantic_types.txt";
-        String fileNameSymptoms = consult.getSnapshot() + "_inserts_symptoms.txt";
-        String path = Constants.METAMAP_FOLDER + fileName;
+        String fileNameHasSymptoms = consult.getSnapshot() + "_" + consult.getSource() + "_inserts_has_symptom.txt";
+        String fileNameSemType = consult.getSnapshot() + "_" + consult.getSource() + "_inserts_semantic_types.txt";
+        String fileNameSymptoms = consult.getSnapshot() + "_" + consult.getSource() + "_inserts_symptoms.txt";
+        String fileHasSemTypes = consult.getSnapshot() + "_" + consult.getSource() + "_inserts_has_semantic_types.txt";
+        String pathHasSymptoms = Constants.METAMAP_FOLDER + fileNameHasSymptoms;
         String pathSemTypes = Constants.METAMAP_FOLDER + fileNameSemType;
         String pathSymptoms = Constants.METAMAP_FOLDER + fileNameSymptoms;
-        FileWriter fileWriter = new FileWriter(path);
+        String pathHasSemTypes = Constants.METAMAP_FOLDER + fileHasSemTypes;
+        FileWriter fileWriterHasSymptoms = new FileWriter(pathHasSymptoms);
         FileWriter fileWriterSemTypes = new FileWriter(pathSemTypes);
         FileWriter fileWriterSymptoms = new FileWriter(pathSymptoms);
+        FileWriter fileWriteHasSemTypes = new FileWriter(pathHasSemTypes);
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         //Metamap configuración
@@ -693,7 +704,7 @@ public class MetamapService {
         metamapConf.setSemanticTypes(Constants.SEMANTIC_TYPES_LIST);
         metamapConf.setConcept_location(true);
 
-        Response response = readMetamapResponseJSON(consult, true);
+        Response response = readMetamapResponseJSON(consult, false);
         System.out.println("Read JSON ready!");
         String has_symptoms_inserts = "";
 
@@ -702,6 +713,7 @@ public class MetamapService {
             if (textList.size()>0) {
                 try {
                     int textCount = 1, conceptCount = 1;
+                    fileWriterHasSymptoms.write("INSERT IGNORE INTO has_symptom (text_id, cui, validated, matched_words, positional_info) VALUES ");
                     for (edu.upm.midas.data.validation.metamap.model.response.Text metamapText : textList) {
                         System.out.println(textCount + ". to " + textList.size() + " TextId: " + metamapText.getId());
                         //Validar que haya conceptos
@@ -710,7 +722,7 @@ public class MetamapService {
                             if (metamapText.getConcepts().size() > 0) {
                                 //List<Concept> conceptsAux = metamapText.getConcepts();
                                 List<Concept> noRepeatedConcepts = removeRepetedConcepts(metamapText.getConcepts());
-                                conceptCount = createHasSymptom(metamapText.getConcepts(), noRepeatedConcepts, hasSymptoms, metamapText.getId(), conceptCount, fileWriter);
+                                conceptCount = createHasSymptom(metamapText.getConcepts(), noRepeatedConcepts, hasSymptoms, metamapText.getId(), conceptCount, fileWriterHasSymptoms);
                                 for (Concept concept : metamapText.getConcepts()) {
                                     //Se crea un sintoma
                                     Symptom symptom = new Symptom(concept.getCui(), concept.getName(), concept.getSemanticTypes());
@@ -731,7 +743,8 @@ public class MetamapService {
                             }
                         }
                     }
-                    fileWriter.close();
+                    fileWriterHasSymptoms.write(Constants.COMMA_DOT);
+                    fileWriterHasSymptoms.close();
                 } catch (Exception e) {
                     System.out.println("Mensaje de la excepción 2: " + e.getMessage());
                 }
@@ -745,9 +758,12 @@ public class MetamapService {
         System.out.println("SemanticTypes sin repetir size: " + semanticTypes.size());
         //formar inserts
         try {
+            int counST = 1;
+            fileWriterSemTypes.write("INSERT IGNORE INTO semantic_type (semantic_type, description) VALUES \n");
             for (SemanticType semanticType : semanticTypes) {
                 //INSERT IGNORE INTO symptom (cui, name) VALUES ('C0231418', "At risk for violence");INSERT IGNORE INTO has_semantic_type (cui, semantic_type) VALUES ('C0231418', 'fndg');
-                fileWriterSemTypes.write("INSERT IGNORE INTO semantic_type (semantic_type, description) VALUES ('"+semanticType.getType()+"', '');\n");
+                fileWriterSemTypes.write("('"+semanticType.getType()+"', '')" + (counST==semanticTypes.size()?Constants.COMMA_DOT:Constants.COMMA+"\n"));
+                counST++;
             }
             fileWriterSemTypes.close();
         }catch (Exception e){
@@ -760,13 +776,19 @@ public class MetamapService {
         System.out.println("symptoms sin repetir size: " + symptoms.size());
         //formar inserts para los sintomas y sus tipos semanticos
         try {
+            int countS = 1;
+            fileWriterSymptoms.write("INSERT IGNORE INTO symptom (cui, name) VALUES \n");
+            fileWriteHasSemTypes.write("INSERT IGNORE INTO has_semantic_type (cui, semantic_type) VALUES \n");
             for (Symptom symptom : symptoms) {
-                fileWriterSymptoms.write("INSERT IGNORE INTO symptom (cui, name) VALUES ('"+symptom.getCui()+"', \""+symptom.getName()+"\");\n");
+                fileWriterSymptoms.write("('"+symptom.getCui()+"', \""+symptom.getName()+"\")" + (countS==symptoms.size()?Constants.COMMA_DOT:Constants.COMMA+"\n"));
                 for (String semType: symptom.getSemanticTypes()) {
-                    fileWriterSymptoms.write("INSERT IGNORE INTO has_semantic_type (cui, semantic_type) VALUES ('"+symptom.getCui()+"', '"+semType+"');\n");
+                    fileWriteHasSemTypes.write("('" + symptom.getCui() + "', '" + semType + "')" + Constants.COMMA+"\n");
                 }
+                countS++;
             }
             fileWriterSymptoms.close();
+            fileWriteHasSemTypes.write(Constants.COMMA_DOT);
+            fileWriteHasSemTypes.close();
         }catch (Exception e){
             System.out.println("Mensaje de la excepción 5: " + e.getMessage());
         }
@@ -821,6 +843,7 @@ public class MetamapService {
     public int createHasSymptom(List<Concept> concepts, List<Concept> noRepeatedConcepts, List<HasSymptom> hasSymptoms, String textId, int conceptCount, FileWriter fileWriter){
         //System.out.println("concepts: " + concepts.size() + " noRepetead: " + noRepeatedConcepts.size());
         try {
+            int countC = 1;
             for (Concept uniqueConcept : noRepeatedConcepts) {
                 HasSymptom hasSymptom = new HasSymptom(textId, uniqueConcept.getCui(), (byte) 0);
                 //System.out.println("ConceptUnique: " + uniqueConcept.getCui());
@@ -846,7 +869,7 @@ public class MetamapService {
                 );
                 //
                 hasSymptoms.add(hasSymptom);
-                fileWriter.write("INSERT IGNORE INTO has_symptom (text_id, cui, validated, matched_words, positional_info) VALUES ('"+hasSymptom.getTextId()+"', '"+hasSymptom.getCui()+"', 0, \""+hasSymptom.getMatchedWords()+"\", \""+hasSymptom.getPositionalInfo()+"\");\n");
+                fileWriter.write("('"+hasSymptom.getTextId()+"', '"+hasSymptom.getCui()+"', 0, \""+hasSymptom.getMatchedWords()+"\", \""+hasSymptom.getPositionalInfo()+"\")" + Constants.COMMA+"\n");
                 System.out.println(conceptCount + ". " +hasSymptom);
                 conceptCount++;
             }

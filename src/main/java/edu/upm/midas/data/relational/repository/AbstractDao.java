@@ -4,6 +4,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 /**
  * Created by gerardo on 28/04/2017.
@@ -15,7 +17,7 @@ import java.lang.reflect.ParameterizedType;
  * @see
  */
 
-public abstract class AbstractDao<PK extends Serializable, T> {
+public abstract class AbstractDao <PK extends Serializable, T>  {
 
     private final Class<T> persistentClass;
 
@@ -26,9 +28,20 @@ public abstract class AbstractDao<PK extends Serializable, T> {
 
     @PersistenceContext
     EntityManager entityManager;
+    PreparedStatement preparedStatement;
+    Connection connection;
+
 
     protected EntityManager getEntityManager(){
         return this.entityManager;
+    }
+
+    public PreparedStatement getPreparedStatement() {
+        return preparedStatement;
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 
     protected T getByKey(PK key) {
@@ -37,6 +50,10 @@ public abstract class AbstractDao<PK extends Serializable, T> {
 
     protected void persist(T entity) {
         entityManager.persist(entity);
+    }
+
+    protected void persist(Iterable<T> entities) {
+        entityManager.persist(entities);
     }
 
     protected T update(T entity) {

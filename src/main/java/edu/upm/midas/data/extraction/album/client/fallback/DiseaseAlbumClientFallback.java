@@ -1,5 +1,6 @@
 package edu.upm.midas.data.extraction.album.client.fallback;
 import edu.upm.midas.data.extraction.album.client.DiseaseAlbumClient;
+import edu.upm.midas.data.extraction.album.model.request.RequestAlbum;
 import edu.upm.midas.data.extraction.album.model.request.RequestFather;
 import edu.upm.midas.data.extraction.album.model.request.RequestGDLL;
 import edu.upm.midas.data.extraction.album.model.response.ResponseGDLL;
@@ -27,5 +28,8 @@ public class DiseaseAlbumClientFallback implements DiseaseAlbumClient {
     public ResponseGDLL getDiseaseLinkList(RequestGDLL request) {
         return new ResponseGDLL();
     }
+
+    @Override
+    public ResponseLA getSpecifictDiseaseAlbum(RequestAlbum request){return new ResponseLA();}
 }
 

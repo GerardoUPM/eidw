@@ -41,4 +41,13 @@ public class Album {
         this.numberDiseases = numberDiseases;
     }
 
+
+    @Override
+    public String toString() {
+        return "Album{" +
+                "albumId='" + albumId + '\'' +
+                ", date=" + date +
+                ", numberDiseases=" + numberDiseases +
+                '}';
+    }
 }

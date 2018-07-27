@@ -2,7 +2,7 @@ package edu.upm.midas.data.validation.metamap.client;
 
 import edu.upm.midas.configuration.FeignConfiguration;
 import edu.upm.midas.data.validation.metamap.client.fallback.MetamapClientFallback;
-import edu.upm.midas.data.validation.metamap.model.receiver.Request;
+import edu.upm.midas.data.validation.metamap.model.request.Request;
 import edu.upm.midas.data.validation.metamap.model.response.Response;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;

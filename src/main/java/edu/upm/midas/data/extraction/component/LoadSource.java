@@ -1,8 +1,7 @@
-package edu.upm.midas.data.extraction.service;
+package edu.upm.midas.data.extraction.component;
 
 import edu.upm.midas.constants.Constants;
 import edu.upm.midas.data.extraction.xml.model.XmlSource;
-import edu.upm.midas.data.extraction.xml.service.ReadXml;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;

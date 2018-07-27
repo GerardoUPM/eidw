@@ -89,8 +89,16 @@ public class HasSymptomRepositoryImpl extends AbstractDao<HasSymptomPK, HasSympt
                 .setParameter("validated", validated)//, String matchedWords, String positionalInfo
                 .setParameter("matchedWords", matchedWords)
                 .setParameter("positionalInfo", positionalInfo)
-                .executeUpdate();
+                .executeUpdate()
+                ;
     }
+
+//    @Override
+//    public int insertMassiveNative(String insertMassiveSQL) throws SQLException {
+//        PreparedStatement ps = getConnection().prepareStatement().;
+//        ps.setString(1, );
+//
+//    }
 
     @Override
     public boolean deleteById(HasSymptomPK hasSymptomPK) {

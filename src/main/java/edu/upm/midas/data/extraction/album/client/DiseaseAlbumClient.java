@@ -2,6 +2,7 @@ package edu.upm.midas.data.extraction.album.client;
 
 import edu.upm.midas.configuration.FeignConfiguration;
 import edu.upm.midas.data.extraction.album.client.fallback.DiseaseAlbumClientFallback;
+import edu.upm.midas.data.extraction.album.model.request.RequestAlbum;
 import edu.upm.midas.data.extraction.album.model.request.RequestFather;
 import edu.upm.midas.data.extraction.album.model.request.RequestGDLL;
 import edu.upm.midas.data.extraction.album.model.response.ResponseGDLL;
@@ -33,5 +34,8 @@ public interface DiseaseAlbumClient {
 
     @RequestMapping(value = "${my.service.client.disease_album.path.get}", method = RequestMethod.POST)
     ResponseGDLL getDiseaseLinkList(@RequestBody RequestGDLL request);
+
+    @RequestMapping(value = "${my.service.client.disease_album.path.get.one}", method = RequestMethod.POST)
+    ResponseLA getSpecifictDiseaseAlbum(@RequestBody RequestAlbum request);
 
 }

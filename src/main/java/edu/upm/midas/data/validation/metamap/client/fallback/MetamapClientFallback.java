@@ -1,6 +1,6 @@
 package edu.upm.midas.data.validation.metamap.client.fallback;
 import edu.upm.midas.data.validation.metamap.client.MetamapClient;
-import edu.upm.midas.data.validation.metamap.model.receiver.Request;
+import edu.upm.midas.data.validation.metamap.model.request.Request;
 import edu.upm.midas.data.validation.metamap.model.response.Response;
 import org.springframework.stereotype.Component;
 
