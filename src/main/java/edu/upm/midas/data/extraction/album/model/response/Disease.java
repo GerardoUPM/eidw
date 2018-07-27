@@ -7,7 +7,7 @@ public class Disease {
     private String diseaseId;
     private String name;
     private String albumId;
-    private Date version;
+    private Date snapshot;
     private String sourceId;
     private String sourceName;
     private String url;
@@ -38,12 +38,12 @@ public class Disease {
         this.albumId = albumId;
     }
 
-    public Date getVersion() {
-        return version;
+    public Date getSnapshot() {
+        return snapshot;
     }
 
-    public void setVersion(Date version) {
-        this.version = version;
+    public void setSnapshot(Date snapshot) {
+        this.snapshot = snapshot;
     }
 
     public String getSourceId() {
