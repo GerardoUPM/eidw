@@ -143,7 +143,6 @@ public class PopulateDbNative {
     /**
      * @throws Exception
      */
-    @Transactional
     public void populate(List<XmlLink> externalDiseaseLinkList, Date version) throws Exception {
 
 /*
@@ -208,6 +207,7 @@ public class PopulateDbNative {
 
                     }// Secciones
                     //</editor-fold>
+//                    insertAllDataOfDocument(document, sourceId, version, source, docsCount);
                     docsCount++;
                 }else{
                     invalidCount++;
@@ -221,8 +221,41 @@ public class PopulateDbNative {
 
     }
 
+    @Transactional
+    public void insertAllDataOfDocument(Doc document, String sourceId, Date version, Source source, int docsCount) throws IOException {
+        String documentId = documentHelperNative.insert(sourceId, document, version);
 
-    public void removeInvalidDocumentsProcedure(List<Source> sources){
+        System.out.println(docsCount + " Insert document: " + document.getDisease().getName() + "_" + documentId);
+
+        //<editor-fold desc="PERSISTIR ENFERMEDAD DEL DOCUMENTO">
+        String diseaseId = diseaseHelperNative.insertIfExist(document, documentId, version);
+        //</editor-fold>
+
+        //<editor-fold desc="PERSISTIR CÓDIGOS DEL DOCUMENTO">
+        codeHelperNative.insertIfExistByCodeList(document.getCodeList(), documentId, version);
+        //</editor-fold>
+
+        //<editor-fold desc="RECORRIDO DE SECCIONES PARA ACCEDER A LOS TEXTOS">
+        for (edu.upm.midas.data.extraction.model.Section section : document.getSectionList()) {
+            //<editor-fold desc="PERSISTIR has_section">
+            String sectionId = hasSectionHelperNative.insert(documentId, version, section);
+            //</editor-fold>
+
+            int textCount = 0;
+            for (edu.upm.midas.data.extraction.model.text.Text text : section.getTextList()) {
+                //<editor-fold desc="INSERTAR TEXTO">
+                textHelperNative.insert(text, sectionId, documentId, version, "");
+                //</editor-fold>
+
+                textCount++;
+            }// Textos
+
+        }// Secciones
+        //</editor-fold>
+    }
+
+
+        public void removeInvalidDocumentsProcedure(List<Source> sources){
         boolean hasCodes = false;
         boolean hasSections = false;
 

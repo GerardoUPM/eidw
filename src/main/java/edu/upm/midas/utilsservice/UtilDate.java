@@ -24,8 +24,8 @@ public class UtilDate {
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public Date getSqlDate(){
-//        return new Date(118, 6, 15);
-        return new Date(new java.util.Date().getTime());
+        return new Date(118, 7, 15);
+//        return new Date(new java.util.Date().getTime());
     }
 
     public long getTimestampNumber(){

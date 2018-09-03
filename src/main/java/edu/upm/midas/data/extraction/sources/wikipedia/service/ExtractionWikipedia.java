@@ -167,16 +167,18 @@ public class ExtractionWikipedia {
                     doc = new Doc();
                     url = new Link();
                     disease = new Disease();
+
+                    // Se obtiene el elemento HTML que almacena el nombre de la enfermedad
+                    String idElementName = getHighlightXmlByDescription(
+                            Constants.XML_HL_DISEASENAME, xmlSource).getId();
+
                     // Se verifica si hubo conexión con el documento (enlace Web)
                     // Se pinta en pantalla el status OK (esta disponible el enlace)
                     System.out.println(countDoc + " wikipediaExtract " + xmlLink.getUrl() + " ==> " + connection_.getStatus() + "("+connection_.getStatusCode()+")");
-                    if (connection_.getStatus().equals(StatusHttpEnum.OK.getDescripcion()) && connection_.getoDoc() != null) {
+                    if (connection_.getStatus().equals(StatusHttpEnum.OK.getDescripcion()) && connection_.getoDoc() != null && connection_.getoDoc().getElementById( idElementName ).text()!=null) {
                         // Se obtiene el documento HTML (página wikipedia)
                         //<editor-fold desc="DOCUMENTOS">
                         document = connection_.getoDoc();
-                        // Se obtiene el elemento HTML que almacena el nombre de la enfermedad
-                        String idElementName = getHighlightXmlByDescription(
-                                Constants.XML_HL_DISEASENAME, xmlSource).getId();
                         // Se inicia a introducir información de un documento
                         doc.setId(countDoc);
                         doc.setDate(version);
@@ -500,198 +502,135 @@ public class ExtractionWikipedia {
                 for (XmlLink oXmlLink: xmlSource.getLinkList()) {
                     connection_ = connectDocument.connect(oXmlLink.getUrl());
 
+                    /* Se obtiene el nombre de la enfermedad dentro del documento */
+                    String idElementName = getHighlightXmlByDescription(Constants.XML_HL_DISEASENAME, xmlSource).getId();
+
                     //Verificación de la conexión del enlace >
                     System.out.println(x + " wikipediaExtract codes (" + oXmlLink.getUrl() + ") ==> " + connection_.getStatus() + "("+connection_.getStatusCode()+")");
-                    if (connection_.getStatus().equals(StatusHttpEnum.OK.getDescripcion()) && connection_.getoDoc() != null) {
+                    if (connection_.getStatus().equals(StatusHttpEnum.OK.getDescripcion()) && connection_.getoDoc()!=null && connection_.getoDoc().getElementById( idElementName ).text()!=null ) {
 
-                        //Se obtiene el documento html "DOM"
-                        oDoc = connection_.getoDoc();
-
-                        /* Se obtiene el nombre de la enfermedad dentro del documento */
-                        String idElementName = getHighlightXmlByDescription(Constants.XML_HL_DISEASENAME, xmlSource).getId();
-                        String diseaseName = oDoc.getElementById( idElementName ).text();
-                        //                    System.out.println("Disease: " + oDoc.getElementById( idElementName ).text() );
+                            //Se obtiene el documento html "DOM"
+                            oDoc = connection_.getoDoc();
 
 
-                        /*
-                            Se obtiene el elemento (tabla) con clase "infobox" NOTA. infobox es un elemento Highlight
-                            del documento source.xml
-                            IMPORTANTE. La siguiente rutina sirve para los infobox que se encuentran en el pie
-                            del documento wikipedia. Es necesario otro para el infobox ubicado al principio.
-                         */
+                            String diseaseName = oDoc.getElementById( idElementName ).text();
+                            //                    System.out.println("Disease: " + oDoc.getElementById( idElementName ).text() );
 
-                        // Se arma la consulta para buscar el elemento  */
-                        String query = getHighlightXmlByDescription( Constants.XML_HL_INFOBOX, xmlSource).getClass_();
-                        // Se ejecuta la consulta
-                        Elements infoboxElements = oDoc.select( consultTabByClass( query ) );
 
-                        int countCode = 0;
-                        for (Element infobox:
-                                infoboxElements) {
+                            /*
+                                Se obtiene el elemento (tabla) con clase "infobox" NOTA. infobox es un elemento Highlight
+                                del documento source.xml
+                                IMPORTANTE. La siguiente rutina sirve para los infobox que se encuentran en el pie
+                                del documento wikipedia. Es necesario otro para el infobox ubicado al principio.
+                             */
 
-                            String infoboxSection = "";
-                            boolean hasValidSection = false;
+                            // Se arma la consulta para buscar el elemento  */
+                            String query = getHighlightXmlByDescription( Constants.XML_HL_INFOBOX, xmlSource).getClass_();
+                            // Se ejecuta la consulta
+                            Elements infoboxElements = oDoc.select( consultTabByClass( query ) );
 
-                            // Se obtienen los elemtos <tr> (filas) de la tabla con class=infobox
-                            Elements rowElements = infobox.select(Constants.HTML_TABLE_TR);
+                            int countCode = 0;
+                            for (Element infobox:
+                                    infoboxElements) {
 
-                            //<editor-fold desc="RECORRIDO DE LAS FILAS DE LA TABLA INFOBOX">
-                            for (Element row: rowElements) {
+                                String infoboxSection = "";
+                                boolean hasValidSection = false;
 
-                            /* Se almecenan por cada fila <tr> el valor llave <th> y su valor <td> */
-                                Elements thElements = row.select(Constants.HTML_TABLE_TH);
-                                Elements tdElements = row.select(Constants.HTML_TABLE_TD);
-                                Elements liElements_ = row.select(Constants.HTML_LI);
-                                Elements divElements = row.select(Constants.HTML_DIV);
+                                // Se obtienen los elemtos <tr> (filas) de la tabla con class=infobox
+                                Elements rowElements = infobox.select(Constants.HTML_TABLE_TR);
 
-                                //<editor-fold desc="PROCESO PARA EL INFOBOX EN EL PRINCIPIO DEL DOCUMENTO">
+                                //<editor-fold desc="RECORRIDO DE LAS FILAS DE LA TABLA INFOBOX">
+                                for (Element row: rowElements) {
 
-                                //<editor-fold desc="VALIDACIONES">
-                                // Se obtienen los elementos <a> que tengan class: external text
-                                // No se pueden leer los códigos que no tengan algun enlace (ver:ICD-10 en.wikipedia.org/wiki/Factor_V_Leiden )
-                                String findExternalText = getHighlightXmlByDescription(Constants.XML_HL_EXTERNAL_TEXT + "", xmlSource).getClass_();
-                                Elements externalTextElements = tdElements.select(Constants.QUERY_A_CLASS + findExternalText + Constants.RIGHT_PARENTHESIS);
-                                // Se verifica (boolean) que en la fila se encuentre un class: external text
-                                boolean hasExternalText = (externalTextElements.size()>0);
+                                /* Se almecenan por cada fila <tr> el valor llave <th> y su valor <td> */
+                                    Elements thElements = row.select(Constants.HTML_TABLE_TH);
+                                    Elements tdElements = row.select(Constants.HTML_TABLE_TD);
+                                    Elements liElements_ = row.select(Constants.HTML_LI);
+                                    Elements divElements = row.select(Constants.HTML_DIV);
 
-                                // Se obtienen los elementos <div>??? que tengan class: plainlist
-                                String findPlainList = getHighlightXmlByDescription(Constants.XML_HL_PLAIN_LIST + "", xmlSource).getClass_();
-                                Elements plainListElements = tdElements.select(Constants.QUERY_TD_CLASS + findPlainList + Constants.RIGHT_PARENTHESIS);
-                                Elements divPlainListElements = tdElements.select(Constants.QUERY_DIV_CLASS + findPlainList + Constants.RIGHT_PARENTHESIS);
+                                    //<editor-fold desc="PROCESO PARA EL INFOBOX EN EL PRINCIPIO DEL DOCUMENTO">
 
-                                // Se verifica (boolean) que en la fila se encuentre un class: plainlist
-                                boolean hasPlainList = ( plainListElements.size()>0) ;
-                                boolean hasDivPlainList = ( divPlainListElements.size()>0) ;
+                                    //<editor-fold desc="VALIDACIONES">
+                                    // Se obtienen los elementos <a> que tengan class: external text
+                                    // No se pueden leer los códigos que no tengan algun enlace (ver:ICD-10 en.wikipedia.org/wiki/Factor_V_Leiden )
+                                    String findExternalText = getHighlightXmlByDescription(Constants.XML_HL_EXTERNAL_TEXT + "", xmlSource).getClass_();
+                                    Elements externalTextElements = tdElements.select(Constants.QUERY_A_CLASS + findExternalText + Constants.RIGHT_PARENTHESIS);
+                                    // Se verifica (boolean) que en la fila se encuentre un class: external text
+                                    boolean hasExternalText = (externalTextElements.size()>0);
 
-                                // Se obtienen los elementos <div>??? que tengan class: hlist
-                                //<<CAMBIO>> Se ha cambiado la clase hlist a hlist hlist-separated
-                                // Se verifica (boolean) que en la fila se encuentre un class: hlist
-                                boolean hasHorizontalList = existHorizontalInfobox(xmlSource, tdElements);
+                                    // Se obtienen los elementos <div>??? que tengan class: plainlist
+                                    String findPlainList = getHighlightXmlByDescription(Constants.XML_HL_PLAIN_LIST + "", xmlSource).getClass_();
+                                    Elements plainListElements = tdElements.select(Constants.QUERY_TD_CLASS + findPlainList + Constants.RIGHT_PARENTHESIS);
+                                    Elements divPlainListElements = tdElements.select(Constants.QUERY_DIV_CLASS + findPlainList + Constants.RIGHT_PARENTHESIS);
 
-                                // Verificar si la fila con <th></th> sin <td></td> es una de las secciones válidas
-                                String findTextAlignCenter = getHighlightXmlByDescription(Constants.XML_HL_TEXT_ALIGN_CENTER + "", xmlSource).getId();
-                                boolean hasStyleAlignCenterElements = common.itsFound( row.toString().replaceAll("\\s",""),  findTextAlignCenter);
+                                    // Se verifica (boolean) que en la fila se encuentre un class: plainlist
+                                    boolean hasPlainList = ( plainListElements.size()>0) ;
+                                    boolean hasDivPlainList = ( divPlainListElements.size()>0) ;
 
-                                if( ( thElements.hasAttr(Constants.HTML_COLSPAN ) || tdElements.hasAttr(Constants.HTML_COLSPAN) )
-                                        && hasStyleAlignCenterElements && divElements.size() < 1
-                                        ){
-                                    if (!thElements.text().trim().equals("")){
-                                        infoboxSection = thElements.text().trim();
-                                    }else if (!tdElements.text().trim().equals("")) {
-                                        infoboxSection = tdElements.text().trim();
+                                    // Se obtienen los elementos <div>??? que tengan class: hlist
+                                    //<<CAMBIO>> Se ha cambiado la clase hlist a hlist hlist-separated
+                                    // Se verifica (boolean) que en la fila se encuentre un class: hlist
+                                    boolean hasHorizontalList = existHorizontalInfobox(xmlSource, tdElements);
+
+                                    // Verificar si la fila con <th></th> sin <td></td> es una de las secciones válidas
+                                    String findTextAlignCenter = getHighlightXmlByDescription(Constants.XML_HL_TEXT_ALIGN_CENTER + "", xmlSource).getId();
+                                    boolean hasStyleAlignCenterElements = common.itsFound( row.toString().replaceAll("\\s",""),  findTextAlignCenter);
+
+                                    if( ( thElements.hasAttr(Constants.HTML_COLSPAN ) || tdElements.hasAttr(Constants.HTML_COLSPAN) )
+                                            && hasStyleAlignCenterElements && divElements.size() < 1
+                                            ){
+                                        if (!thElements.text().trim().equals("")){
+                                            infoboxSection = thElements.text().trim();
+                                        }else if (!tdElements.text().trim().equals("")) {
+                                            infoboxSection = tdElements.text().trim();
+                                        }
                                     }
-                                }
-                                hasValidSection = isAValidInfoboxSection( infoboxSection );
-                                //                            System.out.println("<<hasValidSection>>: " + hasValidSection);
+                                    hasValidSection = isAValidInfoboxSection( infoboxSection );
+                                    //                            System.out.println("<<hasValidSection>>: " + hasValidSection);
 
-                                boolean validLiElement = false;
-                                if(liElements_.size() <= 0){ validLiElement = true; }
-                                else if(liElements_.size() > 0){
-                                    validLiElement = hasPlainList || hasDivPlainList;
-                                }
-                                //</editor-fold>
+                                    boolean validLiElement = false;
+                                    if(liElements_.size() <= 0){ validLiElement = true; }
+                                    else if(liElements_.size() > 0){
+                                        validLiElement = hasPlainList || hasDivPlainList;
+                                    }
+                                    //</editor-fold>
 
-                                /** Se valida: 1) que en la fila se encuente un elemento con class: external text,
-                                 * 2) que no tenga elementos <li>, 3) que no tenga colspan (que no se una sola columna) */
-                                //                            System.out.println(thElements.text() + " => hasExternalText: " + hasExternalText + " && validLiElement: " + validLiElement + " && hasValidSection("+infoboxSection+"):" + hasValidSection + " && !thElements.hasAttr(Constants.HTML_COLSPAN): " + !thElements.hasAttr(Constants.HTML_COLSPAN));
-                                if( hasExternalText && validLiElement && hasValidSection ){
+                                    /** Se valida: 1) que en la fila se encuente un elemento con class: external text,
+                                     * 2) que no tenga elementos <li>, 3) que no tenga colspan (que no se una sola columna) */
+                                    //                            System.out.println(thElements.text() + " => hasExternalText: " + hasExternalText + " && validLiElement: " + validLiElement + " && hasValidSection("+infoboxSection+"):" + hasValidSection + " && !thElements.hasAttr(Constants.HTML_COLSPAN): " + !thElements.hasAttr(Constants.HTML_COLSPAN));
+                                    if( hasExternalText && validLiElement && hasValidSection ){
 
-                                /* Dentro deL infobox <table> se analiza sus elementos <th> */
-                                    //<editor-fold desc="OBTERNER FUENTES EXTERNAS PARA UNA ENFERMEDAD">
-                                    //resource = null;
-                                    resource = new Resource();
-                                    for (Element thElement:
-                                            thElements) {
-                                        List<String> linkList = new ArrayList<>();
-                                    /* Obtener los "resources" y sus enlaces (vocabularios, bases online libres o servicios) */
-                                        //                                    System.out.println( "    Resource(HTML_A): " + thElements.text() );
-                                        Elements links = thElement.getElementsByTag( Constants.HTML_A +"" );
-                                        for (Element link:
-                                                links) {
-                                            //                                        System.out.println( "           URL:" + link.attr(Constants.HTML_HREF).toString() );
-                                            linkList.add( link.attr(Constants.HTML_HREF).trim() );
-                                        }
-                                        resource.setName( thElements.text().trim() );
-                                        //                                    resource.setLinkList( linkList );
-                                        resource.setNameDisease( diseaseName );
-
-                                        resourceMap.put( resource.getName(), resource );
-
-                                    }//</editor-fold>
-
-                                /* Dentro deL infobox <table> se analiza sus elementos <td> */
-                                    //<editor-fold desc="OBTERNER CÓDIGOS DE LAS FUENTES EXTERNAS">
-                                    for (Element tdElement:
-                                            tdElements) {
-                                    /* Obtener los códigos de los vocabularios, bases online libres o servicios
-                                     * Se obtienen los elementos <a> con class="external text" y su atributo href */
-                                        String class_ = getHighlightXmlByDescription(Constants.XML_HL_EXTERNAL_TEXT + "", xmlSource).getClass_();
-                                        Elements codeElements = tdElement.select(Constants.QUERY_A_CLASS + class_ + Constants.RIGHT_PARENTHESIS);
-                                        for (Element code :
-                                                codeElements) {
-                                            oCode = new Code();
-                                            url = new Link();
-
-                                            oCode.setId( countCode );
-                                            oCode.setCode( code.text() );
-
-                                            url.setId( countCode );
-                                            url.setUrl( code.attr(Constants.HTML_HREF).toString() );
-
-                                            oCode.setLink( url );
-                                            oCode.setResource( resource );
-                                            codeList.add( oCode );
-                                            //                                        System.out.println("       Code: " + code.text() + " | URL:" + code.attr(Constants.HTML_HREF).toString());
-                                        }
-                                    }//</editor-fold>
-                                }//</editor-fold>
-                                //System.out.println("    QUE PASA " );
-
-                                //<editor-fold desc="PROCESO PARA EL INFOBOX EN EL PIE DEL DOCUMENTO">
-                            /* Dentro de una fila <tr> se recorren los elementos <td> */
-                                if(hasHorizontalList) {//System.out.println("    ENTRA " );
-                                    Resource resourceFather = new Resource();
-                                    for (Element tdElement : tdElements) {
-                                    /* Dentro de un <td> se seleccionan todos los elementos <li> */
-                                        Elements liElements = tdElement.select(Constants.HTML_LI);
-                                        for (int i = 0; i < liElements.size(); i++) {
-                                    /* Obtiene los "resources" y sus enlaces (vocabularios, bases online libres o servicios) */
-                                            //<editor-fold desc="OBTERNER FUENTES EXTERNAS PARA UNA ENFERMEDAD">
-                                    /* Se obtiene el elemento <b> que es el nombre del "resource"*/
-                                            Elements bElements = liElements.get(i).getElementsByTag(Constants.HTML_B);
-                                            resource = new Resource();
+                                    /* Dentro deL infobox <table> se analiza sus elementos <th> */
+                                        //<editor-fold desc="OBTERNER FUENTES EXTERNAS PARA UNA ENFERMEDAD">
+                                        //resource = null;
+                                        resource = new Resource();
+                                        for (Element thElement:
+                                                thElements) {
                                             List<String> linkList = new ArrayList<>();
-                                            for (Element b :
-                                                    bElements) {
-                                                Elements aElements = bElements.select(Constants.HTML_A);
-                                                /** Condición para eliminar los resources no válidos (aquellos que no contiene
-                                                 *  un enlace de cualquier tipo * no es lo mejor) */
-                                                if (aElements.size() > 0) {
-
-                                                    //System.out.println("    Resource(HTML_B): " + b.text());
-                                        /* Se obtienen los enlaces de un "resource"*/
-                                                    Elements links = b.getElementsByTag(Constants.HTML_A + "");
-                                                    for (Element link :
-                                                            links) {
-                                                        //                                                    System.out.println("           URL(HTML_B):" + link.attr(Constants.HTML_HREF).toString());
-                                                        linkList.add(link.attr(Constants.HTML_HREF).toString().trim());
-                                                    }
-                                                    resource.setName(b.text().trim());
-                                                    //                                                resource.setLinkList(linkList);
-                                                    resource.setNameDisease(diseaseName);
-
-                                                    resourceFather = resource;
-
-                                                    resourceMap.put(resource.getName(), resource );
-                                                }
+                                        /* Obtener los "resources" y sus enlaces (vocabularios, bases online libres o servicios) */
+                                            //                                    System.out.println( "    Resource(HTML_A): " + thElements.text() );
+                                            Elements links = thElement.getElementsByTag( Constants.HTML_A +"" );
+                                            for (Element link:
+                                                    links) {
+                                                //                                        System.out.println( "           URL:" + link.attr(Constants.HTML_HREF).toString() );
+                                                linkList.add( link.attr(Constants.HTML_HREF).trim() );
                                             }
-                                            //</editor-fold>
+                                            resource.setName( thElements.text().trim() );
+                                            //                                    resource.setLinkList( linkList );
+                                            resource.setNameDisease( diseaseName );
 
-                                    /* Obtiene los códigos y su enlace de los vocabularios, bases online libres o servicios */
-                                            //<editor-fold desc="OBTERNER CÓDIGOS DE LAS FUENTES EXTERNAS">
-                                    /* Se obtienen los elementos <a> con class="external text" y su attr href */
+                                            resourceMap.put( resource.getName(), resource );
+
+                                        }//</editor-fold>
+
+                                    /* Dentro deL infobox <table> se analiza sus elementos <td> */
+                                        //<editor-fold desc="OBTERNER CÓDIGOS DE LAS FUENTES EXTERNAS">
+                                        for (Element tdElement:
+                                                tdElements) {
+                                        /* Obtener los códigos de los vocabularios, bases online libres o servicios
+                                         * Se obtienen los elementos <a> con class="external text" y su atributo href */
                                             String class_ = getHighlightXmlByDescription(Constants.XML_HL_EXTERNAL_TEXT + "", xmlSource).getClass_();
-                                            Elements codeElements = liElements.get(i).select(Constants.QUERY_A_CLASS + class_ + Constants.RIGHT_PARENTHESIS);
+                                            Elements codeElements = tdElement.select(Constants.QUERY_A_CLASS + class_ + Constants.RIGHT_PARENTHESIS);
                                             for (Element code :
                                                     codeElements) {
                                                 oCode = new Code();
@@ -704,22 +643,88 @@ public class ExtractionWikipedia {
                                                 url.setUrl( code.attr(Constants.HTML_HREF).toString() );
 
                                                 oCode.setLink( url );
-                                                oCode.setResource( resourceFather );
+                                                oCode.setResource( resource );
                                                 codeList.add( oCode );
-                                                //                                            System.out.println("       Code(HTML_B): " + code.text() + " | URL:" + code.attr(Constants.HTML_HREF).toString() + " R: " + resourceFather.getName());
+                                                //                                        System.out.println("       Code: " + code.text() + " | URL:" + code.attr(Constants.HTML_HREF).toString());
                                             }
-                                            //</editor-fold>
+                                        }//</editor-fold>
+                                    }//</editor-fold>
+                                    //System.out.println("    QUE PASA " );
+
+                                    //<editor-fold desc="PROCESO PARA EL INFOBOX EN EL PIE DEL DOCUMENTO">
+                                /* Dentro de una fila <tr> se recorren los elementos <td> */
+                                    if(hasHorizontalList) {//System.out.println("    ENTRA " );
+                                        Resource resourceFather = new Resource();
+                                        for (Element tdElement : tdElements) {
+                                        /* Dentro de un <td> se seleccionan todos los elementos <li> */
+                                            Elements liElements = tdElement.select(Constants.HTML_LI);
+                                            for (int i = 0; i < liElements.size(); i++) {
+                                        /* Obtiene los "resources" y sus enlaces (vocabularios, bases online libres o servicios) */
+                                                //<editor-fold desc="OBTERNER FUENTES EXTERNAS PARA UNA ENFERMEDAD">
+                                        /* Se obtiene el elemento <b> que es el nombre del "resource"*/
+                                                Elements bElements = liElements.get(i).getElementsByTag(Constants.HTML_B);
+                                                resource = new Resource();
+                                                List<String> linkList = new ArrayList<>();
+                                                for (Element b :
+                                                        bElements) {
+                                                    Elements aElements = bElements.select(Constants.HTML_A);
+                                                    /** Condición para eliminar los resources no válidos (aquellos que no contiene
+                                                     *  un enlace de cualquier tipo * no es lo mejor) */
+                                                    if (aElements.size() > 0) {
+
+                                                        //System.out.println("    Resource(HTML_B): " + b.text());
+                                            /* Se obtienen los enlaces de un "resource"*/
+                                                        Elements links = b.getElementsByTag(Constants.HTML_A + "");
+                                                        for (Element link :
+                                                                links) {
+                                                            //                                                    System.out.println("           URL(HTML_B):" + link.attr(Constants.HTML_HREF).toString());
+                                                            linkList.add(link.attr(Constants.HTML_HREF).toString().trim());
+                                                        }
+                                                        resource.setName(b.text().trim());
+                                                        //                                                resource.setLinkList(linkList);
+                                                        resource.setNameDisease(diseaseName);
+
+                                                        resourceFather = resource;
+
+                                                        resourceMap.put(resource.getName(), resource );
+                                                    }
+                                                }
+                                                //</editor-fold>
+
+                                        /* Obtiene los códigos y su enlace de los vocabularios, bases online libres o servicios */
+                                                //<editor-fold desc="OBTERNER CÓDIGOS DE LAS FUENTES EXTERNAS">
+                                        /* Se obtienen los elementos <a> con class="external text" y su attr href */
+                                                String class_ = getHighlightXmlByDescription(Constants.XML_HL_EXTERNAL_TEXT + "", xmlSource).getClass_();
+                                                Elements codeElements = liElements.get(i).select(Constants.QUERY_A_CLASS + class_ + Constants.RIGHT_PARENTHESIS);
+                                                for (Element code :
+                                                        codeElements) {
+                                                    oCode = new Code();
+                                                    url = new Link();
+
+                                                    oCode.setId( countCode );
+                                                    oCode.setCode( code.text() );
+
+                                                    url.setId( countCode );
+                                                    url.setUrl( code.attr(Constants.HTML_HREF).toString() );
+
+                                                    oCode.setLink( url );
+                                                    oCode.setResource( resourceFather );
+                                                    codeList.add( oCode );
+                                                    //                                            System.out.println("       Code(HTML_B): " + code.text() + " | URL:" + code.attr(Constants.HTML_HREF).toString() + " R: " + resourceFather.getName());
+                                                }
+                                                //</editor-fold>
+                                            }
                                         }
-                                    }
-                                }//</editor-fold>
+                                    }//</editor-fold>
 
-                            }//end for (Element row: rowElements)
-                            //</editor-fold>
+                                }//end for (Element row: rowElements)
+                                //</editor-fold>
 
 
-                        }
+                            }
                     }
                     x++;
+
                 }
 
             }// end validación de solo leer la fuente wikipedia
